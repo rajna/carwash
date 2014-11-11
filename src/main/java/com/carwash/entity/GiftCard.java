@@ -52,7 +52,7 @@ public class GiftCard {
 	private double price;
 	private double customer_discount; // 客户折扣额度
 	private double salesman_disconut; // 销售人员折扣额度
-	private boolean inuse;
+	private boolean inuse = true;
 	@Id
 	@GeneratedValue
 	public int getId() {

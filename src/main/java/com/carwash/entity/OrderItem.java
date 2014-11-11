@@ -80,8 +80,8 @@ public class OrderItem {
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
-	@NotBlank(message = "产品条目名称不能为空")
-	@Length(min=1,max=20,message="产品条目名称长度应在{min}-{max}之间")
+	@NotBlank(message = "产品名称不能为空")
+	@Length(min=1,max=20,message="产品名称长度应在{min}-{max}之间")
 	@Column(nullable = false)
 	public String getName() {
 		return name;

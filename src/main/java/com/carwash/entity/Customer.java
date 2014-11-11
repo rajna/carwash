@@ -56,7 +56,7 @@ public class Customer {
 	private Date create_date = new Date(); // 用户注册时间
 	private String reffer_work_id; // 推荐人工号
 	private double credit; // 用户账户余额
-	private boolean inuse;
+	private boolean inuse = true;
 
 	@Id
 	@GeneratedValue
@@ -67,8 +67,9 @@ public class Customer {
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	@NotBlank(message = "客户名不能为空")
-	@Length(min=1,max=5,message="客户名长度应在{min}-{max}之间")
+	@Length(min = 1, max = 5, message = "客户名长度应在{min}-{max}之间")
 	@Column(nullable = false)
 	public String getName() {
 		return name;
