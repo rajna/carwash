@@ -49,7 +49,7 @@ public class Message {
 	private int userId;
 	private String content;
 	private Date create_date = new Date();
-	private boolean read; // 是否已读
+	private boolean readed; // 是否已读
 
 	@Id
 	@GeneratedValue
@@ -86,12 +86,13 @@ public class Message {
 		this.create_date = create_date;
 	}
 
-	public boolean isRead() {
-		return read;
+	public boolean isReaded() {
+		return readed;
 	}
 
-	public void setRead(boolean read) {
-		this.read = read;
+	public void setReaded(boolean readed) {
+		this.readed = readed;
 	}
+
 
 }
