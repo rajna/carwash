@@ -19,35 +19,30 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          Order.java
+ * File name:          Customer.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.entity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.UUID;
 
 /**
- * 订单数据结构
+ * 客户数据模型
  * <p>
  * Author: ilvelh
  * <p>
- * Date:2014-11-11 Time:下午3:25:44
+ * Date:2014-11-11 Time:下午3:33:12
  * <p>
  */
-public class Order {
+public class Customer {
 	private int id;
-	private int reservationId; // 预约编号
-	private String orderId;
-	private Date create_date = new Date();
-	private String address; // 服务地址 限制
-	private Set<OrderItem> orderItems;
-	private Date reservation_date; // 预约服务时间
-	private int workerId; // 服务人员编号
-	private int supportorId; // 客服人员编号
-	private String workerName; // 服务人员名字
-	private String supportorName; // 客服人员名字
-	private OrderStatus orderStatus = OrderStatus.PROCESSING; // 订单状态
-	private Date complete_date; // 订单完结时间
+	private String name;
+	private String mobile; // 手机号码不能重复
+	private String password = UUID.randomUUID().toString();
+	private Date create_date = new Date(); // 用户注册时间
+	private String reffer_work_id; // 推荐人工号
+	private double credit; //用户账户余额
+	private boolean inuse;
 }

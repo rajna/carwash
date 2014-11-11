@@ -19,23 +19,20 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          ConsumeRecord.java
+ * File name:          OrderStatus.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.entity;
 
 /**
- * 用户消费记录
+ * TODO: File comments
  * <p>
  * Author:   ilvelh
  * <p>
- * Date:2014-11-11   Time:下午4:57:44
+ * Date:2014-11-11   Time:下午5:10:30
  * <p>
  */
-public class ConsumeRecord {
-	private int id;
-	private String customerMobile;
-	private int customerId;
-	
+public enum OrderStatus {
+	PROCESSING,CANCELED,COMPLETED
 }
