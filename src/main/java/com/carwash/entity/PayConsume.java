@@ -19,30 +19,20 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          User.java
+ * File name:          PayConsume.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.entity;
 
-import java.util.Date;
-
 /**
- * 系统操作人员模型
+ * 充值或消费
  * <p>
- * Author: ilvelh
+ * Author:   ilvelh
  * <p>
- * Date:2014-11-11 Time:下午3:32:52
+ * Date:2014-11-11   Time:下午5:04:19
  * <p>
  */
-public class User {
-	private int id;
-	private String name; // 姓名
-	private String workId;// 工号
-	private String mobile; // 手机号码不能重复
-	private String password; // 限制6-12位
-	private Role role; // 角色
-	private int areaId;
-	private Date create_date = new Date();// 用户创建时间
-	private boolean inuse;
+public enum PayConsume {
+	PAY,CONSUME
 }

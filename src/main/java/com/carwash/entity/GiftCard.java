@@ -19,30 +19,26 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          Customer.java
+ * File name:          GiftCard.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.entity;
 
-import java.util.Date;
-import java.util.UUID;
-
 /**
- * 客户数据模型
+ * 礼品卡
  * <p>
  * Author: ilvelh
  * <p>
- * Date:2014-11-11 Time:下午3:33:12
+ * Date:2014-11-11 Time:下午4:34:03
  * <p>
  */
-public class Customer {
+public class GiftCard {
 	private int id;
-	private String name;
-	private String mobile; // 手机号码不能重复
-	private String password = UUID.randomUUID().toString();
-	private Date create_date = new Date(); // 用户注册时间
-	private String reffer_work_id; // 推荐人工号
-	private double money;
+	private String redeemCode; // 兑换码
+	private String name; // 限制:1-20字
+	private double price;
+	private double customer_discount; // 客户折扣额度
+	private double salesman_disconut; //销售人员折扣额度
 	private boolean inuse;
 }
