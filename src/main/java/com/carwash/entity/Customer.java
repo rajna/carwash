@@ -28,6 +28,15 @@ package com.carwash.entity;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 客户数据模型
  * <p>
@@ -36,6 +45,9 @@ import java.util.UUID;
  * Date:2014-11-11 Time:下午3:33:12
  * <p>
  */
+@Entity
+@Table(name = "cw_customer")
+@org.hibernate.annotations.Table(comment = "客户数据模型", appliesTo = "cw_customer")
 public class Customer {
 	private int id;
 	private String name;
@@ -43,6 +55,75 @@ public class Customer {
 	private String password = UUID.randomUUID().toString();
 	private Date create_date = new Date(); // 用户注册时间
 	private String reffer_work_id; // 推荐人工号
-	private double credit; //用户账户余额
+	private double credit; // 用户账户余额
 	private boolean inuse;
+
+	@Id
+	@GeneratedValue
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	@NotBlank(message = "客户名不能为空")
+	@Length(min=1,max=5,message="客户名长度应在{min}-{max}之间")
+	@Column(nullable = false)
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getCreate_date() {
+		return create_date;
+	}
+
+	public void setCreate_date(Date create_date) {
+		this.create_date = create_date;
+	}
+
+	public String getReffer_work_id() {
+		return reffer_work_id;
+	}
+
+	public void setReffer_work_id(String reffer_work_id) {
+		this.reffer_work_id = reffer_work_id;
+	}
+
+	public double getCredit() {
+		return credit;
+	}
+
+	public void setCredit(double credit) {
+		this.credit = credit;
+	}
+
+	public boolean isInuse() {
+		return inuse;
+	}
+
+	public void setInuse(boolean inuse) {
+		this.inuse = inuse;
+	}
+
 }

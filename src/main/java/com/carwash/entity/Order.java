@@ -28,6 +28,17 @@ package com.carwash.entity;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 订单数据结构
  * <p>
@@ -36,6 +47,9 @@ import java.util.Set;
  * Date:2014-11-11 Time:下午3:25:44
  * <p>
  */
+@Entity
+@Table(name = "cw_order")
+@org.hibernate.annotations.Table(comment = "订单数据结构模型", appliesTo = "cw_order")
 public class Order {
 	private int id;
 	private int reservationId; // 预约编号
@@ -50,4 +64,116 @@ public class Order {
 	private String supportorName; // 客服人员名字
 	private OrderStatus orderStatus = OrderStatus.PROCESSING; // 订单状态
 	private Date complete_date; // 订单完结时间
+
+	@Id
+	@GeneratedValue
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(int reservationId) {
+		this.reservationId = reservationId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public Date getCreate_date() {
+		return create_date;
+	}
+
+	public void setCreate_date(Date create_date) {
+		this.create_date = create_date;
+	}
+
+	@NotBlank(message = "订单地址称不能为空")
+	@Length(min = 1, max = 50, message = "订单地址长度应在{min}-{max}之间")
+	@Column(nullable = false)
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "orderId")
+	public Set<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(Set<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+	public Date getReservation_date() {
+		return reservation_date;
+	}
+
+	public void setReservation_date(Date reservation_date) {
+		this.reservation_date = reservation_date;
+	}
+
+	public int getWorkerId() {
+		return workerId;
+	}
+
+	public void setWorkerId(int workerId) {
+		this.workerId = workerId;
+	}
+
+	public int getSupportorId() {
+		return supportorId;
+	}
+
+	public void setSupportorId(int supportorId) {
+		this.supportorId = supportorId;
+	}
+
+	public String getWorkerName() {
+		return workerName;
+	}
+
+	public void setWorkerName(String workerName) {
+		this.workerName = workerName;
+	}
+
+	public String getSupportorName() {
+		return supportorName;
+	}
+
+	public void setSupportorName(String supportorName) {
+		this.supportorName = supportorName;
+	}
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public Date getComplete_date() {
+		return complete_date;
+	}
+
+	public void setComplete_date(Date complete_date) {
+		this.complete_date = complete_date;
+	}
+
 }
