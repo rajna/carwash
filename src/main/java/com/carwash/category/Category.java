@@ -25,7 +25,6 @@
  */
 package com.carwash.category;
 
-
 /**
  * 产品分类
  * <p>
@@ -35,25 +34,30 @@ package com.carwash.category;
  * <p>
  */
 
-public final class Category {
+public final class Category
+{
 
 	private int id;
 	private String name;
+	private String pic;
 
 	/**
 	 * @param id
 	 * @param name
 	 */
-	public Category(int id, String name) {
+	public Category(int id, String name, String pic)
+	{
 		super();
 		this.id = id;
 		this.name = name;
+		this.setPic(pic);
 	}
 
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
@@ -61,14 +65,16 @@ public final class Category {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
@@ -76,7 +82,8 @@ public final class Category {
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
@@ -86,7 +93,8 @@ public final class Category {
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
@@ -99,17 +107,24 @@ public final class Category {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+	public boolean equals(Object obj)
+	{
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		Category other = (Category) obj;
-		if (id != other.id)
-			return false;
+		if (id != other.id) return false;
 		return true;
+	}
+
+	public String getPic()
+	{
+		return pic;
+	}
+
+	public void setPic(String pic)
+	{
+		this.pic = pic;
 	}
 
 }
