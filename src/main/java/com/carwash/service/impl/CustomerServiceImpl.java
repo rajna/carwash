@@ -44,7 +44,7 @@ import com.carwash.service.CustomerServiceI;
  */
 public class CustomerServiceImpl implements CustomerServiceI {
 	@Autowired
-	private BaseDaoI<Customer> customerDao;
+	private BaseDaoI<Customer> customerDao; 
 
 	@Override
 	public void saveOrUpdate(Customer o) {

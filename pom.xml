@@ -20,23 +20,8 @@
 			<version>2.2.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.10-beta2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>2.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>2.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-common</artifactId>
 			<version>2.13</version>
 		</dependency>
 		<dependency>
@@ -56,13 +41,6 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.1.38</version>
 		</dependency>
-		<!-- GSON -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.4</version>
-		</dependency>
-
 		<!-- datasource -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -75,14 +53,12 @@
 			<artifactId>antlr</artifactId>
 			<version>20030911</version>
 		</dependency>
-
 		<!-- aopalliance-1.0 -->
 		<dependency>
 			<groupId>aopalliance</groupId>
 			<artifactId>aopalliance</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 		<!-- commons -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -138,7 +114,6 @@
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-
 		<!-- ehcache core -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
@@ -166,7 +141,6 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>4.2.2.Final</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-commons-annotations</artifactId>
@@ -300,28 +274,11 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- 将java对象转成xml 如果单独使用需要 xmlpull配合 -->
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.4.5</version>
-		</dependency>
 		<!--防止icu4j版本太低，不兼容tomcat7 -->
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
 			<version>52.1</version>
-		</dependency>
-		<!-- java对象与xml之间的转换工具 -->
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.4.5</version>
-		</dependency>
-		<dependency>
-			<groupId>xpp3</groupId>
-			<artifactId>xpp3</artifactId>
-			<version>1.1.4c</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
