@@ -34,9 +34,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.carwash.util.Constant;
 
 /**
  * 系统操作人员模型
@@ -89,6 +92,9 @@ public class User {
 		this.workId = workId;
 	}
 
+	@NotBlank(message = "手机号码不能为空")
+	@Pattern(regexp = Constant.MOBILEREG, message = "手机号码不符合规则")
+	@Column(unique = true, nullable = false)
 	public String getMobile() {
 		return mobile;
 	}

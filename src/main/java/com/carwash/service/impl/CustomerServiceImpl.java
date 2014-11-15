@@ -19,33 +19,47 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          UserServiceImpl.java
+ * File name:          CustomerServiceImpl.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.carwash.entity.User;
+import com.carwash.entity.Customer;
 import com.carwash.service.BaseDaoI;
-import com.carwash.service.UserServiceI;
+import com.carwash.service.CustomerServiceI;
 
 /**
- * 用户的数据操作接口实现
+ * 客户的数据操作接口实现
  * <p>
  * Author: ilvelh
  * <p>
- * Date:2014年11月13日 Time:下午11:17:52
+ * Date:2014年11月15日 Time:下午1:51:55
  * <p>
  */
-public class UserServiceImpl implements UserServiceI {
+public class CustomerServiceImpl implements CustomerServiceI {
 	@Autowired
-	private BaseDaoI<User> userDao;
+	private BaseDaoI<Customer> customerDao;
 
 	@Override
-	public void saveOrUpdate(User o) {
-		userDao.saveOrUpdate(o);
+	public void saveOrUpdate(Customer o) {
+		customerDao.saveOrUpdate(o);
+	}
+
+	@Override
+	public Customer getByMobile(String mobile) {
+		if (mobile == null) {
+			return null;
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("mobile", mobile);
+		return customerDao
+				.get("From Customer c where c.mobile=:mobile", params);
 	}
 
 }

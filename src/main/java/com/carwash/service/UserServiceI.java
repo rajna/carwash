@@ -25,14 +25,21 @@
  */
 package com.carwash.service;
 
+import com.carwash.entity.User;
+
 /**
- * TODO: File comments
+ * 用户的数据操作接口
  * <p>
- * Author:   ilvel
+ * Author: ilvelh
  * <p>
- * Date:2014年11月13日   Time:下午11:16:41
+ * Date:2014年11月13日 Time:下午11:16:41
  * <p>
  */
 public interface UserServiceI {
-
+	/**
+	 * 用户数据的保存与修改
+	 * 
+	 * @param user
+	 */
+	public void saveOrUpdate(User o);
 }

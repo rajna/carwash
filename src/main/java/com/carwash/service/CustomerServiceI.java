@@ -19,23 +19,32 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          Constant.java
+ * File name:          CustomerServiceI.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
-package com.carwash.util;
+package com.carwash.service;
+
+import com.carwash.entity.Customer;
 
 /**
- * 常量类
+ * 客户的数据操作接口
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年11月13日 Time:下午10:06:07
+ * Date:2014年11月15日 Time:下午1:49:16
  * <p>
  */
-public class Constant {
+public interface CustomerServiceI {
 	/**
-	 * 手机号码校验规则
+	 * 客户数据的保存与修改
+	 * 
 	 */
-	public final static String MOBILEREG = "^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\\d{8}$";
+	public void saveOrUpdate(Customer o);
+
+	/**
+	 * 通过手机号码查询客户
+	 */
+	public Customer getByMobile(String mobile);
+
 }
