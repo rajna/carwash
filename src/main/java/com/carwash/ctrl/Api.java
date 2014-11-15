@@ -110,7 +110,6 @@ public class Api {
 		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
 		}
-		json.put("success", true);
 		return new JSON(true, "登录成功").append("password", password);
 	}
 }
