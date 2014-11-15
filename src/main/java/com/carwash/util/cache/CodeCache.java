@@ -110,11 +110,11 @@ public class CodeCache {
 	 * 生成随机size的验证码
 	 */
 	private static String randomCode(int size) {
-		String code = "";
+		StringBuffer codeBuffer = new StringBuffer();
 		for (int i = 0; i < size; i++) {
-			code += new Random().nextInt(10);
+			codeBuffer.append(new Random().nextInt(10));
 		}
-		return code;
+		return codeBuffer.toString();
 	}
 
 	public static void main(String[] args) throws InterruptedException {
