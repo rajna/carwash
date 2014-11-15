@@ -61,6 +61,15 @@ public class Customer {
 	private double credit; // 用户账户余额
 	private boolean inuse = true;
 
+	public Customer() {
+		super();
+	}
+
+	public Customer(String mobile) {
+		super();
+		this.mobile = mobile;
+	}
+
 	@Id
 	@GeneratedValue
 	public int getId() {
@@ -71,9 +80,6 @@ public class Customer {
 		this.id = id;
 	}
 
-	@NotBlank(message = "客户名不能为空")
-	@Length(min = 1, max = 5, message = "客户名长度应在{min}-{max}之间")
-	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -81,9 +87,10 @@ public class Customer {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	@NotBlank(message = "手机号码不能为空")
 	@Pattern(regexp = Constant.MOBILEREG, message = "手机号码不符合规则")
-	@Column(unique=true,nullable=false)
+	@Column(unique = true, nullable = false)
 	public String getMobile() {
 		return mobile;
 	}

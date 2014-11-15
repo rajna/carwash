@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.carwash.entity.Customer;
 import com.carwash.service.BaseDaoI;
@@ -42,6 +43,7 @@ import com.carwash.service.CustomerServiceI;
  * Date:2014年11月15日 Time:下午1:51:55
  * <p>
  */
+@Service("customerService")
 public class CustomerServiceImpl implements CustomerServiceI {
 	@Autowired
 	private BaseDaoI<Customer> customerDao; 

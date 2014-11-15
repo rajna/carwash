@@ -45,7 +45,7 @@ public class CodeCache {
 	/**
 	 * code在缓存中存活的时间,单位秒
 	 */
-	private static int validateTime = 120;
+	public final static int leftTime = 30*60*1000;
 	/**
 	 * 随机生成code的位数
 	 */
@@ -66,7 +66,7 @@ public class CodeCache {
 				Set<String> keySet = maps.keySet();
 				for (String key : keySet) {
 					Code code = maps.get(key);
-					if (System.currentTimeMillis() - code.getTimeMillis() <= validateTime) {
+					if (System.currentTimeMillis() - code.getTimeMillis() <= leftTime) {
 						continue;
 					}
 					maps.remove(key);
@@ -86,7 +86,7 @@ public class CodeCache {
 		if (code == null) {
 			return null;
 		}
-		if (System.currentTimeMillis() - code.getTimeMillis() > validateTime) {
+		if (System.currentTimeMillis() - code.getTimeMillis() > leftTime) {
 			return null;
 		}
 		return code.getCode_string();
