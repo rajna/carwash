@@ -30,6 +30,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.carwash.util.Mail;
+
 /**
  * 验证码缓存工具
  * <p>
@@ -116,9 +118,7 @@ public class CodeCache {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println(generate("18601595393"));
-		System.out.println(generate("18601595391"));
-		Thread.sleep(4000);
-		System.out.println(get("18601595393"));
+		String mobile = "18601595393";
+		Mail.sendCode(mobile, generate(mobile));
 	}
 }

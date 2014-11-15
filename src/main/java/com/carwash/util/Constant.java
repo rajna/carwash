@@ -38,4 +38,5 @@ public class Constant {
 	 * 手机号码校验规则
 	 */
 	public final static String MOBILEREG = "^(13[0-9]|14[0-9]|15[0-9]|18[0-9])\\d{8}$";
+	public final static String CONTENTYPE = "text/html; charset=utf-8";
 }
