@@ -130,8 +130,9 @@ public class Mail {
 	}
 
 	public static void sendCode(String mobile, String code) {
-		sendMail(false, "CarWash-" + mobile + " 验证码", "已发送到您的手机(" + mobile
-				+ ")验证码为:" + code, "carwash2014@126.com");
+		sendMail(false, DateUtil.formatToSecond(new Date()) + "CarWash-" + mobile
+				+ " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:" + code,
+				"carwash2014@126.com");
 	}
 
 	static class MyAuthenticator extends Authenticator {

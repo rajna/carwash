@@ -118,7 +118,7 @@ public class CodeCache {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		String mobile = "18601595393";
+		String mobile = "abcde123456";
 		Mail.sendCode(mobile, generate(mobile));
 	}
 }
