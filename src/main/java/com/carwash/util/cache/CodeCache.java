@@ -45,7 +45,7 @@ public class CodeCache {
 	/**
 	 * code在缓存中存活的时间,单位秒
 	 */
-	public final static int leftTime = 30*60*1000;
+	public final static int leftTime = 30 * 60 * 1000;
 	/**
 	 * 随机生成code的位数
 	 */
@@ -90,6 +90,14 @@ public class CodeCache {
 			return null;
 		}
 		return code.getCode_string();
+	}
+
+	/**
+	 * 移除掉手机号码的验证码
+	 * 
+	 */
+	public static void remove(String mobile) {
+		maps.remove(mobile);
 	}
 
 	private static class Code {

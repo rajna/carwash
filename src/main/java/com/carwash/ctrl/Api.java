@@ -34,7 +34,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
@@ -61,7 +60,7 @@ public class Api {
 	 */
 	@RequestMapping("customercode")
 	@ResponseBody
-	public JSON customercode(String mobile) {
+	public JSON customercode(final String mobile) {
 		if (mobile == null) {
 			return new JSON(false, "手机号码不能为空");
 		}
@@ -79,10 +78,18 @@ public class Api {
 				return new JSON(false, "验证码发送失败");
 			}
 		}
-		Mail.sendCode(mobile, CodeCache.generate(mobile));
+		// 将发送手机验证码交个异步线程处理
+		new Thread(new Runnable() {
+			public void run() {
+				Mail.sendCode(mobile, CodeCache.generate(mobile));
+			}
+		}).start();
 		return new JSON(true, "验证码发送成功").append("leftTime", CodeCache.leftTime);
 	}
 
+	/**
+	 * 客户手机端登录，返回客户密码
+	 */
 	@RequestMapping("customerlogin")
 	@ResponseBody
 	public JSON customerlogin(String mobile, String code) {
@@ -96,6 +103,9 @@ public class Api {
 		}
 		if (!code.equals(CodeCache.get(mobile))) {
 			return new JSON(false, "验证码不正确");
+		} else {
+			// 验证完毕后移除原来的验证码
+			CodeCache.remove(mobile);
 		}
 		Customer customer = customerService.getByMobile(mobile);
 		if (customer == null) {
