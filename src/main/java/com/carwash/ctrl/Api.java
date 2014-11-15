@@ -25,6 +25,7 @@
  */
 package com.carwash.ctrl;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
+import com.carwash.util.JSON;
 import com.carwash.util.Mail;
 import com.carwash.util.cache.CodeCache;
 
@@ -53,20 +55,21 @@ import com.carwash.util.cache.CodeCache;
 public class Api {
 	@Autowired
 	private CustomerServiceI customerService;
-	
+
 	/**
 	 * 客户通过手机端获取验证码
 	 */
 	@RequestMapping("customercode")
 	@ResponseBody
-	public JSONObject customercode(String mobile) {
-		JSONObject json = new JSONObject();
+	public JSON customercode(String mobile) {
+
+		if (mobile == null) {
+			return new JSON(false, "手机号码不能为空");
+		}
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
 		if (!m.find()) {
-			json.put("success", false);
-			json.put("message", "手机号码不规范");
-			return json;
+			return new JSON(false, "手机号码不规范");
 		}
 		Customer customer = customerService.getByMobile(mobile);
 		if (customer == null) {
@@ -74,21 +77,40 @@ public class Api {
 			try {
 				customerService.saveOrUpdate(customer);
 			} catch (Exception e) {
-				json.put("success", false);
-				json.put("message", "发送验证码失败");
-				return json;
+				return new JSON(false, "验证码发送失败");
 			}
 		}
 		Mail.sendCode(mobile, CodeCache.generate(mobile));
-		json.put("success", true);
-		json.put("message", "发送验证码成功");
-		json.put("leftTime", CodeCache.leftTime);
-		return json;
+		return new JSON(true, "验证码发送成功").append("leftTime", CodeCache.leftTime);
 	}
 
 	@RequestMapping("customerlogin")
 	@ResponseBody
-	public JSONObject customerLogin(String mobile, String code) {
-		return null;
+	public JSON customerlogin(String mobile, String code) {
+		JSONObject json = new JSONObject();
+		if (mobile == null || code == null) {
+			return new JSON(false, "登录参数不完整");
+		}
+		Pattern p = Pattern.compile(Constant.MOBILEREG);
+		Matcher m = p.matcher(mobile);
+		if (!m.find()) {
+			return new JSON(false, "手机号码不规范");
+		}
+		if (!code.equals(CodeCache.get(mobile))) {
+			return new JSON(false, "验证码不正确");
+		}
+		Customer customer = customerService.getByMobile(mobile);
+		if (customer == null) {
+			return new JSON(false, "该手机号码尚未注册");
+		}
+		String password = UUID.randomUUID().toString().replace("-", "");
+		customer.setPassword(password);
+		try {
+			customerService.saveOrUpdate(customer);
+		} catch (Exception e) {
+			return new JSON(false, "对不起,登录失败");
+		}
+		json.put("success", true);
+		return new JSON(true, "登录成功").append("password", password);
 	}
 }
