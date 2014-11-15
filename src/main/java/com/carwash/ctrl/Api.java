@@ -62,7 +62,6 @@ public class Api {
 	@RequestMapping("customercode")
 	@ResponseBody
 	public JSON customercode(String mobile) {
-
 		if (mobile == null) {
 			return new JSON(false, "手机号码不能为空");
 		}
@@ -87,7 +86,6 @@ public class Api {
 	@RequestMapping("customerlogin")
 	@ResponseBody
 	public JSON customerlogin(String mobile, String code) {
-		JSONObject json = new JSONObject();
 		if (mobile == null || code == null) {
 			return new JSON(false, "登录参数不完整");
 		}
