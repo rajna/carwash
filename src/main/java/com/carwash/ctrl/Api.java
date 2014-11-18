@@ -118,6 +118,6 @@ public class Api {
 		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
 		}
-		return new JSON(true, "登录成功").append("password", password);
+		return new JSON(true, "登录成功").append("mobile", mobile).append("password", password);
 	}
 }
