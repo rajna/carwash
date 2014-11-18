@@ -47,11 +47,11 @@ public class CodeCache {
 	/**
 	 * 随机生成code的位数
 	 */
-	private static int codeLength = 4;
+	private final static  int codeLength = 4;
 	/**
 	 * 校验次数
 	 */
-	public static int times = 5;
+	public final static  int times = 5;
 	/**
 	 * 缓存数量，超过该数量将执行代码回收
 	 */
