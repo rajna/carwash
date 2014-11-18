@@ -29,9 +29,11 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.asm.commons.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.Customer;
@@ -59,7 +61,7 @@ public class Api
 	/**
 	 * 客户通过手机端获取验证码
 	 */
-	@RequestMapping(value = "customercode",produces = "application/json")
+	@RequestMapping(value = "customercode", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public JSON customercode(final String mobile)
 	{

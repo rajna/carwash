@@ -48,7 +48,8 @@ import javax.mail.internet.MimeMultipart;
  * Date:2014年11月15日 Time:下午4:30:41
  * <p>
  */
-public class Mail {
+public class Mail
+{
 	// 发送邮件的服务器的IP和端口
 	private static String mailServerHost;
 	private static String mailServerPort = "25";
@@ -56,7 +57,8 @@ public class Mail {
 	private static String userName;
 	private static String password;
 	private static MimeMessage message = null;
-	static {
+	static
+	{
 		mailServerHost = ConfigUtil.getValue("mailhost");
 		mailServerPort = ConfigUtil.getValue("mailport");
 		userName = ConfigUtil.getValue("mailuser");
@@ -86,12 +88,12 @@ public class Mail {
 	 *            String... 邮件发送的地址 可变参数
 	 */
 	private static void sendMail(boolean isHtml, String subject,
-			String content, String... mails) {
+			String content, String... mails)
+	{
 		// Message message = getMessage();
-		if (message == null) {
-			return;
-		}
-		try {
+		if (message == null) { return; }
+		try
+		{
 			// 创建邮件发送者地址
 			Address from = new InternetAddress(userName);
 			// 设置邮件消息的发送者
@@ -99,7 +101,8 @@ public class Mail {
 			int length = mails.length;
 			Address[] toAdds = new Address[length];
 			// 创建邮件的接收者地址，并设置到邮件消息中
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < length; i++)
+			{
 				toAdds[i] = new InternetAddress(mails[i]);
 			}
 			message.setRecipients(MimeMessage.RecipientType.TO, toAdds);
@@ -108,46 +111,56 @@ public class Mail {
 			// 设置邮件消息的主题
 			message.setSubject(subject);
 
-			if (isHtml) {
+			if (isHtml)
+			{
 				// MiniMultipart类是一个容器类，包含MimeBodyPart类型的对象
 				Multipart mainPart = new MimeMultipart();
 				// 创建一个包含HTML内容的MimeBodyPart
 				BodyPart html = new MimeBodyPart();
 				// 设置HTML内容
-				html.setContent(content, Constant.CONTENTYPE);
+				html.setContent(content, Constant.HTMLCONTENTTYPE);
 				mainPart.addBodyPart(html);
 				// 将MiniMultipart对象设置为邮件内容
 				message.setContent(mainPart);
-			} else {
+			}
+			else
+			{
 				// 设置邮件消息的主要内容
 				message.setText(content);
 			}
 			// 发送邮件
 			Transport.send(message);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	public static void sendCode(String mobile, String code) {
-		sendMail(false, DateUtil.formatToSecond(new Date()) + "CarWash-" + mobile
-				+ " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:" + code,
-				"carwash2014@126.com");
+	public static void sendCode(String mobile, String code)
+	{
+		sendMail(false, DateUtil.formatToSecond(new Date()) + "CarWash-"
+				+ mobile + " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:"
+				+ code, "carwash2014@126.com");
 	}
 
-	static class MyAuthenticator extends Authenticator {
+	static class MyAuthenticator extends Authenticator
+	{
 		String userName = null;
 		String password = null;
 
-		public MyAuthenticator() {
+		public MyAuthenticator()
+		{
 		}
 
-		public MyAuthenticator(String username, String password) {
+		public MyAuthenticator(String username, String password)
+		{
 			this.userName = username;
 			this.password = password;
 		}
 
-		protected PasswordAuthentication getPasswordAuthentication() {
+		protected PasswordAuthentication getPasswordAuthentication()
+		{
 			PasswordAuthentication pa = new PasswordAuthentication(userName,
 					password);
 			return pa;

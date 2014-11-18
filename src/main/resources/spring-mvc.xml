@@ -51,12 +51,12 @@
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-<!-- 		<property name="interceptors"> -->
-<!-- 			<list> -->
-<!-- 				<bean class="com.ilvelh.interceptor.Interceptor"> -->
-<!-- 				</bean> -->
-<!-- 			</list> -->
-<!-- 		</property> -->
+		<property name="interceptors">
+			<list>
+				<bean class="com.carwash.interceptor.Interceptor">
+				</bean>
+			</list>
+		</property>
 	</bean>
 	<task:annotation-driven />
 </beans>
