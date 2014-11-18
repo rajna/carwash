@@ -85,27 +85,29 @@ public class CodeCache {
 	 * 设置校验次数,超过次数将验证码清空
 	 */
 	public static boolean verfiy(String mobile, String code) {
-		if (code == null) {
+		synchronized (lockObj) {
+			if (code == null) {
+				return false;
+			}
+			if (code.equals(get(mobile))) {
+				timeMaps.remove(mobile);
+				remove(mobile);
+				return true;
+			}
+			Integer integer = timeMaps.get(mobile);
+			if (integer == null) {
+				integer = 1;
+			} else {
+				integer = integer + 1;
+			}
+			if (integer > times) {
+				remove(mobile);
+				timeMaps.remove(mobile);
+			} else {
+				timeMaps.put(mobile, integer);
+			}
 			return false;
 		}
-		if (code.equals(get(mobile))) {
-			timeMaps.remove(mobile);
-			remove(mobile);
-			return true;
-		}
-		Integer integer = timeMaps.get(mobile);
-		if (integer == null) {
-			integer = 1;
-		} else {
-			integer = integer + 1;
-		}
-		if (integer > times) {
-			remove(mobile);
-			timeMaps.remove(mobile);
-		} else {
-			timeMaps.put(mobile, integer);
-		}
-		return false;
 	}
 
 	/**
