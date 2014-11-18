@@ -54,7 +54,7 @@ public class Customer {
 	private int id;
 	private String name;
 	private String mobile; // 手机号码不能重复
-	private String password = UUID.randomUUID().toString();
+	private String password = UUID.randomUUID().toString().replace("-", "");
 	private Date create_date = new Date(); // 用户注册时间
 	private String reffer_work_id; // 推荐人工号
 	private double credit; // 用户账户余额
