@@ -60,7 +60,7 @@ public class Api
 	/**
 	 * 客户通过手机端获取验证码
 	 */
-	@RequestMapping(value = "customercode", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "customercode")
 	@ResponseBody
 	public JSON customercode(final String mobile)
 	{
