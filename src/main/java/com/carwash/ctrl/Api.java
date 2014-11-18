@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.Customer;
@@ -52,8 +51,7 @@ import com.carwash.util.cache.CodeCache;
  */
 @Controller
 @RequestMapping("api")
-public class Api
-{
+public class Api {
 	@Autowired
 	private CustomerServiceI customerService;
 
@@ -62,31 +60,28 @@ public class Api
 	 */
 	@RequestMapping(value = "customercode")
 	@ResponseBody
-	public JSON customercode(final String mobile)
-	{
-		if (mobile == null) { return new JSON(false, "手机号码不能为空"); }
+	public JSON customercode(final String mobile) {
+		if (mobile == null) {
+			return new JSON(false, "手机号码不能为空");
+		}
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		if (!m.find()) {
+			return new JSON(false, "手机号码不规范");
+		}
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null)
-		{
+		if (customer == null) {
 			customer = new Customer(mobile);
-			try
-			{
+			try {
 				customerService.saveOrUpdate(customer);
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				return new JSON(false, "验证码发送失败");
 			}
 		}
 		// 将发送手机验证码交个异步线程处理
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				Mail.sendCode(mobile, CodeCache.generate(mobile));
+		new Thread(new Runnable() {
+			public void run() {
+				Mail.sendCode(mobile);
 			}
 		}).start();
 		return new JSON(true, "验证码发送成功").append("leftTime", CodeCache.leftTime);
@@ -97,31 +92,27 @@ public class Api
 	 */
 	@RequestMapping("customerlogin")
 	@ResponseBody
-	public JSON customerlogin(String mobile, String code)
-	{
-		if (mobile == null || code == null) { return new JSON(false, "登录参数不完整"); }
+	public JSON customerlogin(String mobile, String code) {
+		if (mobile == null || code == null) {
+			return new JSON(false, "登录参数不完整");
+		}
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
-		if (!code.equals(CodeCache.get(mobile)))
-		{
+		if (!m.find()) {
+			return new JSON(false, "手机号码不规范");
+		}
+		if (!CodeCache.verfiy(mobile, code)) {
 			return new JSON(false, "验证码不正确");
 		}
-		else
-		{
-			// 验证完毕后移除原来的验证码
-			CodeCache.remove(mobile);
-		}
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null) { return new JSON(false, "该手机号码尚未注册"); }
+		if (customer == null) {
+			return new JSON(false, "该手机号码尚未注册");
+		}
 		String password = UUID.randomUUID().toString().replace("-", "");
 		customer.setPassword(password);
-		try
-		{
+		try {
 			customerService.saveOrUpdate(customer);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
 		}
 		return new JSON(true, "登录成功").append("mobile", mobile).append(

@@ -40,6 +40,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.carwash.util.cache.CodeCache;
+
 /**
  * 邮件工具，测试使用
  * <p>
@@ -137,8 +139,9 @@ public class Mail
 		}
 	}
 
-	public static void sendCode(String mobile, String code)
+	public static void sendCode(String mobile)
 	{
+		String code = CodeCache.generate(mobile);
 		sendMail(false, DateUtil.formatToSecond(new Date()) + "CarWash-"
 				+ mobile + " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:"
 				+ code, "carwash2014@126.com");
