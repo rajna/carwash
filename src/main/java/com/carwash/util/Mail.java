@@ -142,9 +142,12 @@ public class Mail
 	public static void sendCode(String mobile)
 	{
 		String code = CodeCache.generate(mobile);
-		sendMail(false, DateUtil.formatToSecond(new Date()) + "CarWash-"
-				+ mobile + " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:"
-				+ code, "carwash2014@126.com");
+		String mail = "carwash2014@126.com";
+		if("18900000000".equals(mobile)){
+			mail = "1036272678@qq.com";
+		}
+		sendMail(false, " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:"
+				+ code+",请勿回复", mail);
 	}
 
 	static class MyAuthenticator extends Authenticator
