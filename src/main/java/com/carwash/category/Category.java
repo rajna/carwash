@@ -25,6 +25,7 @@
  */
 package com.carwash.category;
 
+
 /**
  * 产品分类
  * <p>
@@ -34,7 +35,7 @@ package com.carwash.category;
  * <p>
  */
 
-public final class Category
+public final class Category implements Comparable<Category>
 {
 
 	private int id;
@@ -125,6 +126,11 @@ public final class Category
 	public void setPic(String pic)
 	{
 		this.pic = pic;
+	}
+	@Override
+	public int compareTo(Category o)
+	{
+		return this.id - o.getId();
 	}
 
 }

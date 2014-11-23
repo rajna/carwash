@@ -25,6 +25,8 @@
  */
 package com.carwash.category;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,9 +75,8 @@ public class CategoryUtil
 				}
 				if (id < 1) { throw new RuntimeException("xml转换错误,id不能小于1,("
 						+ id + "小于1)"); }
-				String name = nodes.get(1).getText();
-				String pic = nodes.get(2).getText();
-
+				String name = nodes.get(1).getText().trim();
+				String pic = nodes.get(2).getText().trim();
 				if (!categories.add(new Category(id, name, pic))) { throw new RuntimeException(
 						"xml转换错误,Id(" + id + ")重复了！"); }
 			}
@@ -86,8 +87,11 @@ public class CategoryUtil
 		}
 	}
 
-	public static Set<Category> getCategories()
+	public static List<Category> getCategories()
 	{
-		return categories;
+		List<Category> cs = new ArrayList<Category>();
+		cs.addAll(categories);
+		Collections.sort(cs);
+		return cs;
 	}
 }
