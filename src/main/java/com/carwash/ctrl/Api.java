@@ -25,6 +25,7 @@
  */
 package com.carwash.ctrl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -141,7 +142,14 @@ public class Api {
 		List<String> images = Arrays.asList("images/header/1.png",
 				"images/header/2.png", "images/header/3.png",
 				"images/header/4.png");
-		return new JSON(true, "查询成功").append("headerimages", images);
+		List<String> allimage = new ArrayList<String>();
+		allimage.addAll(images);
+		for(int i=1;i<=43;i++){
+			allimage.add("images/header/1 ("+i+").jpg");
+		}
+		
+		
+		return new JSON(true, "查询成功").append("headerimages", allimage);
 	}
 
 }
