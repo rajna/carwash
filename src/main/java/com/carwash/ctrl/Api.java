@@ -142,7 +142,7 @@ public class Api {
 		List<Recommend> recommends = new ArrayList<Recommend>();
 		// mork data end
 		for(int i=0;i<allimage.size();i++){
-			String url = allimage.get(0);
+			String url = allimage.get(i);
 			recommends.add(new Recommend(i,url,null,i));
 		}
 		return new JSON(true, "查询成功").append("categories",
