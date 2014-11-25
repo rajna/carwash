@@ -64,8 +64,8 @@ public class Customer {
 	private String brand;
 	private String model;
 	private String serial;
-	private int sdk_int;
-	private String release;
+	private String sdk_int;
+	private String vrelease;
 
 	public Customer() {
 		super();
@@ -208,7 +208,7 @@ public class Customer {
 	/**
 	 * @return the sdk_int
 	 */
-	public int getSdk_int() {
+	public String getSdk_int() {
 		return sdk_int;
 	}
 
@@ -216,22 +216,23 @@ public class Customer {
 	 * @param sdk_int
 	 *            the sdk_int to set
 	 */
-	public void setSdk_int(int sdk_int) {
+	public void setSdk_int(String sdk_int) {
 		this.sdk_int = sdk_int;
 	}
 
 	/**
 	 * @return the release
 	 */
-	public String getRelease() {
-		return release;
+	public String getVrelease() {
+		return vrelease;
 	}
 
 	/**
 	 * @param release
 	 *            the release to set
 	 */
-	public void setRelease(String release) {
-		this.release = release;
+	public void setVrelease(String vrelease) {
+		this.vrelease = vrelease;
 	}
+
 }
