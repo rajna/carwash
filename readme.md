@@ -30,11 +30,12 @@
 		+ `{password}`,String,只有success为true的时候才会有该数据
 		+ `{mobile}`,String,只有success为true的时候才会有该数据
 		
-#### 3.产品分类
-- URL:`/api/categories`
+#### 3.产品分类与手机首界面的推荐信息
+- URL:`/api/categoriesandrecommends`
 	* 请求方式:get OR post
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{categories}`,Array
+		+ `{categories}`,jsonarray
+		+ `{recommends}`,jsonarray
 	
