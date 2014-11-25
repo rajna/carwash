@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,6 +118,7 @@ public class Api {
 		String password = UUID.randomUUID().toString().replace("-", "");
 		customer.setPassword(password);
 		try {
+			BeanUtils.copyProperties(device, customer);
 			customerService.saveOrUpdate(customer);
 		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
