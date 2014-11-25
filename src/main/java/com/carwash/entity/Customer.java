@@ -56,6 +56,7 @@ public class Customer {
 	private String mobile; // 手机号码不能重复
 	private String password = UUID.randomUUID().toString().replace("-", "");
 	private Date create_date = new Date(); // 用户注册时间
+	private Date login_date = new Date(); // 最后一次登录时间
 	private String reffer_work_id; // 推荐人工号
 	private double credit; // 用户账户余额
 	private boolean inuse = true;
@@ -233,6 +234,21 @@ public class Customer {
 	 */
 	public void setVrelease(String vrelease) {
 		this.vrelease = vrelease;
+	}
+
+	/**
+	 * @return the login_date
+	 */
+	public Date getLogin_date() {
+		return login_date;
+	}
+
+	/**
+	 * @param login_date
+	 *            the login_date to set
+	 */
+	public void setLogin_date(Date login_date) {
+		this.login_date = login_date;
 	}
 
 }

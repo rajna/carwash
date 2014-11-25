@@ -27,6 +27,7 @@ package com.carwash.ctrl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -119,6 +120,7 @@ public class Api {
 		customer.setPassword(password);
 		try {
 			BeanUtils.copyProperties(device, customer);
+			customer.setLogin_date(new Date());
 			customerService.saveOrUpdate(customer);
 		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
