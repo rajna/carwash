@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Customer;
+import com.carwash.entity.Recommend;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
@@ -124,21 +125,12 @@ public class Api {
 	}
 
 	/**
-	 * 查询产品分类
+	 * 查询产品分类与首页的推荐信息
 	 */
-	@RequestMapping("categories")
+	@RequestMapping("categoriesandrecommends")
 	@ResponseBody
-	public JSON categories() {
-		return new JSON(true, "查询成功").append("categories",
-				CategoryUtil.getCategories());
-	}
-
-	/**
-	 * 查询首页置顶图片数据
-	 */
-	@RequestMapping("headerimages")
-	@ResponseBody
-	public JSON headerimages() {
+	public JSON categoriesandrecommends() {
+		//mork data start
 		List<String> images = Arrays.asList("images/header/1.png",
 				"images/header/2.png", "images/header/3.png",
 				"images/header/4.png");
@@ -147,9 +139,13 @@ public class Api {
 		for(int i=1;i<=43;i++){
 			allimage.add("images/header/1 ("+i+").jpg");
 		}
-		
-		
-		return new JSON(true, "查询成功").append("headerimages", allimage);
+		List<Recommend> recommends = new ArrayList<Recommend>();
+		// mork data end
+		for(int i=0;i<allimage.size();i++){
+			String url = allimage.get(0);
+			recommends.add(new Recommend(i,url,null,i));
+		}
+		return new JSON(true, "查询成功").append("categories",
+				CategoryUtil.getCategories()).append("recommends", recommends);
 	}
-
 }
