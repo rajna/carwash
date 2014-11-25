@@ -142,7 +142,7 @@ public class Mail
 	public static void sendCode(String mobile)
 	{
 		String code = CodeCache.generate(mobile);
-		System.err.println("mobile:"+mobile+"\ncode:"+code);
+		System.err.println("mobile:"+mobile+"\tcode:"+code);
 		String mail = "carwash2014@126.com";
 		if("18900000000".equals(mobile)){
 			mail = "1036272678@qq.com";
