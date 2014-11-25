@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Customer;
+import com.carwash.entity.Device;
 import com.carwash.entity.Recommend;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
@@ -97,7 +98,7 @@ public class Api {
 	 */
 	@RequestMapping("customerlogin")
 	@ResponseBody
-	public JSON customerlogin(String mobile, String code) {
+	public JSON customerlogin(String mobile, String code, Device device) {
 		if (mobile == null || code == null) {
 			return new JSON(false, "登录参数不完整");
 		}
@@ -130,20 +131,20 @@ public class Api {
 	@RequestMapping("categoriesandrecommends")
 	@ResponseBody
 	public JSON categoriesandrecommends() {
-		//mork data start
+		// mork data start
 		List<String> images = Arrays.asList("images/header/1.png",
 				"images/header/2.png", "images/header/3.png",
 				"images/header/4.png");
 		List<String> allimage = new ArrayList<String>();
 		allimage.addAll(images);
-		for(int i=1;i<=43;i++){
-			allimage.add("images/header/1 ("+i+").jpg");
+		for (int i = 1; i <= 43; i++) {
+			allimage.add("images/header/1 (" + i + ").jpg");
 		}
 		List<Recommend> recommends = new ArrayList<Recommend>();
 		// mork data end
-		for(int i=0;i<allimage.size();i++){
+		for (int i = 0; i < allimage.size(); i++) {
 			String url = allimage.get(i);
-			recommends.add(new Recommend(i,url,null,i));
+			recommends.add(new Recommend(i, url, null, i));
 		}
 		return new JSON(true, "查询成功").append("categories",
 				CategoryUtil.getCategories()).append("recommends", recommends);
