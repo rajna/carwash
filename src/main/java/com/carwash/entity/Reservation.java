@@ -54,7 +54,7 @@ public class Reservation
 	private String customer_mobile; // 客户手机号码
 	private String customer_name;// 客户的名字
 	private Date create_date = new Date(); // 预约创建日期
-	private Date reservation_date; // 预约服务时间
+	private String service_time; // 预约服务时间
 	private String address; // 客户服务地址
 	private String message_text; // 用户发起预约时输入的文字描述
 	private String message_voice_url; // 用户发起预约时的语言留言
@@ -101,16 +101,6 @@ public class Reservation
 		this.create_date = create_date;
 	}
 
-	public Date getReservation_date()
-	{
-		return reservation_date;
-	}
-
-	public void setReservation_date(Date reservation_date)
-	{
-		this.reservation_date = reservation_date;
-	}
-
 	@NotBlank(message = "预约地址称不能为空")
 	@Length(min = 1, max = 50, message = "预约地址长度应在{min}-{max}之间")
 	@Column(nullable = false)
@@ -152,6 +142,16 @@ public class Reservation
 	public void setCustomer_mobile(String customer_mobile)
 	{
 		this.customer_mobile = customer_mobile;
+	}
+
+	public String getService_time()
+	{
+		return service_time;
+	}
+
+	public void setService_time(String service_time)
+	{
+		this.service_time = service_time;
 	}
 
 }
