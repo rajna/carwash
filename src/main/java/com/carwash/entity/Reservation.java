@@ -47,9 +47,11 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cw_reservation")
 @org.hibernate.annotations.Table(comment = "预约数据模型", appliesTo = "cw_reservation")
-public class Reservation {
+public class Reservation
+{
 	private int id;
 	private int customer_id; // 客户的编号
+	private String customer_mobile; // 客户手机号码
 	private String customer_name;// 客户的名字
 	private Date create_date = new Date(); // 预约创建日期
 	private Date reservation_date; // 预约服务时间
@@ -59,70 +61,97 @@ public class Reservation {
 
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public int getCustomer_id() {
+	public int getCustomer_id()
+	{
 		return customer_id;
 	}
 
-	public void setCustomer_id(int customer_id) {
+	public void setCustomer_id(int customer_id)
+	{
 		this.customer_id = customer_id;
 	}
 
-	public String getCustomer_name() {
+	public String getCustomer_name()
+	{
 		return customer_name;
 	}
 
-	public void setCustomer_name(String customer_name) {
+	public void setCustomer_name(String customer_name)
+	{
 		this.customer_name = customer_name;
 	}
 
-	public Date getCreate_date() {
+	public Date getCreate_date()
+	{
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(Date create_date)
+	{
 		this.create_date = create_date;
 	}
 
-	public Date getReservation_date() {
+	public Date getReservation_date()
+	{
 		return reservation_date;
 	}
 
-	public void setReservation_date(Date reservation_date) {
+	public void setReservation_date(Date reservation_date)
+	{
 		this.reservation_date = reservation_date;
 	}
+
 	@NotBlank(message = "预约地址称不能为空")
 	@Length(min = 1, max = 50, message = "预约地址长度应在{min}-{max}之间")
 	@Column(nullable = false)
-	public String getAddress() {
+	public String getAddress()
+	{
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(String address)
+	{
 		this.address = address;
 	}
 
-	public String getMessage_text() {
+	public String getMessage_text()
+	{
 		return message_text;
 	}
 
-	public void setMessage_text(String message_text) {
+	public void setMessage_text(String message_text)
+	{
 		this.message_text = message_text;
 	}
 
-	public String getMessage_voice_url() {
+	public String getMessage_voice_url()
+	{
 		return message_voice_url;
 	}
 
-	public void setMessage_voice_url(String message_voice_url) {
+	public void setMessage_voice_url(String message_voice_url)
+	{
 		this.message_voice_url = message_voice_url;
+	}
+
+	public String getCustomer_mobile()
+	{
+		return customer_mobile;
+	}
+
+	public void setCustomer_mobile(String customer_mobile)
+	{
+		this.customer_mobile = customer_mobile;
 	}
 
 }
