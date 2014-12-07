@@ -53,6 +53,7 @@ import com.carwash.util.Constant;
 public class Customer {
 	private int id;
 	private String name;
+	private String carNo;
 	private String mobile; // 手机号码不能重复
 	private String password = UUID.randomUUID().toString().replace("-", "");
 	private Date create_date = new Date(); // 用户注册时间
@@ -249,6 +250,21 @@ public class Customer {
 	 */
 	public void setLogin_date(Date login_date) {
 		this.login_date = login_date;
+	}
+
+	/**
+	 * @return the carNo
+	 */
+	public String getCarNo() {
+		return carNo;
+	}
+
+	/**
+	 * @param carNo
+	 *            the carNo to set
+	 */
+	public void setCarNo(String carNo) {
+		this.carNo = carNo;
 	}
 
 }
