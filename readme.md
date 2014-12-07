@@ -31,7 +31,9 @@
 		+ `{message}`,String
 		+ `{password}`,String,只有success为true的时候才会有该数据
 		+ `{mobile}`,String,只有success为true的时候才会有该数据
-二、客户数据接口
+		
+
+二、产品数据接口
 ------------		
 #### 1.产品分类与手机首界面的推荐信息
 - URL:`/api/categoriesandrecommends`
