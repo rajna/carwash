@@ -58,7 +58,7 @@ import com.carwash.util.cache.CodeCache;
  * <p>
  */
 @Controller
-@RequestMapping("api")
+@RequestMapping("/api")
 public class Api {
 	@Autowired
 	private CustomerServiceI customerService;
@@ -153,4 +153,10 @@ public class Api {
 		return new JSON(true, "查询成功").append("categories",
 				CategoryUtil.getCategories()).append("recommends", recommends);
 	}
+	
+	
+	
+	
+	
+	
 }
