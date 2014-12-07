@@ -43,7 +43,7 @@
 		+ `{recommends}`,jsonarray
 		
 #### 2.产品列表(根据分类查询的列表)
-- URL:`/api/prodecut/list`
+- URL:`/api/product/list`
 	* 请求方式:get OR post
 	* 参数`{cid}`：int
 	* 返回json,包含的key-value:
