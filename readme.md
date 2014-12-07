@@ -3,6 +3,8 @@
 
 #### 公共参数
 - 手机号码正则表达式:`^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\\d{8}$`
+- 服务器api接口 http://xx.xx.xx.xx:xxxx/carwarsh/
+- 服务器资源路径 http://xx.xx.xx.xx:xxxx/cwresources/
 
 
 
@@ -29,8 +31,9 @@
 		+ `{message}`,String
 		+ `{password}`,String,只有success为true的时候才会有该数据
 		+ `{mobile}`,String,只有success为true的时候才会有该数据
-		
-#### 3.产品分类与手机首界面的推荐信息
+二、客户数据接口
+------------		
+#### 1.产品分类与手机首界面的推荐信息
 - URL:`/api/categoriesandrecommends`
 	* 请求方式:get OR post
 	* 返回json,包含的key-value:
@@ -38,4 +41,12 @@
 		+ `{message}`,String
 		+ `{categories}`,jsonarray
 		+ `{recommends}`,jsonarray
-	
+		
+#### 2.产品列表(根据分类查询的列表)
+- URL:`/api/prodecut/list`
+	* 请求方式:get OR post
+	* 参数`{cid}`：int
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{products}`,jsonarray
