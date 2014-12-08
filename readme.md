@@ -35,6 +35,8 @@
 #### 3.客户预约
 - URL:`/api/reservation/post`
 	* 请求方式:post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
 	* 参数`{service_time}`：String
 	* 参数`{address}`：String
 	* 参数`{message_text}`：String
