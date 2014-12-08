@@ -42,6 +42,7 @@ import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ReservationServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
+import com.carwash.util.VoiceUtil;
 
 /**
  * 预约服务web接口
@@ -69,7 +70,21 @@ public class ApiReservation
 		Customer customer = Interceptor.threadLocalCustomer.get();
 		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
 				.append("relogin", true); }
-		String message_voice_url = null;
-		return null;
+		String message_voice_url = VoiceUtil.saveToDisk(request, voiceFile);
+		reservation.setCustomer_id(customer.getId());
+		reservation.setCustomer_mobile(customer.getMobile());
+		reservation.setCustomer_name(customer.getName());
+		reservation.setInuse(true);
+		reservation.setMessage_voice_url(message_voice_url);
+		try
+		{
+			reservationService.saveOrUpdate(reservation);
+			return new JSON(true, "预约成功");
+		}
+		catch (Exception e)
+		{
+
+		}
+		return new JSON(false, "预约失败");
 	}
 }

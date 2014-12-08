@@ -26,6 +26,8 @@
 package com.carwash.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +51,7 @@ public class VoiceUtil
 	 * @param request
 	 * @return
 	 */
-	private static File getResourcePath(HttpServletRequest request)
+	private static File getResource(HttpServletRequest request)
 	{
 		String projectDir = request.getSession().getServletContext()
 				.getRealPath("/");
@@ -72,6 +74,7 @@ public class VoiceUtil
 	public static String saveToDisk(HttpServletRequest request,
 			MultipartFile voiceFile)
 	{
+		String voiceName = null;
 		if (request == null || voiceFile == null) { return null; }
 		try
 		{
@@ -81,29 +84,30 @@ public class VoiceUtil
 				is.close();
 				return null;
 			}
+			File voiceDir = new File(getResource(request),
+					Constant.VOICESSOURCES);
+			if (!voiceDir.exists())
+			{
+				voiceDir.mkdirs();
+			}
 			String extension = FilenameUtils.getExtension(voiceFile
 					.getOriginalFilename());
-			String fileName = System.currentTimeMillis() + "." + extension;
-
+			voiceName = System.currentTimeMillis() + "." + extension;
+			File file = new File(voiceDir, voiceName);
+			FileOutputStream fos = new FileOutputStream(file);
+			byte[] bytes = new byte[1024];
+			int len;
+			while ((len = is.read(bytes)) != -1)
+			{
+				fos.write(bytes);
+			}
+			fos.close();
+			is.close();
 		}
 		catch (Exception e)
 		{
+			return null;
 		}
-
-		if (voiceFile != null)
-		{
-			String extension = FilenameUtils.getExtension(voiceFile
-					.getOriginalFilename());
-			String fileName = System.currentTimeMillis() + "." + extension;
-			try
-			{
-
-			}
-			catch (Exception e)
-			{
-			}
-		}
-
-		return null;
+		return Constant.VOICESSOURCES + voiceName;
 	}
 }
