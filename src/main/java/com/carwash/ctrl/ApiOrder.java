@@ -19,55 +19,48 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          ApiProduct.java
+ * File name:          ApiOrder.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.ctrl;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.carwash.entity.Product;
-import com.carwash.service.ProductServiceI;
+import com.carwash.entity.Customer;
+import com.carwash.interceptor.Cwp;
+import com.carwash.interceptor.Interceptor;
+import com.carwash.service.OrderServiceI;
+import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 
 /**
- * 产品web接口
+ * 用户订单web接口
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年12月7日 Time:下午10:25:15
+ * Date:2014年12月8日 Time:上午11:14:53
  * <p>
  */
 @Controller
-@RequestMapping("/api/product")
-public class ApiProduct
+@RequestMapping("/api/order")
+public class ApiOrder
 {
 	@Autowired
-	private ProductServiceI productService;
+	private OrderServiceI orderService;
 
-	/**
-	 * 通过产品分类cid查询产品列表
-	 */
+	@Cwp
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list(String cid)
+	public JSON list()
 	{
-		int id = 0;
-		try
-		{
-			id = Integer.valueOf(cid);
-		}
-		catch (Exception e)
-		{
-		}
-		List<Product> products = productService.find(id);
-		return new JSON(true, "查询成功").append("products", products);
+		Customer customer = Interceptor.threadLocalCustomer.get();
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
+		return new JSON(true, "查询成功").append("orders",
+				orderService.findByCid(customer.getId()));
 	}
-
 }

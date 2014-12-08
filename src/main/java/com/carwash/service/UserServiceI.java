@@ -35,11 +35,14 @@ import com.carwash.entity.User;
  * Date:2014年11月13日 Time:下午11:16:41
  * <p>
  */
-public interface UserServiceI {
+public interface UserServiceI
+{
 	/**
 	 * 用户数据的保存与修改
 	 * 
 	 * @param user
 	 */
 	public void saveOrUpdate(User o);
+
+	
 }

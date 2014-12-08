@@ -25,6 +25,12 @@
  */
 package com.carwash.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 手机端界面推荐图片与其他信息
  * <p>
@@ -33,6 +39,9 @@ package com.carwash.entity;
  * Date:2014年11月25日 Time:上午11:46:22
  * <p>
  */
+@Entity
+@Table(name = "cw_recommend")
+@org.hibernate.annotations.Table(comment = "手机端界面推荐图片与其他信息", appliesTo = "cw_recommend")
 public class Recommend
 {
 	private int id;
@@ -57,6 +66,8 @@ public class Recommend
 		super();
 	}
 
+	@Id
+	@GeneratedValue
 	public int getId()
 	{
 		return id;
@@ -67,6 +78,7 @@ public class Recommend
 		this.id = id;
 	}
 
+	@Column(nullable = false)
 	public String getPic()
 	{
 		return pic;

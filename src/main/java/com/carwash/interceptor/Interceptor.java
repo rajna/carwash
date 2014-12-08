@@ -28,13 +28,18 @@ package com.carwash.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.carwash.ctrl.CustomerCache;
+import com.carwash.entity.Customer;
+import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
+import com.carwash.util.JSON;
 
 /**
- * TODO: File comments
+ * spring mvc 拦截器
  * <p>
  * Author: ilvel
  * <p>
@@ -43,48 +48,69 @@ import com.carwash.util.Constant;
  */
 public class Interceptor implements HandlerInterceptor
 {
+	private CustomerServiceI customerService;
+	public final static ThreadLocal<Customer> threadLocalCustomer = new ThreadLocal<Customer>();
 
 	@Override
 	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object handler) throws Exception
+			HttpServletResponse response, Object obj) throws Exception
 	{
 		response.setContentType(Constant.HTMLCONTENTTYPE);
 		request.setCharacterEncoding(Constant.UTF8);
+		HandlerMethod handler = (HandlerMethod) obj;
+		Cwp cwp = handler.getMethodAnnotation(Cwp.class);
+		if (cwp == null || !cwp.value()) { return true; }
+		Object mObj = request.getParameter("mobile");
+		Object pObj = request.getParameter("password");
+		if (mObj == null || pObj == null)
+		{
+			response.getWriter().write(
+					new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+							true).toJSONString());
+			return false;
+		}
+		Customer customer = CustomerCache.get(mObj.toString());
+		if (customer == null)
+		{
+			// 缓存中未取到用户的话直接从数据库中查询
+			customer = customerService.getByMobile(mObj.toString());
+			CustomerCache.put(customer);
+		}
+		if (customer == null || !pObj.toString().equals(customer.getPassword()))
+		{
+			response.getWriter().write(
+					new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+							true).toJSONString());
+			return false;
+		}
+		threadLocalCustomer.set(customer);
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet
-	 * .http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * java.lang.Object, org.springframework.web.servlet.ModelAndView)
-	 */
 	@Override
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception
 	{
-		// TODO Auto-generated method stub
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.web.servlet.HandlerInterceptor#afterCompletion(javax
-	 * .servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * java.lang.Object, java.lang.Exception)
-	 */
 	@Override
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception
 	{
-		// TODO Auto-generated method stub
 
+	}
+
+	public CustomerServiceI getCustomerService()
+	{
+		return customerService;
+	}
+
+	public void setCustomerService(CustomerServiceI customerService)
+	{
+		this.customerService = customerService;
 	}
 
 }

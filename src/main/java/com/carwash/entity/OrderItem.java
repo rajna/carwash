@@ -45,7 +45,8 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cw_orderitem")
 @org.hibernate.annotations.Table(comment = "购物车条目数据模型", appliesTo = "cw_orderitem")
-public class OrderItem {
+public class OrderItem
+{
 	private int id;
 	private int productId; // 产品编号
 	private int categoryId; // 分类id 分类数据从xml数据读取
@@ -57,70 +58,87 @@ public class OrderItem {
 
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public int getProductId() {
+	public int getProductId()
+	{
 		return productId;
 	}
 
-	public void setProductId(int productId) {
+	public void setProductId(int productId)
+	{
 		this.productId = productId;
 	}
 
-	public int getCategoryId() {
+	public int getCategoryId()
+	{
 		return categoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(int categoryId)
+	{
 		this.categoryId = categoryId;
 	}
+
 	@NotBlank(message = "产品名称不能为空")
-	@Length(min=1,max=20,message="产品名称长度应在{min}-{max}之间")
+	@Length(min = 1, max = 20, message = "产品名称长度应在{min}-{max}之间")
 	@Column(nullable = false)
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
 	@Column(columnDefinition = "text")
-	public String getDescription() {
+	public String getDescription()
+	{
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		this.description = description;
 	}
 
-	public double getPrice() {
+	public double getPrice()
+	{
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(double price)
+	{
 		this.price = price;
 	}
 
-	public String getImageLink() {
+	public String getImageLink()
+	{
 		return imageLink;
 	}
 
-	public void setImageLink(String imageLink) {
+	public void setImageLink(String imageLink)
+	{
 		this.imageLink = imageLink;
 	}
 
-	public int getAmount() {
+	public int getAmount()
+	{
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(int amount)
+	{
 		this.amount = amount;
 	}
 

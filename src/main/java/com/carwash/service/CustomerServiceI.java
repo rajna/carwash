@@ -25,6 +25,8 @@
  */
 package com.carwash.service;
 
+import java.util.List;
+
 import com.carwash.entity.Customer;
 
 /**
@@ -35,7 +37,8 @@ import com.carwash.entity.Customer;
  * Date:2014年11月15日 Time:下午1:49:16
  * <p>
  */
-public interface CustomerServiceI {
+public interface CustomerServiceI
+{
 	/**
 	 * 客户数据的保存与修改
 	 * 
@@ -47,4 +50,10 @@ public interface CustomerServiceI {
 	 */
 	public Customer getByMobile(String mobile);
 
+	/**
+	 * 查询所有的客户信息
+	 * 
+	 * @return
+	 */
+	public List<Customer> find();
 }

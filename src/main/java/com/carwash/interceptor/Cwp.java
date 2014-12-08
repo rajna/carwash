@@ -19,28 +19,30 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          Constant.java
+ * File name:          Cwp.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
-package com.carwash.util;
+package com.carwash.interceptor;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 常量类
+ * carwash权限拦截
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年11月13日 Time:下午10:06:07
+ * Date:2014年12月8日 Time:上午11:13:34
  * <p>
  */
-public class Constant
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Cwp
 {
-	/**
-	 * 手机号码校验规则
-	 */
-	public final static String MOBILEREG = "^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\\d{8}$";
-	public final static String HTMLCONTENTTYPE = "text/html;charset=UTF-8";
-	public final static String JSONCONTENTTYPE = "application/Json;charset=UTF-8";
-	public final static String UTF8 = "UTF-8";
-	public final static String ACCOUNTERROR = "账号或密码错误";
+	boolean value() default true;
 }

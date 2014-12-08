@@ -26,8 +26,10 @@
 package com.carwash.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,10 +58,11 @@ public class Order
 	private int id;
 	private int customerId; // 客户编号
 	private int reservationId; // 预约编号
+	private String carNo;
 	private String orderId;
 	private Date create_date = new Date();
 	private String address; // 服务地址 限制
-	private Set<OrderItem> orderItems;
+	private Set<OrderItem> orderItems = new HashSet<OrderItem>();
 	private Date reservation_date; // 预约服务时间
 	private int workerId; // 服务人员编号
 	private int supportorId; // 客服人员编号
@@ -78,6 +81,16 @@ public class Order
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public String getCarNo()
+	{
+		return carNo;
+	}
+
+	public void setCarNo(String carNo)
+	{
+		this.carNo = carNo;
 	}
 
 	public int getReservationId()
@@ -123,7 +136,7 @@ public class Order
 		this.address = address;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "oid")
 	public Set<OrderItem> getOrderItems()
 	{
