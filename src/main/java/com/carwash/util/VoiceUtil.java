@@ -95,6 +95,7 @@ public class VoiceUtil
 			File file = new File(voiceDir, voiceName);
 			FileOutputStream fos = new FileOutputStream(file);
 			byte[] bytes = new byte[1024];
+			@SuppressWarnings("unused")
 			int len;
 			while ((len = is.read(bytes)) != -1)
 			{
