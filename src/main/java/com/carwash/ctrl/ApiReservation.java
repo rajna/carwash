@@ -77,7 +77,7 @@ public class ApiReservation
 		reservation.setCustomer_name(customer.getName());
 		reservation.setInuse(true);
 		String address = reservation.getAddress();
-		if (address == null || "".equals(address))
+		if (address == null || "".equals(address.trim()))
 		{
 			address = "未填写地址";
 			reservation.setAddress(address);
