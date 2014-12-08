@@ -52,3 +52,14 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{products}`,jsonarray
+		
+二、订单数据接口
+#### 1.订单列表(根据客户查询的列表)
+- URL:`/api/order/list`
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{orders}`,jsonarray

@@ -127,7 +127,6 @@ public class OrderTest
 					oi.setProductId(product.getId());
 					order.getOrderItems().add(oi);
 				}
-				System.out.println(order.getOrderItems().size());
 				orderService.saveOrUpdate(order);
 			}
 		}
