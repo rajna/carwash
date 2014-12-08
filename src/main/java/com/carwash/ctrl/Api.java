@@ -44,6 +44,7 @@ import com.carwash.entity.Customer;
 import com.carwash.entity.Device;
 import com.carwash.entity.Recommend;
 import com.carwash.service.CustomerServiceI;
+import com.carwash.service.RecommendServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 import com.carwash.util.Mail;
@@ -59,40 +60,38 @@ import com.carwash.util.cache.CodeCache;
  */
 @Controller
 @RequestMapping("/api")
-public class Api
-{
+public class Api {
 	@Autowired
 	private CustomerServiceI customerService;
+	@Autowired
+	private RecommendServiceI recommendService;
 
 	/**
 	 * 客户通过手机端获取验证码
 	 */
 	@RequestMapping(value = "customercode")
 	@ResponseBody
-	public JSON customercode(final String mobile)
-	{
-		if (mobile == null) { return new JSON(false, "手机号码不能为空"); }
+	public JSON customercode(final String mobile) {
+		if (mobile == null) {
+			return new JSON(false, "手机号码不能为空");
+		}
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		if (!m.find()) {
+			return new JSON(false, "手机号码不规范");
+		}
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null)
-		{
+		if (customer == null) {
 			customer = new Customer(mobile);
-			try
-			{
+			try {
 				customerService.saveOrUpdate(customer);
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				return new JSON(false, "验证码发送失败");
 			}
 		}
 		// 将发送手机验证码交个异步线程处理
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
+		new Thread(new Runnable() {
+			public void run() {
 				Mail.sendCode(mobile);
 			}
 		}).start();
@@ -104,25 +103,29 @@ public class Api
 	 */
 	@RequestMapping("customerlogin")
 	@ResponseBody
-	public JSON customerlogin(String mobile, String code, Device device)
-	{
-		if (mobile == null || code == null) { return new JSON(false, "登录参数不完整"); }
+	public JSON customerlogin(String mobile, String code, Device device) {
+		if (mobile == null || code == null) {
+			return new JSON(false, "登录参数不完整");
+		}
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
-		if (!CodeCache.verfiy(mobile, code)) { return new JSON(false, "验证码不正确"); }
+		if (!m.find()) {
+			return new JSON(false, "手机号码不规范");
+		}
+		if (!CodeCache.verfiy(mobile, code)) {
+			return new JSON(false, "验证码不正确");
+		}
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null) { return new JSON(false, "该手机号码尚未注册"); }
+		if (customer == null) {
+			return new JSON(false, "该手机号码尚未注册");
+		}
 		String password = UUID.randomUUID().toString().replace("-", "");
 		customer.setPassword(password);
-		try
-		{
+		try {
 			BeanUtils.copyProperties(device, customer);
 			customer.setLogin_date(new Date());
 			customerService.saveOrUpdate(customer);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return new JSON(false, "对不起,登录失败");
 		}
 		return new JSON(true, "登录成功").append("mobile", mobile).append(
@@ -134,27 +137,10 @@ public class Api
 	 */
 	@RequestMapping("categoriesandrecommends")
 	@ResponseBody
-	public JSON categoriesandrecommends()
-	{
-		// mork data start
-		List<String> images = Arrays.asList("images/header/1.png",
-				"images/header/2.png", "images/header/3.png",
-				"images/header/4.png");
-		List<String> allimage = new ArrayList<String>();
-		allimage.addAll(images);
-		for (int i = 1; i <= 43; i++)
-		{
-			allimage.add("images/header/1 (" + i + ").jpg");
-		}
-		List<Recommend> recommends = new ArrayList<Recommend>();
-		// mork data end
-		for (int i = 0; i < allimage.size(); i++)
-		{
-			String url = allimage.get(i);
-			recommends.add(new Recommend(i, url, null, i));
-		}
+	public JSON categoriesandrecommends() {
 		return new JSON(true, "查询成功").append("categories",
-				CategoryUtil.getCategories()).append("recommends", recommends);
+				CategoryUtil.getCategories()).append("recommends",
+				recommendService.findInuse());
 	}
 
 }

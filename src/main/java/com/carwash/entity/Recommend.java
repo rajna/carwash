@@ -42,8 +42,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cw_recommend")
 @org.hibernate.annotations.Table(comment = "手机端界面推荐图片与其他信息", appliesTo = "cw_recommend")
-public class Recommend
-{
+public class Recommend {
 	private int id;
 	// 推荐图片的相对地址
 	private String pic;
@@ -51,62 +50,70 @@ public class Recommend
 	private String url;
 	// 产品编号,用于手机端跳转使用
 	private int pid;
+	private boolean inuse = true;
 
-	public Recommend(int id, String pic, String url, int pid)
-	{
+	public Recommend(String pic, String url, int pid, boolean inuse) {
+		super();
+		this.pic = pic;
+		this.url = url;
+		this.pid = pid;
+		this.inuse = inuse;
+	}
+
+	public Recommend(int id, String pic, String url, int pid, boolean inuse) {
 		super();
 		this.id = id;
 		this.pic = pic;
 		this.url = url;
 		this.pid = pid;
+		this.inuse = inuse;
 	}
 
-	public Recommend()
-	{
+	public Recommend() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
 
 	@Column(nullable = false)
-	public String getPic()
-	{
+	public String getPic() {
 		return pic;
 	}
 
-	public void setPic(String pic)
-	{
+	public void setPic(String pic) {
 		this.pic = pic;
 	}
 
-	public String getUrl()
-	{
+	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(String url)
-	{
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public int getPid()
-	{
+	public int getPid() {
 		return pid;
 	}
 
-	public void setPid(int pid)
-	{
+	public void setPid(int pid) {
 		this.pid = pid;
+	}
+
+	public boolean isInuse() {
+		return inuse;
+	}
+
+	public void setInuse(boolean inuse) {
+		this.inuse = inuse;
 	}
 
 }

@@ -19,14 +19,11 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          ProductTest.java
+ * File name:          RecommendTest.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
 package com.carwash.test;
-
-import java.util.List;
-import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,54 +33,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.carwash.category.Category;
-import com.carwash.category.CategoryUtil;
-import com.carwash.entity.Product;
-import com.carwash.service.ProductServiceI;
+import com.carwash.entity.Recommend;
+import com.carwash.service.RecommendServiceI;
 
 /**
- * 产品测试类
+ * 客户端推荐图测试类
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年12月7日 Time:下午9:41:26
+ * Date:2014年12月8日 Time:下午8:36:57
  * <p>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 @Transactional
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
-public class ProductTest {
+public class RecommendTest {
 	@Autowired
-	private ProductServiceI productService;
+	private RecommendServiceI recommendService;
 
-	/**
-	 * 新增产品数据至数据库用于测试
-	 */
 	@Test
-	public void generateProduct() {
-		// 先查询出分类
-		List<Category> categories = CategoryUtil.getCategories();
-		for (Category c : categories) {
-			for (int i = 0; i < 30; i++) {
-				String image = "images/product/1 ("
-						+ (new Random().nextInt(102) + 1) + ").jpg";
-				Product product = new Product();
-				product.setCategoryId(c.getId());
-				product.setDescription("产品测试数据");
-				product.setImageLink(image);
-				product.setInuse(true);
-				product.setName(c.getName() + "分类产品" + (i + 1));
-				product.setPrice(new Random().nextInt(500) + 40);
-				productService.saveOrUpdate(product);
-			}
+	public void generateRecommend() {
+		for (int i = 1; i <= 43; i++) {
+			String imagePath = "images/header/1 (" + i + ").jpg";
+			Recommend r = new Recommend(imagePath, null, i, true);
+			recommendService.saveOrUpdate(r);
 		}
-	}
-	
-	
-	@Test
-	public void findProduct(){
-		int size = productService.find().size();
-		System.out.println(size);
 	}
 }
