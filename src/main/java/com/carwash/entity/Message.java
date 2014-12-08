@@ -44,55 +44,65 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cw_message")
 @org.hibernate.annotations.Table(comment = "用户的消息数据模型", appliesTo = "cw_message")
-public class Message {
+public class Message
+{
 	private int id;
-	private int userId;
+	private int customerId;
 	private String content;
 	private Date create_date = new Date();
 	private boolean readed; // 是否已读
 
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-
 	@Column(columnDefinition = "text")
-	public String getContent() {
+	public String getContent()
+	{
 		return content;
 	}
 
-	public void setContent(String content) {
+	public void setContent(String content)
+	{
 		this.content = content;
 	}
 
-	public Date getCreate_date() {
+	public Date getCreate_date()
+	{
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(Date create_date)
+	{
 		this.create_date = create_date;
 	}
 
-	public boolean isReaded() {
+	public boolean isReaded()
+	{
 		return readed;
 	}
 
-	public void setReaded(boolean readed) {
+	public void setReaded(boolean readed)
+	{
 		this.readed = readed;
 	}
 
+	public int getCustomerId()
+	{
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId)
+	{
+		this.customerId = customerId;
+	}
 
 }

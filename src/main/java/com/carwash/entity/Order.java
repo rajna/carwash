@@ -51,8 +51,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cw_order")
 @org.hibernate.annotations.Table(comment = "订单数据结构模型", appliesTo = "cw_order")
-public class Order {
+public class Order
+{
 	private int id;
+	private int customerId; // 客户编号
 	private int reservationId; // 预约编号
 	private String orderId;
 	private Date create_date = new Date();
@@ -68,113 +70,153 @@ public class Order {
 
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public int getReservationId() {
+	public int getReservationId()
+	{
 		return reservationId;
 	}
 
-	public void setReservationId(int reservationId) {
+	public void setReservationId(int reservationId)
+	{
 		this.reservationId = reservationId;
 	}
 
-	public String getOrderId() {
+	public String getOrderId()
+	{
 		return orderId;
 	}
 
-	public void setOrderId(String orderId) {
+	public void setOrderId(String orderId)
+	{
 		this.orderId = orderId;
 	}
 
-	public Date getCreate_date() {
+	public Date getCreate_date()
+	{
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(Date create_date)
+	{
 		this.create_date = create_date;
 	}
 
 	@NotBlank(message = "订单地址称不能为空")
 	@Length(min = 1, max = 50, message = "订单地址长度应在{min}-{max}之间")
 	@Column(nullable = false)
-	public String getAddress() {
+	public String getAddress()
+	{
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(String address)
+	{
 		this.address = address;
 	}
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "oid")
-	public Set<OrderItem> getOrderItems() {
+	public Set<OrderItem> getOrderItems()
+	{
 		return orderItems;
 	}
 
-	public void setOrderItems(Set<OrderItem> orderItems) {
+	public void setOrderItems(Set<OrderItem> orderItems)
+	{
 		this.orderItems = orderItems;
 	}
 
-	public Date getReservation_date() {
+	public Date getReservation_date()
+	{
 		return reservation_date;
 	}
 
-	public void setReservation_date(Date reservation_date) {
+	public void setReservation_date(Date reservation_date)
+	{
 		this.reservation_date = reservation_date;
 	}
 
-	public int getWorkerId() {
+	public int getWorkerId()
+	{
 		return workerId;
 	}
 
-	public void setWorkerId(int workerId) {
+	public void setWorkerId(int workerId)
+	{
 		this.workerId = workerId;
 	}
 
-	public int getSupportorId() {
+	public int getSupportorId()
+	{
 		return supportorId;
 	}
 
-	public void setSupportorId(int supportorId) {
+	public void setSupportorId(int supportorId)
+	{
 		this.supportorId = supportorId;
 	}
 
-	public String getWorkerName() {
+	public String getWorkerName()
+	{
 		return workerName;
 	}
 
-	public void setWorkerName(String workerName) {
+	public void setWorkerName(String workerName)
+	{
 		this.workerName = workerName;
 	}
 
-	public String getSupportorName() {
+	public String getSupportorName()
+	{
 		return supportorName;
 	}
 
-	public void setSupportorName(String supportorName) {
+	public void setSupportorName(String supportorName)
+	{
 		this.supportorName = supportorName;
 	}
 
-	public OrderStatus getOrderStatus() {
+	public OrderStatus getOrderStatus()
+	{
 		return orderStatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
+	public void setOrderStatus(OrderStatus orderStatus)
+	{
 		this.orderStatus = orderStatus;
+		if (orderStatus.equals(OrderStatus.COMPLETED))
+		{
+			setComplete_date(new Date());
+		}
 	}
 
-	public Date getComplete_date() {
+	public Date getComplete_date()
+	{
 		return complete_date;
 	}
 
-	public void setComplete_date(Date complete_date) {
+	public void setComplete_date(Date complete_date)
+	{
 		this.complete_date = complete_date;
+	}
+
+	public int getCustomerId()
+	{
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId)
+	{
+		this.customerId = customerId;
 	}
 
 }

@@ -3,8 +3,8 @@
 
 #### 公共参数
 - 手机号码正则表达式:`^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\\d{8}$`
-- 服务器api接口 http://xx.xx.xx.xx:xxxx/carwarsh/
-- 服务器资源路径 http://xx.xx.xx.xx:xxxx/cwresources/
+- 服务器api接口:`http://xx.xx.xx.xx:xxxx/carwarsh/`
+- 服务器资源路径:`http://xx.xx.xx.xx:xxxx/cwresources/`
 
 
 
