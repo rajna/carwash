@@ -58,6 +58,7 @@ public class Reservation
 	private String address; // 客户服务地址
 	private String message_text; // 用户发起预约时输入的文字描述
 	private String message_voice_url; // 用户发起预约时的语言留言
+	private String carNo; // 车牌号
 	private boolean inuse = true;
 
 	@Id
@@ -163,6 +164,16 @@ public class Reservation
 	public void setInuse(boolean inuse)
 	{
 		this.inuse = inuse;
+	}
+
+	public String getCarNo()
+	{
+		return carNo;
+	}
+
+	public void setCarNo(String carNo)
+	{
+		this.carNo = carNo;
 	}
 
 }

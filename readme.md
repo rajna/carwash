@@ -38,6 +38,7 @@
 	* 参数`{service_time}`：String
 	* 参数`{address}`：String
 	* 参数`{message_text}`：String
+	* 参数`{carNo}`：String
 	* 参数`{voice}`：file二进制文件,上传
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
