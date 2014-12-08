@@ -97,6 +97,7 @@ public class OrderTest
 
 				Order order = new Order();
 				order.setCustomerId(c.getId());
+				order.setCarNo(c.getCarNo());
 				order.setAddress(c.getMobile() + ":地址" + (i + 1));
 				order.setOrderId(UUID.randomUUID().toString().replace("-", "")
 						.toLowerCase());
