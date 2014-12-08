@@ -70,7 +70,6 @@ public class ApiReservation
 		Customer customer = Interceptor.threadLocalCustomer.get();
 		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
 				.append("relogin", true); }
-		// TODO校验是否填写车牌
 		String message_voice_url = VoiceUtil.saveToDisk(request, voiceFile);
 		reservation.setCustomer_id(customer.getId());
 		reservation.setCustomer_mobile(customer.getMobile());
