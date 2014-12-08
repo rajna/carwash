@@ -58,6 +58,7 @@ public class Reservation
 	private String address; // 客户服务地址
 	private String message_text; // 用户发起预约时输入的文字描述
 	private String message_voice_url; // 用户发起预约时的语言留言
+	private boolean inuse = true;
 
 	@Id
 	@GeneratedValue
@@ -152,6 +153,16 @@ public class Reservation
 	public void setService_time(String service_time)
 	{
 		this.service_time = service_time;
+	}
+
+	public boolean isInuse()
+	{
+		return inuse;
+	}
+
+	public void setInuse(boolean inuse)
+	{
+		this.inuse = inuse;
 	}
 
 }
