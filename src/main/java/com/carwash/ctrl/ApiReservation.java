@@ -77,6 +77,12 @@ public class ApiReservation
 		reservation.setCustomer_name(customer.getName());
 		reservation.setInuse(true);
 		reservation.setMessage_voice_url(message_voice_url);
+		String address = reservation.getAddress();
+		if (address == null || "".equals(address))
+		{
+			address = "未填写地址";
+			reservation.setAddress(address);
+		}
 		try
 		{
 			reservationService.saveOrUpdate(reservation);
@@ -84,7 +90,7 @@ public class ApiReservation
 		}
 		catch (Exception e)
 		{
-
+			e.printStackTrace();
 		}
 		return new JSON(false, "预约失败");
 	}
