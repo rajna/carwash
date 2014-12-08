@@ -25,10 +25,7 @@
  */
 package com.carwash.ctrl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +39,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Device;
-import com.carwash.entity.Recommend;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.service.RecommendServiceI;
 import com.carwash.util.Constant;
