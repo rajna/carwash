@@ -60,11 +60,12 @@ public class OrderServiceImpl implements OrderServiceI {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cid", cid);
 		StringBuffer hql = new StringBuffer(
-				"From Order o where o.customerId=:cid");
+				"From Order o where o.customerId=:cid ");
 		if (status != null) {
 			params.put("status", status);
-			hql.append(" and o.orderStatus=:status");
+			hql.append(" and o.orderStatus=:status ");
 		}
+		hql.append(" Order By o.create_date desc");
 		return oDao.find(hql.toString(), params);
 	}
 
