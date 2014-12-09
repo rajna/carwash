@@ -46,7 +46,21 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		
-
+#### 3.客户修改姓名与车牌号
+- URL:`/api/customer/update`
+	* 请求方式:get Or post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{name}`：String
+	* 参数`{carNo}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{password}`：String,只有success为true的时候才会有该数据
+		+ `{mobile}`：String,只有success为true的时候才会有该数据
+		+ `{name}`,String,只有success为true的时候才会有该数据
+		+ `{carNo}`：String,只有success为true的时候才会有该数据
+		
 二、产品数据接口
 ------------		
 #### 1.产品分类与手机首界面的推荐信息
@@ -77,4 +91,4 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{orders}`,jsonarray
+		+ `{orders}`,jsonarray,只有success为true的时候才会有该数据

@@ -56,7 +56,8 @@ import com.carwash.util.cache.CodeCache;
  */
 @Controller
 @RequestMapping("/api")
-public class Api {
+public class Api
+{
 	@Autowired
 	private CustomerServiceI customerService;
 	@Autowired
@@ -67,27 +68,32 @@ public class Api {
 	 */
 	@RequestMapping(value = "customercode")
 	@ResponseBody
-	public JSON customercode(final String mobile) {
-		if (mobile == null) {
-			return new JSON(false, "手机号码不能为空");
-		}
+	public JSON customercode(final String mobile)
+	{
+		if (mobile == null) { return new JSON(false, "手机号码不能为空"); }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) {
-			return new JSON(false, "手机号码不规范");
-		}
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null) {
+		if (customer != null && !customer.isInuse()) { return new JSON(false,
+				"该账户已停用"); }
+		if (customer == null)
+		{
 			customer = new Customer(mobile);
-			try {
+			try
+			{
 				customerService.saveOrUpdate(customer);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				return new JSON(false, "验证码发送失败");
 			}
 		}
 		// 将发送手机验证码交个异步线程处理
-		new Thread(new Runnable() {
-			public void run() {
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
 				Mail.sendCode(mobile);
 			}
 		}).start();
@@ -99,33 +105,32 @@ public class Api {
 	 */
 	@RequestMapping("customerlogin")
 	@ResponseBody
-	public JSON customerlogin(String mobile, String code, Device device) {
-		if (mobile == null || code == null) {
-			return new JSON(false, "登录参数不完整");
-		}
+	public JSON customerlogin(String mobile, String code, Device device)
+	{
+		if (mobile == null || code == null) { return new JSON(false, "登录参数不完整"); }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) {
-			return new JSON(false, "手机号码不规范");
-		}
-		if (!CodeCache.verfiy(mobile, code)) {
-			return new JSON(false, "验证码不正确");
-		}
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		if (!CodeCache.verfiy(mobile, code)) { return new JSON(false, "验证码不正确"); }
 		Customer customer = customerService.getByMobile(mobile);
-		if (customer == null) {
-			return new JSON(false, "该手机号码尚未注册");
-		}
+		if (customer == null) { return new JSON(false, "该手机号码尚未注册"); }
+		if (!customer.isInuse()) { return new JSON(false, "该账户已停用"); }
 		String password = UUID.randomUUID().toString().replace("-", "");
 		customer.setPassword(password);
-		try {
+		try
+		{
 			BeanUtils.copyProperties(device, customer);
 			customer.setLogin_date(new Date());
 			customerService.saveOrUpdate(customer);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "对不起,登录失败");
 		}
-		return new JSON(true, "登录成功").append("mobile", mobile).append(
-				"password", password);
+		return new JSON(true, "登录成功").append("mobile", mobile)
+				.append("password", password)
+				.append("carNo", customer.getCarNo())
+				.append("name", customer.getName());
 	}
 
 	/**
@@ -133,7 +138,8 @@ public class Api {
 	 */
 	@RequestMapping("categoriesandrecommends")
 	@ResponseBody
-	public JSON categoriesandrecommends() {
+	public JSON categoriesandrecommends()
+	{
 		return new JSON(true, "查询成功").append("categories",
 				CategoryUtil.getCategories()).append("recommends",
 				recommendService.findInuse());
