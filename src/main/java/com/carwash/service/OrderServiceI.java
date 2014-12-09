@@ -28,6 +28,7 @@ package com.carwash.service;
 import java.util.List;
 
 import com.carwash.entity.Order;
+import com.carwash.entity.OrderStatus;
 
 /**
  * 订单服务接口
@@ -37,14 +38,12 @@ import com.carwash.entity.Order;
  * Date:2014年12月8日 Time:上午10:05:55
  * <p>
  */
-public interface OrderServiceI
-{
+public interface OrderServiceI {
 	public void saveOrUpdate(Order order);
 
 	/**
 	 * 查询客户订单
 	 */
-	public List<Order> findByCid(int cid);
-	
-	
+	public List<Order> findByCid(int cid, OrderStatus status);
+
 }

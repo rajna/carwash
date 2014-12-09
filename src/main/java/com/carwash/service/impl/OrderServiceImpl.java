@@ -25,12 +25,15 @@
  */
 package com.carwash.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.carwash.entity.Order;
+import com.carwash.entity.OrderStatus;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.OrderServiceI;
 
@@ -43,21 +46,26 @@ import com.carwash.service.OrderServiceI;
  * <p>
  */
 @Service("orderService")
-public class OrderServiceImpl implements OrderServiceI
-{
+public class OrderServiceImpl implements OrderServiceI {
 	@Autowired
 	private BaseDaoI<Order> oDao;
 
 	@Override
-	public void saveOrUpdate(Order order)
-	{
+	public void saveOrUpdate(Order order) {
 		oDao.saveOrUpdate(order);
 	}
 
 	@Override
-	public List<Order> findByCid(int cid)
-	{
-		return oDao.find("From Order o where o.customerId=" + cid);
+	public List<Order> findByCid(int cid, OrderStatus status) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cid", cid);
+		StringBuffer hql = new StringBuffer(
+				"From Order o where o.customerId=:cid");
+		if (status != null) {
+			params.put("status", status);
+			hql.append(" and o.orderStatus=:status");
+		}
+		return oDao.find(hql.toString(), params);
 	}
 
 }

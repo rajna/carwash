@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.Customer;
+import com.carwash.entity.OrderStatus;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.OrderServiceI;
@@ -47,20 +48,30 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/order")
-public class ApiOrder
-{
+public class ApiOrder {
 	@Autowired
 	private OrderServiceI orderService;
 
 	@Cwp
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list()
-	{
+	public JSON list(String status) {
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
-				.append("relogin", true); }
+		if (customer == null) {
+			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+					true);
+		}
+		OrderStatus os = null;
+
+		if (status != null) {
+			status = status.toUpperCase().trim();
+			try {
+				os = OrderStatus.valueOf(status);
+			} catch (Exception e) {
+			}
+		}
+
 		return new JSON(true, "查询成功").append("orders",
-				orderService.findByCid(customer.getId()));
+				orderService.findByCid(customer.getId(), os));
 	}
 }

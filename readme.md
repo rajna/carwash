@@ -88,6 +88,8 @@
 	* 请求方式:get OR post
 	* 参数`{mobile}`：String
 	* 参数`{password}`：String
+	* 参数`{status}`：String(可选,不传递该参数则查询所有)
+		+ 枚举类型`(PROCESSING,CANCELED,COMPLETED)`,如果传递其他参数,则查询所有
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
