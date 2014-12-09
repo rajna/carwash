@@ -26,13 +26,18 @@
 package com.carwash.entity;
 
 /**
- * TODO: File comments
+ * 订单状态枚举类型
  * <p>
- * Author:   ilvelh
+ * Author: ilvelh
  * <p>
- * Date:2014-11-11   Time:下午5:10:30
+ * Date:2014-11-11 Time:下午5:10:30
  * <p>
  */
 public enum OrderStatus {
-	PROCESSING,CANCELED,COMPLETED
+	PROCESSING("处理中订单"), COMPLETED("已完成订单"), CANCELED("已取消订单");
+	String status;
+
+	private OrderStatus(String status) {
+		this.status = status;
+	}
 }
