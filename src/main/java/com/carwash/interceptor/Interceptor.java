@@ -57,6 +57,7 @@ public class Interceptor implements HandlerInterceptor
 	{
 		response.setContentType(Constant.HTMLCONTENTTYPE);
 		request.setCharacterEncoding(Constant.UTF8);
+		response.setCharacterEncoding(Constant.UTF8);
 		HandlerMethod handler = (HandlerMethod) obj;
 		Cwp cwp = handler.getMethodAnnotation(Cwp.class);
 		if (cwp == null || !cwp.value()) { return true; }
