@@ -73,7 +73,7 @@ public class OrderTest
 		String c = (char) (new Random().nextInt(26) + 65) + "";
 		return "苏" + c + (new Random().nextInt(10))
 				+ (new Random().nextInt(10)) + (new Random().nextInt(10))
-				+ (new Random().nextInt(10));
+				+ (new Random().nextInt(10)) + (new Random().nextInt(10));
 	}
 
 	@Test
