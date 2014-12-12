@@ -19,10 +19,16 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.1</version>
 		</dependency>
+		<!-- jersey http client -->
 		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>1.17.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>2.5</version>
+			<version>1.17.1</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>

@@ -40,8 +40,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import com.carwash.util.cache.CodeCache;
-
 /**
  * 邮件工具，测试使用
  * <p>
@@ -89,8 +87,8 @@ public class Mail
 	 * @param mails
 	 *            String... 邮件发送的地址 可变参数
 	 */
-	private static void sendMail(boolean isHtml, String subject,
-			String content, String... mails)
+	public static void sendMail(boolean isHtml, String subject, String content,
+			String... mails)
 	{
 		// Message message = getMessage();
 		if (message == null) { return; }
@@ -137,18 +135,6 @@ public class Mail
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public static void sendCode(String mobile)
-	{
-		String code = CodeCache.generate(mobile);
-		System.err.println("mobile:"+mobile+"\tcode:"+code);
-		String mail = "carwash2014@126.com";
-		if("18900000000".equals(mobile)){
-			mail = "1036272678@qq.com";
-		}
-		sendMail(false, " 验证码:" + code, "已发送到您的手机(" + mobile + ")验证码为:"
-				+ code+",请勿回复", mail);
 	}
 
 	static class MyAuthenticator extends Authenticator
