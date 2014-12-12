@@ -43,7 +43,7 @@ import com.carwash.service.CustomerServiceI;
 import com.carwash.service.RecommendServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
-import com.carwash.util.Mail;
+import com.carwash.util.PhoneMessage;
 import com.carwash.util.cache.CodeCache;
 
 /**
@@ -89,9 +89,11 @@ public class Api {
 			}
 		}
 		// 将发送手机验证码交个异步线程处理
+
 		new Thread(new Runnable() {
 			public void run() {
-				Mail.sendCode(mobile);
+				PhoneMessage.sendLoginMessage(mobile);
+
 			}
 		}).start();
 		return new JSON(true, "验证码发送成功").append("leftTime", CodeCache.leftTime);
