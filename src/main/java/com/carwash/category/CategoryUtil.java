@@ -94,4 +94,18 @@ public class CategoryUtil
 		Collections.sort(cs);
 		return cs;
 	}
+
+	public static Category getCategory(int id)
+	{
+		Category category = null;
+		for (Category c : getCategories())
+		{
+			if (c.getId() == id)
+			{
+				category = c;
+				break;
+			}
+		}
+		return category;
+	}
 }

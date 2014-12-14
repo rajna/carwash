@@ -32,6 +32,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.carwash.category.Category;
+import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Product;
 import com.carwash.service.ProductServiceI;
 import com.carwash.util.JSON;
@@ -67,6 +69,16 @@ public class ApiProduct
 		{
 		}
 		List<Product> products = productService.find(id);
+		for (Product p : products)
+		{
+			String cateogoryName = "未知分类";
+			Category category = CategoryUtil.getCategory(p.getCategoryId());
+			if (category != null)
+			{
+				cateogoryName = category.getName();
+			}
+			p.setCategory(cateogoryName);
+		}
 		return new JSON(true, "查询成功").append("products", products);
 	}
 
