@@ -27,9 +27,10 @@
 
 	<core-item label="产品列表" tag="productlist" url="productlist"></core-item>
 	</core-submenu> <core-submenu icon="chevron-right" label="区域管理"> <core-item
-		label="区域列表" tag="arealist" url="arealist.html"></core-item> </core-submenu> <core-submenu
+		label="区域列表" tag="arealist" url="arealist"></core-item> </core-submenu> <core-submenu
 		icon="chevron-right" label="预约管理"> <core-item
-		label="预约列表" tag="arealist" url="orderlist.html"></core-item> </core-submenu> </nav-frame>
+		label="预约列表" tag="reservationlist" url="reservationlist"></core-item>
+	</core-submenu> </nav-frame>
 	<!--
   <core-drawer-panel id="drawerPanel">
 

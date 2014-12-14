@@ -63,4 +63,22 @@ public class ManagerCtrl
 		mv.addObject("categories", categories);
 		return mv;
 	}
+
+	@RequestMapping("/arealist")
+	public ModelAndView arealist(HttpServletRequest request)
+	{
+		List<Category> categories = CategoryUtil.getCategories();
+		ModelAndView mv = new ModelAndView("/manager/productlist");
+		mv.addObject("categories", categories);
+		return mv;
+	}
+
+	@RequestMapping("/reservationlist")
+	public ModelAndView reservationlist(HttpServletRequest request)
+	{
+		List<Category> categories = CategoryUtil.getCategories();
+		ModelAndView mv = new ModelAndView("/manager/productlist");
+		mv.addObject("categories", categories);
+		return mv;
+	}
 }
