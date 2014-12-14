@@ -37,13 +37,18 @@ import com.carwash.entity.Customer;
  * Date:2014年11月15日 Time:下午1:49:16
  * <p>
  */
-public interface CustomerServiceI
-{
+public interface CustomerServiceI {
+
 	/**
 	 * 客户数据的保存与修改
 	 * 
 	 */
 	public void saveOrUpdate(Customer o);
+
+	/**
+	 * 查询用户信息
+	 */
+	public Customer get(int id);
 
 	/**
 	 * 通过手机号码查询客户
@@ -52,8 +57,6 @@ public interface CustomerServiceI
 
 	/**
 	 * 查询所有的客户信息
-	 * 
-	 * @return
 	 */
 	public List<Customer> find();
 }
