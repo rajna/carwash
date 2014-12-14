@@ -60,12 +60,12 @@ public class ProductServiceImpl implements ProductServiceI {
 		params.put("inuse", true);
 		params.put("categoryId", categoryId);
 		return pDao
-				.find("From Product p where p.categoryId=:categoryId and p.inuse=:inuse",
+				.find("From Product p where p.categoryId=:categoryId and p.inuse=:inuse Order By p.id desc",
 						params);
 	}
 
 	@Override
 	public List<Product> find() {
-		return pDao.find("From Product p ");
+		return pDao.find("From Product p Order By p.id desc");
 	}
 }
