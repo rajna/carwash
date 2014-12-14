@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
@@ -47,29 +48,29 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/customer")
-public class ApiCustomer {
+public class ApiCustomer
+{
 	@Autowired
 	private CustomerServiceI customerService;
 
 	@Cwp
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String carNo, String name) {
+	public JSON update(String carNo, String name)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		customer.setCarNo(carNo);
 		customer.setName(name);
-		try {
+		try
+		{
 			customerService.saveOrUpdate(customer);
-			return new JSON(true, "更新成功")
-					.append("mobile", customer.getMobile())
-					.append("password", customer.getPassword())
-					.append("carNo", carNo).append("name", name)
-					.append("credit", customer.getCredit());
-		} catch (Exception e) {
+			return new JSON(true, "更新成功").append("customer",
+					JSONObject.toJSONString(customer));
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "更新失败");
 		}
 	}
