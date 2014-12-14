@@ -1,5 +1,5 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%
@@ -81,8 +81,8 @@
 	<paper-button label="取消" affirmative on-click="{{cansleEdit}}"></paper-button>
 	<paper-button label="确定" affirmative autofocus></paper-button> </paper-dialog>
 
-	<core-ajax auto url="../api/product/list"
-		params='{"cid":"1"}' handleAs="json"></core-ajax>
+	<core-ajax auto url="../api/product/list" params='{"cid":"1"}'
+		handleAs="json"></core-ajax>
 
 	<template repeat="{{data}}">
 	<div>{{name}}</div>
