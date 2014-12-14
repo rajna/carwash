@@ -139,7 +139,7 @@
 					name : 'price',
 					title : '价格'
 				}, {
-					name : 'pagenum',
+					name : 'category',
 					title : '分类'
 				}, {
 					name : 'description',
