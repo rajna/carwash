@@ -12,7 +12,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>cleancar</title>
+<title>产品管理页</title>
 <meta charset='utf8'>
 <meta name="viewport"
 	content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
