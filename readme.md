@@ -29,10 +29,21 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{password}`,String,只有success为true的时候才会有该数据
-		+ `{mobile}`,String,只有success为true的时候才会有该数据
+		+ `{customer}`：JSONObject customer对象模型
+
+
+#### 3.客户数据查询
+- URL:`/api/customer/view`
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{customer}`：JSONObject customer对象模型(success=true时存在)
 		
-#### 3.客户预约
+		
+#### 4.客户预约
 - URL:`/api/reservation/post`
 	* 请求方式:post
 	* 参数`{mobile}`：String
@@ -46,7 +57,7 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		
-#### 3.客户修改姓名与车牌号
+#### 5.客户修改姓名与车牌号
 - URL:`/api/customer/update`
 	* 请求方式:get Or post
 	* 参数`{mobile}`：String
@@ -56,10 +67,7 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{password}`：String,只有success为true的时候才会有该数据
-		+ `{mobile}`：String,只有success为true的时候才会有该数据
-		+ `{name}`,String,只有success为true的时候才会有该数据
-		+ `{carNo}`：String,只有success为true的时候才会有该数据
+		+ `{customer}`：JSONObject customer对象模型(success=true时存在)
 		
 二、产品数据接口
 ------------		
@@ -93,4 +101,4 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{orders}`,jsonarray,只有success为true的时候才会有该数据
+		+ `{orders}`,jsonarray(success=true时存在)
