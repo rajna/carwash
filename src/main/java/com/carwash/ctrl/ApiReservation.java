@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.carwash.entity.Customer;
-import com.carwash.entity.OrderStatus;
 import com.carwash.entity.Reservation;
 import com.carwash.entity.ReservationStatus;
 import com.carwash.interceptor.Cwp;
@@ -105,7 +104,6 @@ public class ApiReservation {
 					true);
 		}
 		ReservationStatus os = null;
-
 		if (status != null) {
 			status = status.toUpperCase().trim();
 			try {
