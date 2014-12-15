@@ -56,8 +56,20 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		
-#### 5.客户修改姓名与车牌号
+
+#### 5.客户预约查询
+- URL:`/api/reservation/list`
+	* 请求方式:post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{status}`：String(必选)
+		+ 枚举类型`(PROCESSING,CANCELED,COMPLETED)`,如果传递其他参数,则查询不到任何数据
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{reservations}`,jsonarray(success=true时存在)
+				
+#### 6.客户修改姓名与车牌号
 - URL:`/api/customer/update`
 	* 请求方式:get Or post
 	* 参数`{mobile}`：String

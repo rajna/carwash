@@ -47,8 +47,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cw_reservation")
 @org.hibernate.annotations.Table(comment = "预约数据模型", appliesTo = "cw_reservation")
-public class Reservation
-{
+public class Reservation {
 	private int id;
 	private int customer_id; // 客户的编号
 	private String customer_mobile; // 客户手机号码
@@ -59,121 +58,106 @@ public class Reservation
 	private String message_text; // 用户发起预约时输入的文字描述
 	private String message_voice_url; // 用户发起预约时的语言留言
 	private String carNo; // 车牌号
-	private boolean inuse = true;
+	private ReservationStatus reservationStatus;
 
 	@Id
 	@GeneratedValue
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public int getCustomer_id()
-	{
+	public int getCustomer_id() {
 		return customer_id;
 	}
 
-	public void setCustomer_id(int customer_id)
-	{
+	public void setCustomer_id(int customer_id) {
 		this.customer_id = customer_id;
 	}
 
-	public String getCustomer_name()
-	{
+	public String getCustomer_name() {
 		return customer_name;
 	}
 
-	public void setCustomer_name(String customer_name)
-	{
+	public void setCustomer_name(String customer_name) {
 		this.customer_name = customer_name;
 	}
 
-	public Date getCreate_date()
-	{
+	public Date getCreate_date() {
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date)
-	{
+	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
 	}
 
 	@NotBlank(message = "预约地址称不能为空")
 	@Length(min = 1, max = 50, message = "预约地址长度应在{min}-{max}之间")
 	@Column(nullable = false)
-	public String getAddress()
-	{
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address)
-	{
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public String getMessage_text()
-	{
+	public String getMessage_text() {
 		return message_text;
 	}
 
-	public void setMessage_text(String message_text)
-	{
+	public void setMessage_text(String message_text) {
 		this.message_text = message_text;
 	}
 
-	public String getMessage_voice_url()
-	{
+	public String getMessage_voice_url() {
 		return message_voice_url;
 	}
 
-	public void setMessage_voice_url(String message_voice_url)
-	{
+	public void setMessage_voice_url(String message_voice_url) {
 		this.message_voice_url = message_voice_url;
 	}
 
-	public String getCustomer_mobile()
-	{
+	public String getCustomer_mobile() {
 		return customer_mobile;
 	}
 
-	public void setCustomer_mobile(String customer_mobile)
-	{
+	public void setCustomer_mobile(String customer_mobile) {
 		this.customer_mobile = customer_mobile;
 	}
 
-	public String getService_time()
-	{
+	public String getService_time() {
 		return service_time;
 	}
 
-	public void setService_time(String service_time)
-	{
+	public void setService_time(String service_time) {
 		this.service_time = service_time;
 	}
 
-	public boolean isInuse()
-	{
-		return inuse;
-	}
-
-	public void setInuse(boolean inuse)
-	{
-		this.inuse = inuse;
-	}
-
-	public String getCarNo()
-	{
+	public String getCarNo() {
 		return carNo;
 	}
 
-	public void setCarNo(String carNo)
-	{
+	public void setCarNo(String carNo) {
 		this.carNo = carNo;
+	}
+
+	/**
+	 * @return the reservationStatus
+	 */
+	public ReservationStatus getReservationStatus() {
+		return reservationStatus;
+	}
+
+	/**
+	 * @param reservationStatus
+	 *            the reservationStatus to set
+	 */
+	public void setReservationStatus(ReservationStatus reservationStatus) {
+		this.reservationStatus = reservationStatus;
 	}
 
 }

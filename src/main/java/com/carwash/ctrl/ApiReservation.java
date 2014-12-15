@@ -36,7 +36,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.carwash.entity.Customer;
+import com.carwash.entity.OrderStatus;
 import com.carwash.entity.Reservation;
+import com.carwash.entity.ReservationStatus;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ReservationServiceI;
@@ -54,8 +56,7 @@ import com.carwash.util.VoiceUtil;
  */
 @Controller
 @RequestMapping("/api/reservation")
-public class ApiReservation
-{
+public class ApiReservation {
 	@Autowired
 	private ReservationServiceI reservationService;
 
@@ -65,32 +66,55 @@ public class ApiReservation
 	public JSON post(
 			HttpServletRequest request,
 			Reservation reservation,
-			@RequestParam(required = false, value = "voice") MultipartFile voiceFile)
-	{
+			@RequestParam(required = false, value = "voice") MultipartFile voiceFile) {
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
-				.append("relogin", true); }
+		if (customer == null) {
+			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+					true);
+		}
 		String message_voice_url = VoiceUtil.saveToDisk(request, voiceFile);
 		reservation.setMessage_voice_url(message_voice_url);
 		reservation.setCustomer_id(customer.getId());
 		reservation.setCustomer_mobile(customer.getMobile());
 		reservation.setCustomer_name(customer.getName());
-		reservation.setInuse(true);
+		reservation.setReservationStatus(ReservationStatus.PROCESSING);
 		String address = reservation.getAddress();
-		if (address == null || "".equals(address.trim()))
-		{
+		if (address == null || "".equals(address.trim())) {
 			address = "未填写地址";
 			reservation.setAddress(address);
 		}
-		try
-		{
+		try {
 			reservationService.saveOrUpdate(reservation);
 			return new JSON(true, "预约成功");
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return new JSON(false, "预约失败");
 	}
+
+	/**
+	 * 客户端查询接口
+	 */
+	@Cwp
+	@RequestMapping("list")
+	@ResponseBody
+	public JSON list(String status) {
+		Customer customer = Interceptor.threadLocalCustomer.get();
+		if (customer == null) {
+			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+					true);
+		}
+		ReservationStatus os = null;
+
+		if (status != null) {
+			status = status.toUpperCase().trim();
+			try {
+				os = ReservationStatus.valueOf(status);
+			} catch (Exception e) {
+			}
+		}
+		return new JSON(true, "查询成功").append("reservations",
+				reservationService.findByCid(customer.getId(), os));
+	}
+
 }
