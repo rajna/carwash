@@ -59,6 +59,8 @@ public class ApiProduct
 	/**
 	 * 新增產品
 	 */
+	@RequestMapping("post")
+	@ResponseBody
 	public JSON post(Product product)
 	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
