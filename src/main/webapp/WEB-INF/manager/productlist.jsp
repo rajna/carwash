@@ -63,32 +63,50 @@
 .c-p-caption paper-radio-button{
 	display:inline-block;
 }
+.p-select{
+	width:100%;
+}
 </style>
 </head>
 
 
-<body>
+<body unresolved>
 
 	<paper-dialog heading="添加" class="c-p-addProduct"
 		transition="paper-dialog-transition-center">
 	<div class="c-form">
 		<div class="f-inner">
-
-			<paper-input label="名称" inputValue="{{formdata.name}}"
+		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
+		    <core-ajax id="addProductform" 
+		               handleAs="json" 
+		               response="{{response}}" 
+		               on-core-response="{{handleReg}}" 
+		               url="/api/reg" 
+		               params="{{product}}" 
+		               method="post">
+		    </core-ajax>
+			<select class="p-select">
+			<c:forEach items="${categories }" var="category">
+					<option  name='${category.id }'>${category.name }</option>
+			</c:forEach>
+			</select>
+			
+			<paper-input label="名称" inputValue="{{product.name}}"
 				placeholder="名称" floatingLabel></paper-input>
-			<paper-input label="价格" min="0" inputValue="{{formdata.price}}"
+			<paper-input label="价格" min="0" inputValue="{{product.price}}"
 				placeholder="价格" floatingLabel></paper-input>
-			<paper-input label="分类" inputValue="{{formdata.type}}"
-				placeholder="分类" floatingLabel></paper-input>
-			<paper-input label="描述" inputValue="{{formdata.desc}}"
+			
+			<paper-input label="描述" inputValue="{{product.description}}"
 				placeholder="描述" floatingLabel></paper-input>
+			<input type="file" name="File" id="p-file">
+			</template>
 		</div>
 	</div>
 
-	<paper-button label="取消" affirmative on-click="{{cansleEdit}}"></paper-button>
+	<paper-button label="取消" affirmative></paper-button>
 	<paper-button label="确定" affirmative autofocus></paper-button> </paper-dialog>
 
-	<core-ajax auto url="../api/product/list"
+	<core-ajax auto url="../api/product/list" class="p_list"
 		params='{"cid":"1"}' handleAs="json"></core-ajax>
 
 	<template repeat="{{data}}">
@@ -132,12 +150,15 @@
 		});
 		
 		var p_category = document.querySelector('.p_category');
-		var ajax = document.querySelector("core-ajax");
+		var ajax = document.querySelector('.p_list');
 		
 		p_category.addEventListener("change",function(e){
 			var chenked=e.target.getAttribute('name');
 			ajax.params={"cid":chenked};
 		});
+		
+		var add_p_form=document.querySelector('#add_p_form');
+		var addProductformajax = document.querySelector('.addProductform');
 
 		window.addEventListener('polymer-ready', function() {
 			
