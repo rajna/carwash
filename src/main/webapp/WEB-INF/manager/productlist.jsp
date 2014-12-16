@@ -58,7 +58,6 @@
 <link href="../../cwresources/components/core-ajax/core-ajax.html"
 	rel="import">
 <link href="../mycomponents/productcard/p-table.html" rel="import">
-<link href="../mycomponents/productcard/p-form.html" rel="import">
 
 <link rel='stylesheet' href='../../cwresources/css/carhome.css'>
 <style>
@@ -76,9 +75,7 @@
 
 	<paper-dialog heading="添加" class="c-p-addProduct"
 		transition="paper-dialog-transition-center">
-			<p-form></p-form>
-	<!--  <div class="c-form">
-		<div class="f-inner">
+	<div class="c-form">
 		    <core-ajax class="addProductform" 
 		               handleAs="json"
 		               url="../api/product/post" 
@@ -86,28 +83,26 @@
 		    </core-ajax>
 		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
 		    
-			<select class="p-select" selectedIndex={{product.categoryId}}>
+			<select class="p-select" name="categoryId" selectedIndex={{product.categoryId}}>
 			<c:forEach items="${categories }" var="category">
-					<option  name='${category.id }'>${category.name }</option>
+					<option  name='${category.id}'>${category.name }</option>
 			</c:forEach>
 			</select>
 			
-			<paper-input label="名称" inputValue="{{product.name}}"
+			<paper-input label="名称" name="name" inputValue="{{product.name}}"
 				placeholder="名称" floatingLabel></paper-input>
-			<paper-input label="价格" min="0" inputValue="{{product.price}}"
+			<paper-input label="价格" name="price" min="0" inputValue="{{product.price}}"
 				placeholder="价格" floatingLabel></paper-input>
 			
-			<paper-input label="描述" inputValue="{{product.description}}"
+			<paper-input label="描述" name="description" inputValue="{{product.description}}"
 				placeholder="描述" floatingLabel></paper-input>
 			
 			</template>
-			<input type="file" bind="{{product.image}}" class="p_file">
-		</div>
+			<input type="file" name="image" bind="{{product.image}}" class="p_file">
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
 	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
-	-->
 	</paper-dialog>
 
 	<core-ajax auto url="../api/product/list" class="p_list"
@@ -128,7 +123,7 @@
 	<div flex=""></div>
 	<paper-menu-button icon="more-vert" halign="right" noTransition>
 	<paper-item class="addProductPanel">添加产品</paper-item> </paper-menu-button> </core-toolbar>
-	<div class="content c-product-main">
+	<div class="content c-product-main" >
 		<div class="c-p-caption">
 			<div horizontal layout>
 			    <paper-radio-group selected="${categories[0].id }" class="p_category">
@@ -158,35 +153,35 @@
 			//end显示产品添加表单
 			
 			//start提交添加表单
-			/*
+			var formData = new FormData();
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.product={};
 			var p_confirm_button = document.querySelector('.p_confirm');
 			var addProductformajax = document.querySelector('.addProductform');
 			p_confirm_button.addEventListener("click", function(e) {
-				addProductformajax.params=add_p_form.product;
-				console.log(addProductformajax.params);
+			   
+				var p=add_p_form.product;
+				formData.append("categoryId",p.categoryId+1);
+				formData.append("name",p.name);
+				formData.append("price",p.price);
+				formData.append("description",p.description);
 				addProductformajax.go();
 			});
-			
 			//end提交添加表单
 			
 			//start
 			var p_file=document.querySelector('.p_file');
 			p_file.addEventListener("change",function(e, detail, sender){
-				var formData = new FormData();
 		        for (var i = 0, f; f = e.target.files[i]; ++i) {
 		          formData.append(e.target.name,f,f.name);
 		        }
 		        add_p_form.product.image=e.target.value;
 		        addProductformajax.body = formData;
-		        console.log(addProductformajax.body);
 		        // Override default type set by core-ajax.
 		        // Allow browser to set the mime multipart content type itself. 
 		        addProductformajax.contentType = null;
 			});
 			//end
-			*/
 			
 			//start获取列表
 			var ajax = document.querySelector('.p_list');
