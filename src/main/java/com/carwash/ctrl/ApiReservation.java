@@ -43,7 +43,7 @@ import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ReservationServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
-import com.carwash.util.VoiceUtil;
+import com.carwash.util.UploadUtil;
 
 /**
  * 预约服务web接口
@@ -71,7 +71,7 @@ public class ApiReservation {
 			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
 					true);
 		}
-		String message_voice_url = VoiceUtil.saveToDisk(request, voiceFile);
+		String message_voice_url = UploadUtil.saveVoiceToDisk(request, voiceFile);
 		reservation.setMessage_voice_url(message_voice_url);
 		reservation.setCustomer_id(customer.getId());
 		reservation.setCustomer_mobile(customer.getMobile());

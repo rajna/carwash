@@ -27,10 +27,15 @@ package com.carwash.ctrl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.carwash.category.Category;
 import com.carwash.category.CategoryUtil;
@@ -38,8 +43,8 @@ import com.carwash.entity.Customer;
 import com.carwash.entity.Product;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ProductServiceI;
-import com.carwash.util.Constant;
 import com.carwash.util.JSON;
+import com.carwash.util.UploadUtil;
 
 /**
  * 产品web接口
@@ -59,17 +64,27 @@ public class ApiProduct
 	/**
 	 * 新增產品
 	 */
-	@RequestMapping("post")
+	@RequestMapping(value = "post", method = RequestMethod.POST)
 	@ResponseBody
-	public JSON post(Product product)
+	public JSON post(
+			HttpServletRequest request,
+			Product product,
+			@RequestParam(required = false, value = "image") MultipartFile imageFile)
 	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { 
-			//return new JSON(false, Constant.ACCOUNTERROR)
-				//.append("relogin", true); 
-			}
+		if (customer == null)
+		{
+			// return new JSON(false, Constant.ACCOUNTERROR)
+			// .append("relogin", true);
+		}
 		try
 		{
+			String imageLink = UploadUtil.saveProductImageToDisk(request,
+					imageFile);
+			if (imageLink != null)
+			{
+				product.setImageLink(imageLink);
+			}
 			productService.saveOrUpdate(product);
 			return new JSON(false, "操作成功");
 		}

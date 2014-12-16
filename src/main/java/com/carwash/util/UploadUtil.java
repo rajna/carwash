@@ -19,7 +19,7 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          VoiceUtil.java
+ * File name:          UploadUtil.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
@@ -42,7 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
  * Date:2014年12月8日 Time:下午2:16:26
  * <p>
  */
-public class VoiceUtil
+public class UploadUtil
 {
 	/**
 	 * 获取资源服务器基本路径
@@ -64,13 +64,57 @@ public class VoiceUtil
 	}
 
 	/**
+	 * 上传产品图片到本地
+	 */
+	public static String saveProductImageToDisk(HttpServletRequest request,
+			MultipartFile imageFile)
+	{
+		String imageName = null;
+		if (request == null || imageFile == null) { return null; }
+		try
+		{
+			InputStream is = imageFile.getInputStream();
+			if (is.available() == 0)
+			{
+				is.close();
+				return null;
+			}
+			File imageDir = new File(getResource(request),
+					Constant.IMAGESSOURCES + "product");
+			if (!imageDir.exists())
+			{
+				imageDir.mkdirs();
+			}
+			String extension = FilenameUtils.getExtension(imageFile
+					.getOriginalFilename());
+			imageName = System.currentTimeMillis() + "." + extension;
+			File file = new File(imageDir, imageName);
+			FileOutputStream fos = new FileOutputStream(file);
+			byte[] bytes = new byte[1024];
+			@SuppressWarnings("unused")
+			int len;
+			while ((len = is.read(bytes)) != -1)
+			{
+				fos.write(bytes);
+			}
+			fos.close();
+			is.close();
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+		return Constant.IMAGESSOURCES + "product/" + imageName;
+	}
+
+	/**
 	 * 上传用户音频数据
 	 * 
 	 * @param request
 	 * @param voiceFile
 	 * @return 音频数据相对路径
 	 */
-	public static String saveToDisk(HttpServletRequest request,
+	public static String saveVoiceToDisk(HttpServletRequest request,
 			MultipartFile voiceFile)
 	{
 		String voiceName = null;
