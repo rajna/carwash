@@ -77,16 +77,14 @@
 		transition="paper-dialog-transition-center">
 	<div class="c-form">
 		<div class="f-inner">
-		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
-		    <core-ajax id="addProductform" 
-		               handleAs="json" 
-		               response="{{response}}" 
-		               on-core-response="{{handleReg}}" 
-		               url="/api/reg" 
-		               params="{{product}}" 
+		    <core-ajax class="addProductform" 
+		               handleAs="json"
+		               url="../api/product/post" 
 		               method="post">
 		    </core-ajax>
-			<select class="p-select">
+		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
+		    
+			<select class="p-select" selectedIndex={{product.categoryId}}>
 			<c:forEach items="${categories }" var="category">
 					<option  name='${category.id }'>${category.name }</option>
 			</c:forEach>
@@ -105,7 +103,7 @@
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
-	<paper-button label="确定" affirmative autofocus></paper-button> </paper-dialog>
+	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> </paper-dialog>
 
 	<core-ajax auto url="../api/product/list" class="p_list"
 		params='{"cid":"1"}' handleAs="json"></core-ajax>
@@ -143,26 +141,32 @@
 	</div>
 	</core-scroll-header-panel>
 	<script>
-		var addProductPanel = document.querySelector('.addProductPanel');
-
-		var addProduct = document.querySelector('.c-p-addProduct');
-		addProductPanel.addEventListener('click', function(e) {
-			addProduct.toggle();
-		});
 		
-		var p_category = document.querySelector('.p_category');
-		var ajax = document.querySelector('.p_list');
-		
-		p_category.addEventListener("change",function(e){
-			var chenked=e.target.getAttribute('name');
-			ajax.params={"cid":chenked};
-		});
-		
-		var add_p_form=document.querySelector('#add_p_form');
-		var addProductformajax = document.querySelector('.addProductform');
-
 		window.addEventListener('polymer-ready', function() {
 			
+			//start显示产品添加表单
+			var addProductPanel = document.querySelector('.addProductPanel');
+			var addProduct = document.querySelector('.c-p-addProduct');
+			addProductPanel.addEventListener("click", function(e) {
+				addProduct.toggle();
+			});
+			//end显示产品添加表单
+			
+			//start提交添加表单
+			var add_p_form=document.querySelector('#add_p_form');
+			add_p_form.product={};
+			var p_confirm_button = document.querySelector('.p_confirm');
+			var addProductformajax = document.querySelector('.addProductform');
+			p_confirm_button.addEventListener("click", function(e) {
+				addProductformajax.params=add_p_form.product;
+				addProductformajax.go();
+			});
+			//end提交添加表单
+			
+			
+			
+			//start获取列表
+			var ajax = document.querySelector('.p_list');
 			ajax.addEventListener("core-response", function(e) {
 				var columns = [ {
 					name : 'imageLink',
@@ -188,6 +192,15 @@
 					columns : columns
 				};
 			});
+			//end获取列表
+			
+			//start根据类别切换列表
+			var p_category = document.querySelector('.p_category');
+			p_category.addEventListener("change",function(e){
+				var chenked=e.target.getAttribute('name');
+				ajax.params={"cid":chenked};
+			});
+			//end根据类别切换列表
 		});
 	</script>
 	<script src="../../cwresources/js/app.js"></script>
