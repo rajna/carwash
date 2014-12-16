@@ -34,8 +34,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.category.Category;
 import com.carwash.category.CategoryUtil;
+import com.carwash.entity.Customer;
 import com.carwash.entity.Product;
+import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ProductServiceI;
+import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 
 /**
@@ -52,6 +55,28 @@ public class ApiProduct
 {
 	@Autowired
 	private ProductServiceI productService;
+
+	/**
+	 * 新增產品
+	 */
+	public JSON post(Product product)
+	{
+		Customer customer = Interceptor.threadLocalCustomer.get();
+		if (customer == null) { 
+			//return new JSON(false, Constant.ACCOUNTERROR)
+				//.append("relogin", true); 
+			}
+		try
+		{
+			productService.saveOrUpdate(product);
+			return new JSON(false, "操作成功");
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "操作失败");
+		}
+
+	}
 
 	/**
 	 * 通过产品分类cid查询产品列表
