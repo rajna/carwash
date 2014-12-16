@@ -28,6 +28,7 @@ package com.carwash.service;
 import java.util.List;
 
 import com.carwash.entity.Reservation;
+import com.carwash.entity.ReservationStatus;
 
 /**
  * 预约服务接口
@@ -37,8 +38,7 @@ import com.carwash.entity.Reservation;
  * Date:2014年12月8日 Time:下午1:53:49
  * <p>
  */
-public interface ReservationServiceI
-{
+public interface ReservationServiceI {
 	public void saveOrUpdate(Reservation o);
 
 	/**
@@ -47,4 +47,14 @@ public interface ReservationServiceI
 	 * @return
 	 */
 	public List<Reservation> find();
+
+	/**
+	 * 查询预约
+	 * 
+	 * @param cid
+	 *            客户编号
+	 * @param rs
+	 *            状态
+	 */
+	public List<Reservation> findByCid(int cid, ReservationStatus status);
 }

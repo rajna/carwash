@@ -25,12 +25,16 @@
  */
 package com.carwash.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.carwash.entity.Reservation;
+import com.carwash.entity.ReservationStatus;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.ReservationServiceI;
 
@@ -43,21 +47,32 @@ import com.carwash.service.ReservationServiceI;
  * <p>
  */
 @Service("reservationService")
-public class ReservationServiceImpl implements ReservationServiceI
-{
+public class ReservationServiceImpl implements ReservationServiceI {
 	@Autowired
 	private BaseDaoI<Reservation> rDao;
 
 	@Override
-	public void saveOrUpdate(Reservation o)
-	{
+	public void saveOrUpdate(Reservation o) {
 		rDao.saveOrUpdate(o);
 	}
 
 	@Override
-	public List<Reservation> find()
-	{
+	public List<Reservation> find() {
 		return null;
+	}
+
+	@Override
+	public List<Reservation> findByCid(int cid, ReservationStatus status) {
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		if (cid == 0 || status == null) {
+			return reservations;
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cid", cid);
+		params.put("status", status);
+		StringBuffer hql = new StringBuffer(
+				"From Reservation r where r.customer_id=:cid and r.reservationStatus=:status Order By r.create_date desc");
+		return rDao.find(hql.toString(), params);
 	}
 
 }

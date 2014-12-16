@@ -131,7 +131,7 @@ public class Api
 			return new JSON(false, "对不起,登录失败");
 		}
 		return new JSON(true, "登录成功").append("customer",
-				JSONObject.toJSONString(customer));
+				JSONObject.toJSON(customer));
 	}
 
 	/**

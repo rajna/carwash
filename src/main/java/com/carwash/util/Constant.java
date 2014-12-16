@@ -33,8 +33,8 @@ package com.carwash.util;
  * Date:2014年11月13日 Time:下午10:06:07
  * <p>
  */
-public class Constant
-{
+public class Constant {
+	public final static boolean isDebug = true;
 	/**
 	 * 手机号码校验规则
 	 */

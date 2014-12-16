@@ -46,22 +46,21 @@ import com.carwash.service.CustomerServiceI;
  * <p>
  */
 @Service("customerService")
-public class CustomerServiceImpl implements CustomerServiceI
-{
+public class CustomerServiceImpl implements CustomerServiceI {
 	@Autowired
 	private BaseDaoI<Customer> customerDao;
 
 	@Override
-	public void saveOrUpdate(Customer o)
-	{
+	public void saveOrUpdate(Customer o) {
 		customerDao.saveOrUpdate(o);
 		CustomerCache.put(o);
 	}
 
 	@Override
-	public Customer getByMobile(String mobile)
-	{
-		if (mobile == null) { return null; }
+	public Customer getByMobile(String mobile) {
+		if (mobile == null) {
+			return null;
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("mobile", mobile);
 		return customerDao
@@ -69,9 +68,20 @@ public class CustomerServiceImpl implements CustomerServiceI
 	}
 
 	@Override
-	public List<Customer> find()
-	{
+	public List<Customer> find() {
 		return customerDao.find("From Customer c");
+	}
+
+	@Override
+	public Customer get(int id) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		Customer customer = customerDao.get("From Customer c where c.id=:id",
+				params);
+		if (customer != null) {
+			CustomerCache.put(customer);
+		}
+		return customer;
 	}
 
 }

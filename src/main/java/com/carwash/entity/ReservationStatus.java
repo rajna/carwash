@@ -19,44 +19,29 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          CustomerServiceI.java
+ * File name:          ReservationStatus.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
-package com.carwash.service;
-
-import java.util.List;
-
-import com.carwash.entity.Customer;
+package com.carwash.entity;
 
 /**
- * 客户的数据操作接口
+ * 预约状态枚举类型
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年11月15日 Time:下午1:49:16
+ * Date:2014年12月15日 Time:下午9:51:34
  * <p>
  */
-public interface CustomerServiceI {
+public enum ReservationStatus {
+	PROCESSING("处理中预约"), COMPLETED("已完成预约"), CANCELED("已取消预约");
+	String status;
 
-	/**
-	 * 客户数据的保存与修改
-	 * 
-	 */
-	public void saveOrUpdate(Customer o);
+	private ReservationStatus(String status) {
+		this.status = status;
+	}
 
-	/**
-	 * 查询用户信息
-	 */
-	public Customer get(int id);
-
-	/**
-	 * 通过手机号码查询客户
-	 */
-	public Customer getByMobile(String mobile);
-
-	/**
-	 * 查询所有的客户信息
-	 */
-	public List<Customer> find();
+	public String getStatus() {
+		return this.status;
+	}
 }
