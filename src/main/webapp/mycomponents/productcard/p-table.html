@@ -7,7 +7,7 @@
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 
 
-<polymer-element name="guwu-table" attributes="data columns sortColumn sortDescending">
+<polymer-element name="p-table" attributes="data columns sortColumn sortDescending">
     <template>
       <style>
     paper-dialog {
@@ -57,9 +57,9 @@ margin: 0.3em 0;
           <div class="c-form">
             <div class="f-inner">
               <core-ajax id="ajaxregform" handleAs="json" response="{{response}}" on-core-response="{{handleReg}}" url="" params="{{formdata}}" method="post" ></core-ajax>
-              <paper-input label="名字" inputValue="{{formdata.name}}" placeholder="名字:{{singleItem.name}}" floatingLabel></paper-input>
+              <paper-input label="名称" inputValue="{{formdata.name}}" placeholder="名称:{{singleItem.name}}" floatingLabel></paper-input>
               <paper-input label="价格" min="0" inputValue="{{formdata.user}}" placeholder="价格:{{singleItem.price}}"  floatingLabel></paper-input>
-              <paper-input label="类别"  inputValue="{{formdata.pagenum}}" placeholder="类别:{{singleItem.category}}" floatingLabel></paper-input>
+              <paper-input label="分类"  inputValue="{{formdata.pagenum}}" placeholder="分类:{{singleItem.category}}" floatingLabel></paper-input>
               <paper-input label="描述"  inputValue="{{formdata.description}}" placeholder="描述:{{singleItem.description}}" floatingLabel></paper-input>
             </div>
           </div>
@@ -111,7 +111,7 @@ margin: 0.3em 0;
               }
           });
       };
-      Polymer('guwu-table', {
+      Polymer('p-table', {
           data: [],
           columns: [],
           sortColumn: null,
