@@ -58,6 +58,7 @@
 <link href="../../cwresources/components/core-ajax/core-ajax.html"
 	rel="import">
 <link href="../mycomponents/productcard/p-table.html" rel="import">
+<link href="../mycomponents/productcard/p-form.html" rel="import">
 
 <link rel='stylesheet' href='../../cwresources/css/carhome.css'>
 <style>
@@ -75,7 +76,8 @@
 
 	<paper-dialog heading="添加" class="c-p-addProduct"
 		transition="paper-dialog-transition-center">
-	<div class="c-form">
+			<p-form></p-form>
+	<!--  <div class="c-form">
 		<div class="f-inner">
 		    <core-ajax class="addProductform" 
 		               handleAs="json"
@@ -97,13 +99,16 @@
 			
 			<paper-input label="描述" inputValue="{{product.description}}"
 				placeholder="描述" floatingLabel></paper-input>
-			<input type="file" name="File" id="p-file">
+			
 			</template>
+			<input type="file" bind="{{product.image}}" class="p_file">
 		</div>
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
-	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> </paper-dialog>
+	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
+	-->
+	</paper-dialog>
 
 	<core-ajax auto url="../api/product/list" class="p_list"
 		params='{"cid":"1"}' handleAs="json"></core-ajax>
@@ -153,17 +158,35 @@
 			//end显示产品添加表单
 			
 			//start提交添加表单
+			/*
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.product={};
 			var p_confirm_button = document.querySelector('.p_confirm');
 			var addProductformajax = document.querySelector('.addProductform');
 			p_confirm_button.addEventListener("click", function(e) {
 				addProductformajax.params=add_p_form.product;
+				console.log(addProductformajax.params);
 				addProductformajax.go();
 			});
+			
 			//end提交添加表单
 			
-			
+			//start
+			var p_file=document.querySelector('.p_file');
+			p_file.addEventListener("change",function(e, detail, sender){
+				var formData = new FormData();
+		        for (var i = 0, f; f = e.target.files[i]; ++i) {
+		          formData.append(e.target.name,f,f.name);
+		        }
+		        add_p_form.product.image=e.target.value;
+		        addProductformajax.body = formData;
+		        console.log(addProductformajax.body);
+		        // Override default type set by core-ajax.
+		        // Allow browser to set the mime multipart content type itself. 
+		        addProductformajax.contentType = null;
+			});
+			//end
+			*/
 			
 			//start获取列表
 			var ajax = document.querySelector('.p_list');

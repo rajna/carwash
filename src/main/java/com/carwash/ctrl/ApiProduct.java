@@ -86,7 +86,7 @@ public class ApiProduct
 				product.setImageLink(imageLink);
 			}
 			productService.saveOrUpdate(product);
-			return new JSON(false, "操作成功");
+			return new JSON(true, "操作成功");
 		}
 		catch (Exception e)
 		{
