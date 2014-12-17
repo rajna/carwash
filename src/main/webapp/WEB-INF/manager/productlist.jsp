@@ -57,22 +57,43 @@
 	rel="import">
 <link href="../../cwresources/components/core-ajax/core-ajax.html"
 	rel="import">
+<link rel="import" href="../../cwresources/components/paper-ripple/paper-ripple.html">
 <link href="../mycomponents/productcard/p-table.html" rel="import">
 
-<link rel='stylesheet' href='../../cwresources/css/carhome.css'>
+<link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
+
+<link rel='stylesheet' href='../css/carhome.css'>
 <style>
 .c-p-caption paper-radio-button{
 	display:inline-block;
 }
 .p-select{
 	width:100%;
+	border:none;
+	border:1px solid #757575;
+	font-size:18px;
+	color:#757575;
+	background:none;
+}
+
+.p_file{
+	font-size:18px;
+	color:#757575;
+	margin-top:8px;
+}
+.c-fab-fixed{
+	position:fixed;
+	right: 24px;
+	bottom:24px;
 }
 </style>
 </head>
 
 
 <body unresolved>
-
+     <paper-toast id="p-a-msg" role="alert">
+	 </paper-toast>
+	 
 	<paper-dialog heading="添加" class="c-p-addProduct"
 		transition="paper-dialog-transition-center">
 	<div class="c-form">
@@ -83,22 +104,23 @@
 		    </core-ajax>
 		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
 		    
-			<select class="p-select" name="categoryId" selectedIndex={{product.categoryId}}>
+			<select class="p-select" selectedIndex={{product.categoryId}}>
 			<c:forEach items="${categories }" var="category">
 					<option  name='${category.id}'>${category.name }</option>
 			</c:forEach>
 			</select>
 			
-			<paper-input label="名称" name="name" inputValue="{{product.name}}"
+			<paper-input label="名称" inputValue="{{product.name}}"
 				placeholder="名称" floatingLabel></paper-input>
-			<paper-input label="价格" name="price" min="0" inputValue="{{product.price}}"
+			<paper-input label="价格"  min="0" inputValue="{{product.price}}"
 				placeholder="价格" floatingLabel></paper-input>
 			
-			<paper-input label="描述" name="description" inputValue="{{product.description}}"
+			<paper-input label="描述"  inputValue="{{product.description}}"
 				placeholder="描述" floatingLabel></paper-input>
 			
 			</template>
-			<input type="file" name="image" bind="{{product.image}}" class="p_file">
+			
+			<input type="file" name="image" bind={{product.image}} class="p_file">
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
@@ -113,17 +135,21 @@
 	</template>
 
 	<core-scroll-header-panel condenses keepCondensedHeader
-		condensedHeaderHeight="80"> <core-toolbar
+		condensedHeaderHeight="80" mode="cover"> <core-toolbar
 		id="mainheader">
 	<div class="bottom indent bottom-text" self-end>
 		<div class="c_m_title">产品列表</div>
 		<div class="subtitle">产品信息查看</div>
-
+		
 	</div>
 	<div flex=""></div>
 	<paper-menu-button icon="more-vert" halign="right" noTransition>
 	<paper-item class="addProductPanel">添加产品</paper-item> </paper-menu-button> </core-toolbar>
 	<div class="content c-product-main" >
+	    <div class="fab red c-fab-fixed">
+		      <core-icon icon="add"></core-icon>
+		      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+		    </div>
 		<div class="c-p-caption">
 			<div horizontal layout>
 			    <paper-radio-group selected="${categories[0].id }" class="p_category">
@@ -135,7 +161,7 @@
 			</div>
 		</div>
 		<template id="tableTemplate" bind> <p-table
-			data="{{data}}" columns="{{columns}}" sortColumn="p50"
+			data="{{data}}" columns="{{columns}}" sortColumn="id"
 			sortDescending="false"></p-table> </template>
 
 	</div>
@@ -143,8 +169,13 @@
 	<script>
 		
 		window.addEventListener('polymer-ready', function() {
+			var ajax = document.querySelector('.p_list');
 			
 			//start显示产品添加表单
+			var fab_fixed=document.querySelector('.c-fab-fixed');
+			fab_fixed.addEventListener("click", function(e) {
+				addProduct.toggle();
+			});
 			var addProductPanel = document.querySelector('.addProductPanel');
 			var addProduct = document.querySelector('.c-p-addProduct');
 			addProductPanel.addEventListener("click", function(e) {
@@ -159,13 +190,16 @@
 			var p_confirm_button = document.querySelector('.p_confirm');
 			var addProductformajax = document.querySelector('.addProductform');
 			p_confirm_button.addEventListener("click", function(e) {
-			   
 				var p=add_p_form.product;
+				if(!p.categoryId){
+					p.categoryId=0;
+				}
 				formData.append("categoryId",p.categoryId+1);
 				formData.append("name",p.name);
 				formData.append("price",p.price);
 				formData.append("description",p.description);
 				addProductformajax.go();
+				
 			});
 			//end提交添加表单
 			
@@ -181,12 +215,26 @@
 		        // Allow browser to set the mime multipart content type itself. 
 		        addProductformajax.contentType = null;
 			});
+			addProductformajax.addEventListener("core-response",function(e){
+			    formData=new FormData();
+			    var msgtoast= document.querySelector('#p-a-msg');
+			    if(e.detail.response.success){
+			    	msgtoast.text=e.detail.response.message;
+			    }else{
+			    	msgtoast.text="添加失败";
+			    }
+			    
+			    msgtoast.show();
+			    ajax.go();
+			});
 			//end
 			
 			//start获取列表
-			var ajax = document.querySelector('.p_list');
 			ajax.addEventListener("core-response", function(e) {
-				var columns = [ {
+				var columns = [{
+					name : 'id',
+					title : '编号'
+				}, {
 					name : 'imageLink',
 					title : '图片'
 				}, {

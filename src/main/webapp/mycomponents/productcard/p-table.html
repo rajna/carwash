@@ -1,11 +1,10 @@
 <link rel="import" href="../../../cwresources/components/polymer/polymer.html">
 
 <link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog-transition.html">
-<link href="../../../cwresources/components/paper-dialog/paper-dialog.html" rel="import">
+<link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../../cwresources/components/core-ajax/core-ajax.html">
-<link href="../../../cwresources/components/paper-button/paper-button.html" rel="import">
+<link rel="import" href="../../../cwresources/components/paper-button/paper-button.html">
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
-
 
 <polymer-element name="p-table" attributes="data columns sortColumn sortDescending">
     <template>
@@ -22,36 +21,36 @@
       width:100%;
     }
       table.g_table {
-  width: 100%;
-  margin:0 auto;
-  border-collapse: collapse;
+		  width: 100%;
+		  margin:0 auto;
+		  border-collapse: collapse;
       }
       table.g_table tr:nth-of-type(even) {
-
-cursor: pointer;
-border-radius: 5px;
-background: rgba(118,117,128,0.05);
+		cursor: pointer;
+		border-radius: 5px;
       }
-      table.g_table th {
-  color: rgba(145,145,145,0.7);
-  font-weight: bold;
-  text-align: center;
-      }
+    
       table.g_table td,
       table.g_table th {
-  padding: 0.75em 0;
-margin: 0.3em 0;
-  text-align: left;
-  color: #757575;
+		  padding: 0.75em 0;
+		  margin: 0.3em 0;
+		  text-align: left;
+		  color: #616161;
+		  font-size:14px;
       }
       table.g_table th {
-  font-weight: 800;
-  cursor: pointer;
+		  font-weight: 800;
+		  cursor: pointer;
+		  color:#bdbdbd;
+		  border-bottom:1px solid #bdbdbd;
+		  padding-bottom:14px;
       }
       table.g_table td:first-of-type {
   text-align: left;
       }
     </style>
+    
+   
 
     <paper-dialog heading="编辑" id="editPanel" transition="paper-dialog-transition-center">
           <div class="c-form">
@@ -79,7 +78,7 @@ margin: 0.3em 0;
             <template repeat="{{column in columns}}">
               <template if="{{column.name!='action'}}">
                 <td hidden?="{{column.name!='imageLink'}}">
-                  <img style="width:30px;" src="{{column.name!='imageLink'?'':'../../cwresources/'+row[column.name]}}"/>
+                  <img style="width:60px;" src="{{column.name!='imageLink'?'':'../../cwresources/'+row[column.name]}}"/>
                 </td>
                 <td hidden?="{{column.name=='imageLink'}}">
                   <span>{{row[column.name]}}</span>
@@ -121,6 +120,7 @@ margin: 0.3em 0;
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
+             
               this.sortDescending = !this.sortDescending;
             }else{
               this.sortColumn = clickedSortColumn;

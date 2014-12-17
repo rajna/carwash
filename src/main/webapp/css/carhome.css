@@ -1,0 +1,113 @@
+body {
+  font-family: sans-serif;
+}
+.c_h_logo{
+	width:140px;
+	margin-top: 24px;
+	margin-bottom: 36px;
+}
+core-scroll-header-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+#mainheader{
+    height: 256px;
+}
+
+.bottom-text {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.c_m_title{
+	font-size: 45px;
+	-webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+.subtitle{
+	margin-top: 20px;
+	opacity: .6;
+}
+
+core-toolbar {
+  background-color: #3f51b5;
+  color:#fff;
+  box-shadow: none;
+}
+
+.content {
+  padding: 24px 64px;
+  max-width: 912px;
+  min-height: 300px;
+}
+
+/* drawer is always visible on a wide screen
+   so menu button isn't required */
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
+}
+
+ .c-p-caption{
+padding: 12px;
+  display: block;
+  margin: 0.3em 0 0.6em 0;
+  cursor: pointer;
+  background: #e0e0e0;
+}
+
+.c-p-addProduct{
+  width: 50%;
+      min-width: 350px;
+}
+.c-form{
+      width:90%;
+      margin:24px auto 0;
+    }
+    .c-form paper-input{
+      width:100%;
+    }
+ 
+/* FAB */
+    .fab {
+      position: relative;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      color: #fff;
+      overflow: hidden;
+      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 0.2s;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    }
+    
+    .fab.red {
+      background-color: #d23f31;
+    }
+    
+    .fab.blue {
+      background-color: #4285f4;
+    }
+    
+    .fab.green {
+      background-color: #0f9d58;
+    }
+    
+    .fab:active {
+      box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+      transition-delay: 0s;
+    }
+    
+    .fab > core-icon {
+      margin: 16px;
+    }
+    
+    .fab > core-icon::shadow path {
+      fill: #fff;
+    }
