@@ -63,12 +63,10 @@ public class ManagerCtrl
 		return mv;
 	}
 
-	@RequestMapping("/arealist")
+	@RequestMapping("/customerslist")
 	public ModelAndView arealist(HttpServletRequest request)
 	{
-		List<Category> categories = CategoryUtil.getCategories();
-		ModelAndView mv = new ModelAndView("/manager/productlist");
-		mv.addObject("categories", categories);
+		ModelAndView mv = new ModelAndView("/manager/customerslist");
 		return mv;
 	}
 
