@@ -90,7 +90,7 @@
 </head>
 
 
-<body unresolved>
+<body unresolved class="p_body">
      <paper-toast id="p-a-msg" role="alert">
 	 </paper-toast>
 	 
@@ -112,7 +112,7 @@
 			
 			<paper-input label="名称" inputValue="{{product.name}}"
 				placeholder="名称" floatingLabel></paper-input>
-			<paper-input label="价格"  min="0" inputValue="{{product.price}}"
+			<paper-input label="价格"  type="number" step="0.1" inputValue="{{product.price}}"
 				placeholder="价格" floatingLabel></paper-input>
 			
 			<paper-input label="描述"  inputValue="{{product.description}}"
@@ -120,7 +120,7 @@
 			
 			</template>
 			
-			<input type="file" name="image" bind={{product.image}} class="p_file">
+			<input type="file" name="image" bind={{product.imageLink}} class="p_file">
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
@@ -161,7 +161,7 @@
 			</div>
 		</div>
 		<template id="tableTemplate" bind> <p-table
-			data="{{data}}" columns="{{columns}}" sortColumn="id"
+			data="{{data}}" columns="{{columns}}" categories="{{categories}}" sortColumn="id"
 			sortDescending="false"></p-table> </template>
 
 	</div>
@@ -170,23 +170,29 @@
 		
 		window.addEventListener('polymer-ready', function() {
 			var ajax = document.querySelector('.p_list');
+			var formData = new FormData();
 			
+			var add_p_form=document.querySelector('#add_p_form');
+			add_p_form.product={};
 			//start显示产品添加表单
 			var fab_fixed=document.querySelector('.c-fab-fixed');
 			fab_fixed.addEventListener("click", function(e) {
+			   var formData = new FormData();
+			   add_p_form.product={};
 				addProduct.toggle();
 			});
 			var addProductPanel = document.querySelector('.addProductPanel');
 			var addProduct = document.querySelector('.c-p-addProduct');
 			addProductPanel.addEventListener("click", function(e) {
+				var formData = new FormData();
+			   add_p_form.product={};
 				addProduct.toggle();
 			});
 			//end显示产品添加表单
 			
 			//start提交添加表单
-			var formData = new FormData();
-			var add_p_form=document.querySelector('#add_p_form');
-			add_p_form.product={};
+			
+			
 			var p_confirm_button = document.querySelector('.p_confirm');
 			var addProductformajax = document.querySelector('.addProductform');
 			p_confirm_button.addEventListener("click", function(e) {
@@ -198,6 +204,10 @@
 				formData.append("name",p.name);
 				formData.append("price",p.price);
 				formData.append("description",p.description);
+				addProductformajax.body = formData;
+		        // Override default type set by core-ajax.
+		        // Allow browser to set the mime multipart content type itself. 
+		        addProductformajax.contentType = null;
 				addProductformajax.go();
 				
 			});
@@ -209,11 +219,10 @@
 		        for (var i = 0, f; f = e.target.files[i]; ++i) {
 		          formData.append(e.target.name,f,f.name);
 		        }
-		        add_p_form.product.image=e.target.value;
-		        addProductformajax.body = formData;
-		        // Override default type set by core-ajax.
-		        // Allow browser to set the mime multipart content type itself. 
-		        addProductformajax.contentType = null;
+		        add_p_form.product.imageLink=e.target.value;
+			});
+			document.querySelector('.p_body').addEventListener("product-refresh",function(e){
+			    ajax.go();
 			});
 			addProductformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
@@ -229,8 +238,19 @@
 			});
 			//end
 			
+			
 			//start获取列表
 			ajax.addEventListener("core-response", function(e) {
+			   var categories=[];
+			   var p_select=document.querySelector('.p-select');
+			   var options=p_select.getElementsByTagName("option");
+			   for(var i=0;i<options.length;i++){
+			    var c={};
+			    c.id=options[i].attributes.getNamedItem("name").value;
+			    c.name=options[i].innerHTML;
+			    categories.push(c);
+			   }
+			   
 				var columns = [{
 					name : 'id',
 					title : '编号'
@@ -255,7 +275,8 @@
 				} ];
 				document.getElementById('tableTemplate').model = {
 					data : e.detail.response.products,
-					columns : columns
+					columns : columns,
+					categories:categories
 				};
 			});
 			//end获取列表
