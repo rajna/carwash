@@ -48,43 +48,52 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/customer")
-public class ApiCustomer {
+public class ApiCustomer
+{
 	@Autowired
 	private CustomerServiceI customerService;
 
 	@Cwp
 	@RequestMapping("view")
 	@ResponseBody
-	public JSON view() {
+	public JSON view()
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		customer = customerService.get(customer.getId());
-		if (customer == null) {
-			return new JSON(false, "账户不存在").append("relogin", true);
-		}
+		if (customer == null) { return new JSON(false, "账户不存在").append(
+				"relogin", true); }
 		return new JSON(true, "查询成功").append("customer",
 				JSONObject.toJSON(customer));
+	}
+
+	@RequestMapping("list")
+	@ResponseBody
+	public JSON list()
+	{
+		return new JSON(true, "查询成功").append("customers",
+				customerService.find());
 	}
 
 	@Cwp
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String carNo, String name) {
+	public JSON update(String carNo, String name)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		customer.setCarNo(carNo);
 		customer.setName(name);
-		try {
+		try
+		{
 			customerService.saveOrUpdate(customer);
 			return new JSON(true, "更新成功").append("customer",
 					JSONObject.toJSON(customer));
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "更新失败");
 		}
 	}
