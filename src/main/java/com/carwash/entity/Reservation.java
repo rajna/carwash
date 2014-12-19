@@ -29,6 +29,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -145,17 +147,11 @@ public class Reservation {
 		this.carNo = carNo;
 	}
 
-	/**
-	 * @return the reservationStatus
-	 */
+	@Enumerated(EnumType.STRING)
 	public ReservationStatus getReservationStatus() {
 		return reservationStatus;
 	}
 
-	/**
-	 * @param reservationStatus
-	 *            the reservationStatus to set
-	 */
 	public void setReservationStatus(ReservationStatus reservationStatus) {
 		this.reservationStatus = reservationStatus;
 	}
