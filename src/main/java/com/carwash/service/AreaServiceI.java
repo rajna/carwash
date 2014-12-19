@@ -27,6 +27,9 @@ package com.carwash.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.carwash.entity.Area;
 
 /**
@@ -37,6 +40,8 @@ import com.carwash.entity.Area;
  * Date:2014年12月8日 Time:上午9:49:33
  * <p>
  */
+@Controller
+@RequestMapping("/api/area")
 public interface AreaServiceI
 {
 	public void saveOrUpdate(Area area);
