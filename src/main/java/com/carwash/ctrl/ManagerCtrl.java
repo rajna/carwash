@@ -64,9 +64,16 @@ public class ManagerCtrl
 	}
 
 	@RequestMapping("/customerslist")
-	public ModelAndView arealist(HttpServletRequest request)
+	public ModelAndView customerlist(HttpServletRequest request)
 	{
 		ModelAndView mv = new ModelAndView("/manager/customerslist");
+		return mv;
+	}
+	
+	@RequestMapping("/arealist")
+	public ModelAndView arealist(HttpServletRequest request)
+	{
+		ModelAndView mv = new ModelAndView("/manager/arealist");
 		return mv;
 	}
 

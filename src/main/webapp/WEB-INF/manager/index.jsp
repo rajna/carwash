@@ -31,6 +31,10 @@
 		<core-item
 		label="客户列表" tag="customerslist" url="customerslist"></core-item> 
 	</core-submenu> 
+	<core-submenu icon="chevron-right" label="区域管理"> 
+		<core-item
+		label="区域列表" tag="arealist" url="arealist"></core-item> 
+	</core-submenu> 
 	<core-submenu
 		icon="chevron-right" label="预约管理"> 
 		<core-item
