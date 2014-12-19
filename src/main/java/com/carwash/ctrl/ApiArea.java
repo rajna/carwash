@@ -26,6 +26,7 @@
 package com.carwash.ctrl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,6 +42,8 @@ import com.carwash.util.JSON;
  * Date:2014年12月19日 Time:下午2:32:28
  * <p>
  */
+@Controller
+@RequestMapping("/api/area")
 public class ApiArea
 {
 	@Autowired
