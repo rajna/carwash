@@ -104,19 +104,18 @@
 		    </core-ajax>
 		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
 		    
-			<select class="p-select" selectedIndex={{product.categoryId}}>
-			<c:forEach items="${categories }" var="category">
-					<option  name='${category.id}'>${category.name }</option>
-			</c:forEach>
+			<select class="p-select" selectedIndex={{cutomer.categoryId}}>
+					<option  name='${cutomer.id}'>${cutomer.name }</option>
 			</select>
 			
-			<paper-input label="名称" inputValue="{{product.name}}"
-				placeholder="名称" floatingLabel></paper-input>
-			<paper-input label="价格"  type="number" step="0.1" inputValue="{{product.price}}"
-				placeholder="价格" floatingLabel></paper-input>
-			
-			<paper-input label="描述"  inputValue="{{product.description}}"
-				placeholder="描述" floatingLabel></paper-input>
+			<paper-input label="名字" inputValue="{{cutomer.name}}"
+				placeholder="名字" floatingLabel></paper-input>
+			<paper-input label="车牌号"  type="number" inputValue="{{cutomer.carNo}}"
+				placeholder="车牌号" floatingLabel></paper-input>
+			<paper-input label="电话号"  type="number"  inputValue="{{customer.mobile}}"
+				placeholder="电话号" floatingLabel></paper-input>
+			<paper-input label="账户余额"  type="credit"  inputValue="{{customer.credit}}"
+				placeholder="账户余额" floatingLabel></paper-input>
 			
 			</template>
 			
@@ -127,7 +126,7 @@
 	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
 	</paper-dialog>
 
-	<core-ajax auto url="../api/customer/view" class="p_list"  handleAs="json"></core-ajax>
+	<core-ajax auto url="../api/customer/list" class="p_list"  handleAs="json"></core-ajax>
 
 	<template repeat="{{data}}">
 	<div>{{name}}</div>
@@ -231,26 +230,23 @@
 					name : 'id',
 					title : '编号'
 				}, {
-					name : 'imageLink',
-					title : '图片'
-				}, {
 					name : 'name',
-					title : '名称'
+					title : '名字'
 				}, {
-					name : 'price',
-					title : '价格'
+					name : 'carNo',
+					title : '车牌号'
 				}, {
-					name : 'category',
-					title : '分类'
+					name : 'mobile',
+					title : '电话'
 				}, {
-					name : 'description',
-					title : '描述'
+					name : 'credit',
+					title : '用户账户余额'
 				}, {
-					name : 'action',
-					title : '动作'
-				} ];
+					name : 'inuse',
+					title : '状态'
+				}];
 				document.getElementById('tableTemplate').model = {
-					data : e.detail.response.products,
+					data : e.detail.response.customers,
 					columns : columns
 				};
 			});
