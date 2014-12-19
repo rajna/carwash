@@ -25,6 +25,9 @@
  */
 package com.carwash.ctrl;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,12 +71,51 @@ public class ApiCustomer
 				JSONObject.toJSON(customer));
 	}
 
+	/**
+	 * 查询客户，用于后台界面
+	 * 
+	 * @return
+	 */
 	@RequestMapping("list")
 	@ResponseBody
 	public JSON list()
 	{
+		// TODO 校验登录
 		return new JSON(true, "查询成功").append("customers",
 				customerService.find());
+	}
+
+	/**
+	 * 新增客户，用于后台界面
+	 * 
+	 * @return
+	 */
+	@RequestMapping("post")
+	@ResponseBody
+	public JSON post(Customer customer)
+	{
+		// TODO 校验登录
+		String mobile = customer.getMobile();
+		if (mobile == null) { return new JSON(false, "手机号码不能为空"); }
+		Pattern p = Pattern.compile(Constant.MOBILEREG);
+		Matcher m = p.matcher(mobile);
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		String carNo = customer.getCarNo();
+		String name = customer.getName();
+		if (carNo == null || "".equals(carNo.trim())) { return new JSON(false,
+				"请填写车牌号"); }
+		if (name == null || "".equals(name)) { return new JSON(false, "请填写客户姓名"); }
+		Customer byMobile = customerService.getByMobile(mobile);
+		if (byMobile != null) { return new JSON(false, "该手机号码已经被使用"); }
+		try
+		{
+			customerService.saveOrUpdate(customer);
+			return new JSON(true, "新增客户成功");
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "新增客户失败" + e.getMessage());
+		}
 	}
 
 	@Cwp

@@ -50,14 +50,15 @@ import com.carwash.util.Constant;
 @Entity
 @Table(name = "cw_customer")
 @org.hibernate.annotations.Table(comment = "客户数据模型", appliesTo = "cw_customer")
-public class Customer {
+public class Customer
+{
 	private int id;
 	private String name;
 	private String carNo;
 	private String mobile; // 手机号码不能重复
 	private String password = UUID.randomUUID().toString().replace("-", "");
 	private Date create_date = new Date(); // 用户注册时间
-	private Date login_date = new Date(); // 最后一次登录时间
+	private Date login_date; // 最后一次登录时间
 	private String reffer_work_id; // 推荐人工号
 	private double credit; // 用户账户余额
 	private boolean inuse = true;
@@ -69,88 +70,107 @@ public class Customer {
 	private String sdk_int;
 	private String vrelease;
 
-	public Customer() {
+	public Customer()
+	{
 		super();
 	}
 
-	public Customer(String mobile) {
+	public Customer(String mobile)
+	{
 		super();
 		this.mobile = mobile;
 	}
 
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
 	@NotBlank(message = "手机号码不能为空")
 	@Pattern(regexp = Constant.MOBILEREG, message = "手机号码不符合规则")
 	@Column(unique = true, nullable = false)
-	public String getMobile() {
+	public String getMobile()
+	{
 		return mobile;
 	}
 
-	public void setMobile(String mobile) {
+	public void setMobile(String mobile)
+	{
 		this.mobile = mobile;
 	}
 
-	public String getPassword() {
+	public String getPassword()
+	{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(String password)
+	{
 		this.password = password;
 	}
 
-	public Date getCreate_date() {
+	public Date getCreate_date()
+	{
 		return create_date;
 	}
 
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(Date create_date)
+	{
 		this.create_date = create_date;
 	}
 
-	public String getReffer_work_id() {
+	public String getReffer_work_id()
+	{
 		return reffer_work_id;
 	}
 
-	public void setReffer_work_id(String reffer_work_id) {
+	public void setReffer_work_id(String reffer_work_id)
+	{
 		this.reffer_work_id = reffer_work_id;
 	}
 
-	public double getCredit() {
+	public double getCredit()
+	{
 		return credit;
 	}
 
-	public void setCredit(double credit) {
+	public void setCredit(double credit)
+	{
 		this.credit = credit;
 	}
 
-	public boolean isInuse() {
+	public boolean isInuse()
+	{
 		return inuse;
 	}
 
-	public void setInuse(boolean inuse) {
+	public void setInuse(boolean inuse)
+	{
 		this.inuse = inuse;
 	}
 
 	/**
 	 * @return the ostype
 	 */
-	public String getOstype() {
+	public String getOstype()
+	{
 		return ostype;
 	}
 
@@ -158,14 +178,16 @@ public class Customer {
 	 * @param ostype
 	 *            the ostype to set
 	 */
-	public void setOstype(String ostype) {
+	public void setOstype(String ostype)
+	{
 		this.ostype = ostype;
 	}
 
 	/**
 	 * @return the brand
 	 */
-	public String getBrand() {
+	public String getBrand()
+	{
 		return brand;
 	}
 
@@ -173,14 +195,16 @@ public class Customer {
 	 * @param brand
 	 *            the brand to set
 	 */
-	public void setBrand(String brand) {
+	public void setBrand(String brand)
+	{
 		this.brand = brand;
 	}
 
 	/**
 	 * @return the model
 	 */
-	public String getModel() {
+	public String getModel()
+	{
 		return model;
 	}
 
@@ -188,14 +212,16 @@ public class Customer {
 	 * @param model
 	 *            the model to set
 	 */
-	public void setModel(String model) {
+	public void setModel(String model)
+	{
 		this.model = model;
 	}
 
 	/**
 	 * @return the serial
 	 */
-	public String getSerial() {
+	public String getSerial()
+	{
 		return serial;
 	}
 
@@ -203,14 +229,16 @@ public class Customer {
 	 * @param serial
 	 *            the serial to set
 	 */
-	public void setSerial(String serial) {
+	public void setSerial(String serial)
+	{
 		this.serial = serial;
 	}
 
 	/**
 	 * @return the sdk_int
 	 */
-	public String getSdk_int() {
+	public String getSdk_int()
+	{
 		return sdk_int;
 	}
 
@@ -218,14 +246,16 @@ public class Customer {
 	 * @param sdk_int
 	 *            the sdk_int to set
 	 */
-	public void setSdk_int(String sdk_int) {
+	public void setSdk_int(String sdk_int)
+	{
 		this.sdk_int = sdk_int;
 	}
 
 	/**
 	 * @return the release
 	 */
-	public String getVrelease() {
+	public String getVrelease()
+	{
 		return vrelease;
 	}
 
@@ -233,14 +263,16 @@ public class Customer {
 	 * @param release
 	 *            the release to set
 	 */
-	public void setVrelease(String vrelease) {
+	public void setVrelease(String vrelease)
+	{
 		this.vrelease = vrelease;
 	}
 
 	/**
 	 * @return the login_date
 	 */
-	public Date getLogin_date() {
+	public Date getLogin_date()
+	{
 		return login_date;
 	}
 
@@ -248,14 +280,16 @@ public class Customer {
 	 * @param login_date
 	 *            the login_date to set
 	 */
-	public void setLogin_date(Date login_date) {
+	public void setLogin_date(Date login_date)
+	{
 		this.login_date = login_date;
 	}
 
 	/**
 	 * @return the carNo
 	 */
-	public String getCarNo() {
+	public String getCarNo()
+	{
 		return carNo;
 	}
 
@@ -263,7 +297,8 @@ public class Customer {
 	 * @param carNo
 	 *            the carNo to set
 	 */
-	public void setCarNo(String carNo) {
+	public void setCarNo(String carNo)
+	{
 		this.carNo = carNo;
 	}
 
