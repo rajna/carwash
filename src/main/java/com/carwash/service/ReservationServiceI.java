@@ -38,15 +38,18 @@ import com.carwash.entity.ReservationStatus;
  * Date:2014年12月8日 Time:下午1:53:49
  * <p>
  */
-public interface ReservationServiceI {
+public interface ReservationServiceI
+{
 	public void saveOrUpdate(Reservation o);
+
+	public long count(ReservationStatus status);
 
 	/**
 	 * 查询预约
 	 * 
 	 * @return
 	 */
-	public List<Reservation> find();
+	public List<Reservation> find(ReservationStatus status, int pageId);
 
 	/**
 	 * 查询预约

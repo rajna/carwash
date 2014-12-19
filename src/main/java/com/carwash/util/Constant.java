@@ -46,4 +46,6 @@ public class Constant {
 	public final static String BASESOURCES = "/cwresources";
 	public final static String IMAGESSOURCES = "images/";
 	public final static String VOICESSOURCES = "voices/";
+	//每页查询的数据量
+	public final static int SIZEPERPAGE = 10;
 }
