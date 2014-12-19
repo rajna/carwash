@@ -147,7 +147,6 @@ public class Reservation {
 		this.carNo = carNo;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public ReservationStatus getReservationStatus() {
 		return reservationStatus;
 	}

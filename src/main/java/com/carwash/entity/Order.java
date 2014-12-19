@@ -200,7 +200,6 @@ public class Order
 		this.supportorName = supportorName;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public OrderStatus getOrderStatus()
 	{
 		return orderStatus;
