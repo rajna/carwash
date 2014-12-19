@@ -80,9 +80,7 @@ public class ManagerCtrl
 	@RequestMapping("/reservationlist")
 	public ModelAndView reservationlist(HttpServletRequest request)
 	{
-		List<Category> categories = CategoryUtil.getCategories();
-		ModelAndView mv = new ModelAndView("/manager/productlist");
-		mv.addObject("categories", categories);
+		ModelAndView mv = new ModelAndView("/manager/reservationlist");
 		return mv;
 	}
 }

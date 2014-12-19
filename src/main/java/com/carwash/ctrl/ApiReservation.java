@@ -126,7 +126,6 @@ public class ApiReservation
 	/**
 	 * 客户端查询接口
 	 */
-	@Cwp
 	@RequestMapping("all")
 	@ResponseBody
 	public JSON all(String status, String pid)
