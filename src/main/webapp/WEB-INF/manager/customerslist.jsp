@@ -58,12 +58,18 @@
 <link href="../../cwresources/components/core-ajax/core-ajax.html"
 	rel="import">
 <link rel="import" href="../../cwresources/components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../cwresources/components/paper-toggle-button/paper-toggle-button.html">
 <link href="../mycomponents/customercard/customer-table.html" rel="import">
 
 <link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
 
+
 <link rel='stylesheet' href='../css/carhome.css'>
 <style>
+.c-p-add{
+  width: 50%;
+      min-width: 350px;
+}
 .c-p-caption paper-radio-button{
 	display:inline-block;
 }
@@ -94,32 +100,37 @@
      <paper-toast id="p-a-msg" role="alert">
 	 </paper-toast>
 	 
-	<paper-dialog heading="添加" class="c-p-addProduct"
+	<paper-dialog heading="添加" class="c-p-add"
 		transition="paper-dialog-transition-center">
 	<div class="c-form">
-		    <core-ajax class="addProductform" 
+		    <core-ajax class="addform" 
 		               handleAs="json"
-		               url="../api/product/post" 
-		               method="post">
+		               url="../api/customer/post" 
+		               method="post"
+		               params={{customer}}
+		               >
 		    </core-ajax>
-		    <template bind="{{product}}" is="auto-binding" id="add_p_form">
+		    <template bind="{{customer}}" is="auto-binding" id="add_p_form">
 		    
-			<select class="p-select" selectedIndex={{cutomer.categoryId}}>
-					<option  name='${cutomer.id}'>${cutomer.name }</option>
+			<select class="p-select" value={{customer.reffer_work_id}}>
+			        <option>请选择</option>
+					<option  value="id1">1</option>
+					<option  value='id2'>2</option>
 			</select>
 			
-			<paper-input label="名字" inputValue="{{cutomer.name}}"
+			<paper-input label="名字" inputValue="{{customer.name}}"
 				placeholder="名字" floatingLabel></paper-input>
-			<paper-input label="车牌号"  type="number" inputValue="{{cutomer.carNo}}"
+			<paper-input label="车牌号" inputValue="{{customer.carNo}}"
 				placeholder="车牌号" floatingLabel></paper-input>
 			<paper-input label="电话号"  type="number"  inputValue="{{customer.mobile}}"
 				placeholder="电话号" floatingLabel></paper-input>
-			<paper-input label="账户余额"  type="credit"  inputValue="{{customer.credit}}"
-				placeholder="账户余额" floatingLabel></paper-input>
-			
+			<paper-input label="账户余额"  inputValue="{{customer.credit}}"
+				placeholder="账户余额"  type="number" step="0.01" floatingLabel></paper-input>
+			<div center horizontal layout style="margin-top:12px;width:50%;">
+			      <div flex  style="color:#757575;font-weight:bold;">状态</div>
+			      <paper-toggle-button class="blue" role="button" aria-pressed="true" tabindex="0"></paper-toggle-button>
+			</div>
 			</template>
-			
-			<input type="file" name="image" bind={{product.imageLink}} class="p_file">
 	</div>
 
 	<paper-button label="取消" affirmative></paper-button>
@@ -157,73 +168,52 @@
 	<script>
 		
 		window.addEventListener('polymer-ready', function() {
-			var ajax = document.querySelector('.p_list');
-			var formData = new FormData();
+			var ajaxlist = document.querySelector('.p_list');
 			
 			var add_p_form=document.querySelector('#add_p_form');
-			add_p_form.product={};
-			//start显示产品添加表单
+			add_p_form.customer={};
+			//start显示添加表单
 			var fab_fixed=document.querySelector('.c-fab-fixed');
-			var addProduct = document.querySelector('.c-p-addProduct');
+			var addPanel = document.querySelector('.c-p-add');
 			fab_fixed.addEventListener("click", function(e) {
-			   var formData = new FormData();
-			   add_p_form.product={};
-				addProduct.toggle();
+			   add_p_form.customer={};
+				addPanel.toggle();
 			});
 			
-			//end显示产品添加表单
+			//end显示添加表单
 			
 			//start提交添加表单
 			
 			
 			var p_confirm_button = document.querySelector('.p_confirm');
-			var addProductformajax = document.querySelector('.addProductform');
+			var addformajax = document.querySelector('.addform');
 			p_confirm_button.addEventListener("click", function(e) {
-				var p=add_p_form.product;
-				if(!p.categoryId){
-					p.categoryId=0;
-				}
-				formData.append("categoryId",p.categoryId+1);
-				formData.append("name",p.name);
-				formData.append("price",p.price);
-				formData.append("description",p.description);
-				addProductformajax.body = formData;
-		        // Override default type set by core-ajax.
-		        // Allow browser to set the mime multipart content type itself. 
-		        addProductformajax.contentType = null;
-				addProductformajax.go();
+				var inuse=document.querySelector('paper-toggle-button').checked;
+				add_p_form.customer.inuse=inuse
+				addformajax.params=add_p_form.customer;
+				addformajax.go();
 				
 			});
 			//end提交添加表单
 			
 			//start
-			var p_file=document.querySelector('.p_file');
-			p_file.addEventListener("change",function(e, detail, sender){
-		        for (var i = 0, f; f = e.target.files[i]; ++i) {
-		          formData.append(e.target.name,f,f.name);
-		        }
-		        add_p_form.product.imageLink=e.target.value;
-			});
-			document.querySelector('.p_body').addEventListener("product-refresh",function(e){
-			    ajax.go();
-			});
-			addProductformajax.addEventListener("core-response",function(e){
+			addformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
 			    var msgtoast= document.querySelector('#p-a-msg');
 			    if(e.detail.response.success){
 			    	msgtoast.text=e.detail.response.message;
 			    }else{
-			    	msgtoast.text="添加失败";
+			    	msgtoast.text="添加失败"+e.detail.response.message;
 			    }
 			    
 			    msgtoast.show();
-			    ajax.go();
+			    ajaxlist.go();
 			});
 			//end
 			
 			
 			//start获取列表
-			ajax.addEventListener("core-response", function(e) {
+			ajaxlist.addEventListener("core-response", function(e) {
 			  
 			   
 				var columns = [{
