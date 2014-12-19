@@ -114,28 +114,7 @@
    
     <paper-toast id="msgtoast" role="alert">
 	 </paper-toast>
-    <paper-dialog heading="编辑" id="editPanel" transition="paper-dialog-transition-center">
-          <div class="c-form">
-            <div class="f-inner">
-              <core-ajax id="ajaxediteform" handleAs="json" on-core-response="{{handleEdite}}" url="../../api/product/post"  method="post" ></core-ajax>
-              <!--  <div class="c-type">类别:{{singleItem.categoryId}}</div>
-              <select class="p-select" selectedIndex={{formdata.categoryId}}>
-				<template repeat="{{category in categories}}">
-					<option name="{{category.id}}">{{category.name}}</option>
-				</template>
-				</select>
-			  -->
-              <paper-input label="名称" inputValue="{{formdata.name}}" placeholder="名称:{{singleItem.name}}" floatingLabel></paper-input>
-              <paper-input label="价格" type="number" step="0.1" inputValue="{{formdata.price}}" placeholder="价格:{{singleItem.price}}"  floatingLabel></paper-input>
-              <paper-input label="描述"  inputValue="{{formdata.description}}" placeholder="描述:{{singleItem.description}}" floatingLabel></paper-input>
-              <!-- <img src="../../cwresources/{{singleItem.imageLink}}" width="100%;"/>--><input type="file" name="image" id="p_file"  class="p_file" on-change={{fileselect}}>
-            </div>
-          </div>
-
-    <paper-button label="取消" affirmative on-click="{{cansleEdit}}"></paper-button>
-    <paper-button label="确定" affirmative autofocus on-click={{confirm}}></paper-button>
-
-  </paper-dialog>
+    
       <table class="g_table">
         <tr>
           <template repeat="{{column in columns}}">
@@ -145,14 +124,10 @@
         <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
           <tr>
             <template repeat="{{column in columns}}">
-              <template if="{{column.name!='action'}}">
+             
                 <td>
                   <span>{{row[column.name]}}</span>
                 </td>
-              </template>
-              <template if="{{column.name=='action'}}">
-                <td on-click="{{editeRow}}"><paper-button label="修改" ></paper-button></td>
-              </template>
             </template>
           </tr>
         </template>
