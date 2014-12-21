@@ -52,7 +52,7 @@ public class ApiOrder {
 	@Autowired
 	private OrderServiceI orderService;
 
-	@Cwp
+	@Cwp(0)
 	@RequestMapping("list")
 	@ResponseBody
 	public JSON list(String status) {

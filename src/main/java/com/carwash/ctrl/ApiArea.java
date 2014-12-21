@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.Area;
+import com.carwash.interceptor.Cwp;
 import com.carwash.service.AreaServiceI;
 import com.carwash.util.JSON;
 
@@ -44,8 +45,7 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/area")
-public class ApiArea
-{
+public class ApiArea {
 	@Autowired
 	private AreaServiceI areaService;
 
@@ -56,8 +56,7 @@ public class ApiArea
 	 */
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list()
-	{
+	public JSON list() {
 		return new JSON(true, "查询成功").append("areas", areaService.find());
 	}
 
@@ -66,20 +65,18 @@ public class ApiArea
 	 * 
 	 * @return
 	 */
+	@Cwp(1)
 	@RequestMapping("post")
 	@ResponseBody
-	public JSON post(Area area)
-	{
+	public JSON post(Area area) {
 		// TODO 校验权限
-		if (area.getName() == null || "".equals(area.getName())) { return new JSON(
-				false, "区域名称不能为空"); }
-		try
-		{
+		if (area.getName() == null || "".equals(area.getName())) {
+			return new JSON(false, "区域名称不能为空");
+		}
+		try {
 			areaService.saveOrUpdate(area);
 			return new JSON(true, "操作成功");
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return new JSON(false, "操作失败," + e.getMessage());
 		}
 

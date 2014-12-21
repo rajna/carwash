@@ -19,31 +19,20 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          Cwp.java
+ * File name:          ApiUser.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
-package com.carwash.interceptor;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.carwash.ctrl;
 
 /**
- * carwash权限拦截
+ * TODO: File comments
  * <p>
- * Author: ilvel
+ * Author:   ilvel
  * <p>
- * Date:2014年12月8日 Time:上午11:13:34
+ * Date:2014年12月21日   Time:上午9:32:21
  * <p>
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Cwp
-{
-	//0为客户端客户，1，后台权限，
-	int[] value() default 0;
+public class ApiUser {
+
 }

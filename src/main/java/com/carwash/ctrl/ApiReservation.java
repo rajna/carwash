@@ -55,22 +55,25 @@ import com.carwash.util.UploadUtil;
  */
 @Controller
 @RequestMapping("/api/reservation")
-public class ApiReservation
-{
+public class ApiReservation {
 	@Autowired
 	private ReservationServiceI reservationService;
 
-	@Cwp
+	/**
+	 * 客户创建预约
+	 */
+	@Cwp(0)
 	@RequestMapping(value = "post", method = RequestMethod.POST)
 	@ResponseBody
 	public JSON post(
 			HttpServletRequest request,
 			Reservation reservation,
-			@RequestParam(required = false, value = "voice") MultipartFile voiceFile)
-	{
+			@RequestParam(required = false, value = "voice") MultipartFile voiceFile) {
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
-				.append("relogin", true); }
+		if (customer == null) {
+			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+					true);
+		}
 		String message_voice_url = UploadUtil.saveVoiceToDisk(request,
 				voiceFile);
 		reservation.setMessage_voice_url(message_voice_url);
@@ -79,44 +82,37 @@ public class ApiReservation
 		reservation.setCustomer_name(customer.getName());
 		reservation.setReservationStatus(ReservationStatus.PROCESSING);
 		String address = reservation.getAddress();
-		if (address == null || "".equals(address.trim()))
-		{
+		if (address == null || "".equals(address.trim())) {
 			address = "未填写地址";
 			reservation.setAddress(address);
 		}
-		try
-		{
+		try {
 			reservationService.saveOrUpdate(reservation);
 			return new JSON(true, "预约成功");
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return new JSON(false, "预约失败");
 	}
 
 	/**
-	 * 客户端查询接口
+	 * 客户端查询预约接口
 	 */
-	@Cwp
+	@Cwp(0)
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list(String status)
-	{
+	public JSON list(String status) {
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
-				.append("relogin", true); }
+		if (customer == null) {
+			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
+					true);
+		}
 		ReservationStatus os = null;
-		if (status != null)
-		{
+		if (status != null) {
 			status = status.toUpperCase().trim();
-			try
-			{
+			try {
 				os = ReservationStatus.valueOf(status);
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 			}
 		}
 		return new JSON(true, "查询成功").append("reservations",
@@ -128,28 +124,20 @@ public class ApiReservation
 	 */
 	@RequestMapping("all")
 	@ResponseBody
-	public JSON all(String status, String pid)
-	{
+	public JSON all(String status, String pid) {
 		// TODO 校验登录
 		ReservationStatus os = null;
-		if (status != null)
-		{
+		if (status != null) {
 			status = status.toUpperCase().trim();
-			try
-			{
+			try {
 				os = ReservationStatus.valueOf(status);
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 			}
 		}
 		int pageId = 0;
-		try
-		{
+		try {
 			pageId = Integer.valueOf(pid);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 		}
 		long total = reservationService.count(os);
 		long temp = total % Constant.SIZEPERPAGE;
