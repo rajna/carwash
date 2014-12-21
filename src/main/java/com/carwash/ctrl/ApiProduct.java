@@ -39,10 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.carwash.category.Category;
 import com.carwash.category.CategoryUtil;
-import com.carwash.entity.Customer;
 import com.carwash.entity.Product;
 import com.carwash.interceptor.Cwp;
-import com.carwash.interceptor.Interceptor;
 import com.carwash.service.ProductServiceI;
 import com.carwash.util.JSON;
 import com.carwash.util.UploadUtil;

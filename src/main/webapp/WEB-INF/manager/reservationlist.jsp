@@ -129,7 +129,7 @@
 	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
 	</paper-dialog>
 
-	<core-ajax auto url="../api/reservation/list" class="p_list"  handleAs="json"></core-ajax>
+	<core-ajax auto url="../api/reservation/all" class="p_list"  handleAs="json"></core-ajax>
 
 	<template repeat="{{data}}">
 	<div>{{name}}</div>
