@@ -89,9 +89,19 @@ public class ReservationServiceImpl implements ReservationServiceI
 	public List<Reservation> findByCid(int cid, ReservationStatus status)
 	{
 		List<Reservation> reservations = new ArrayList<Reservation>();
-		if (cid == 0 || status == null) { return reservations; }
+		if (cid == 0) { return reservations; }
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cid", cid);
+		if (status == null)
+		{
+			StringBuffer hql = new StringBuffer(
+					"From Reservation r where r.customer_id=:cid and r.reservationStatus="
+							+ ReservationStatus.COMPLETED.ordinal()
+							+ " OR r.reservationStatus="
+							+ ReservationStatus.PROCESSING.ordinal()
+							+ " Order By r.create_date desc");
+			return rDao.find(hql.toString(), params);
+		}
 		params.put("status", status);
 		StringBuffer hql = new StringBuffer(
 				"From Reservation r where r.customer_id=:cid and r.reservationStatus=:status Order By r.create_date desc");
