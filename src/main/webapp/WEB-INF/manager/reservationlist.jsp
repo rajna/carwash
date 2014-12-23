@@ -167,9 +167,9 @@ core-animated-pages {
 					
 					<template id="tableTemplate" bind> 
 					   <reservation-table
-						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} sortColumn="id"
+						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} reservationId={{reservationId}} sortColumn="id"
 						sortDescending="true"></reservation-table> 
-				   </template>
+				    </template>
 				   
 				   <div horizontal layout>
 					  <div class="button raised more">
@@ -197,6 +197,13 @@ core-animated-pages {
 				</div>
 				<div flex=""></div>
 				</core-toolbar>
+				<div class="content c-product-main" >
+					<template id="orderListTemplate" bind> 
+					   <order-table
+						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} reservationId={{reservationId}} sortColumn="id"
+						sortDescending="true"></reservation-table> 
+				    </template>
+				</div>
 		  </core-scroll-header-panel>
       </div>
     </section>
@@ -240,11 +247,12 @@ core-animated-pages {
 			//end显示添加表单
 			
 			
-			
+			//start预约列表
 			var listdata=[];
 			 var page=1;
 			 var pages=0;
 			var rowStatus="PROCESSING";
+			var reservationId=null;
 			
 			var columns = [{
 					name : 'id',
@@ -275,11 +283,12 @@ core-animated-pages {
 					title : '操作'
 				}];
 			
-			//start获取列表
+			
 			ajaxlist.addEventListener("core-response", function(e) {
 			    var newdata=e.detail.response.reservations;
 			    pages=e.detail.response.pages;
-			    for ( var i=0 ; i < newdata.length ; ++i ){
+			    console.log(newdata);
+			    for ( var i=0 ; i < newdata.length; ++i ){
 			    	listdata.push(newdata[i]);
 			    }
 			    
@@ -291,7 +300,8 @@ core-animated-pages {
 				tableTemplate.model = {
 					data : listdata,
 					columns : columns,
-					rowStatus:rowStatus
+					rowStatus:rowStatus,
+					reservationId:reservationId
 				};
 			});
 			//end获取列表

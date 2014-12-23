@@ -7,7 +7,7 @@
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
-<polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending rowStatus reservationId">
+<polymer-element name="order-table" attributes="data columns categories sortColumn sortDescending">
     <template>
       <style>
       
@@ -158,9 +158,6 @@ padding: 12px;
           columns: [],
           sortColumn: null,
           sortDescending: false,
-          singleItem:null,
-          rowStatus:null,
-          reservationId:null,
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
@@ -169,16 +166,6 @@ padding: 12px;
             }else{
               this.sortColumn = clickedSortColumn;
             }
-          },
-          orderList:function(event, detail,sender){
-            var row=sender.templateInstance_.model.row;
-            console.log(row.id);
-            this.reservationId=row.id;
-            this.fire('orderlist-show');
-          },
-          itemSelect:function(event, detail, sender){
-          	var status=event.target.getAttribute('name');
-          	this.rowStatus=status;
           }
       });
     </script>
