@@ -40,6 +40,7 @@ import com.carwash.entity.Reservation;
 import com.carwash.entity.ReservationStatus;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
+import com.carwash.service.CustomerServiceI;
 import com.carwash.service.ReservationServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
@@ -58,6 +59,8 @@ import com.carwash.util.UploadUtil;
 public class ApiReservation {
 	@Autowired
 	private ReservationServiceI reservationService;
+	@Autowired
+	private CustomerServiceI customerService;
 
 	/**
 	 * 客户创建预约
@@ -79,7 +82,6 @@ public class ApiReservation {
 		reservation.setMessage_voice_url(message_voice_url);
 		reservation.setCustomer_id(customer.getId());
 		reservation.setCustomer_mobile(customer.getMobile());
-		reservation.setCustomer_name(customer.getName());
 		reservation.setReservationStatus(ReservationStatus.PROCESSING);
 		String address = reservation.getAddress();
 		if (address == null || "".equals(address.trim())) {
@@ -87,6 +89,13 @@ public class ApiReservation {
 			reservation.setAddress(address);
 		}
 		try {
+			String carNo = reservation.getCarNo();
+			boolean carNoIsChange = carNo != null
+					&& !carNo.equals(customer.getCarNo());
+			if (carNoIsChange) {
+				customer.setCarNo(carNo);
+				customerService.saveOrUpdate(customer);
+			}
 			reservationService.saveOrUpdate(reservation);
 			return new JSON(true, "预约成功");
 		} catch (Exception e) {
@@ -122,7 +131,8 @@ public class ApiReservation {
 	/**
 	 * 后台查询接口
 	 */
-	@Cwp(1) //如果
+	@Cwp(1)
+	// 如果
 	@RequestMapping("all")
 	@ResponseBody
 	public JSON all(String status, String pid) {
