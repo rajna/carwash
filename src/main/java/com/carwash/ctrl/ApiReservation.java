@@ -120,7 +120,7 @@ public class ApiReservation {
 	}
 
 	/**
-	 * 客户端查询接口
+	 * 后台查询接口
 	 */
 	@Cwp(1) //如果
 	@RequestMapping("all")
