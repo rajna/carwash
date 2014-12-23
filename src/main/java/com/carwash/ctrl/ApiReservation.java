@@ -82,6 +82,7 @@ public class ApiReservation {
 		reservation.setMessage_voice_url(message_voice_url);
 		reservation.setCustomer_id(customer.getId());
 		reservation.setCustomer_mobile(customer.getMobile());
+		reservation.setCustomer_name(customer.getName());
 		reservation.setReservationStatus(ReservationStatus.PROCESSING);
 		String address = reservation.getAddress();
 		if (address == null || "".equals(address.trim())) {
