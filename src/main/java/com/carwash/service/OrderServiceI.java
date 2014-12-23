@@ -38,7 +38,8 @@ import com.carwash.entity.OrderStatus;
  * Date:2014年12月8日 Time:上午10:05:55
  * <p>
  */
-public interface OrderServiceI {
+public interface OrderServiceI
+{
 	public void saveOrUpdate(Order order);
 
 	/**
@@ -46,4 +47,8 @@ public interface OrderServiceI {
 	 */
 	public List<Order> findByCid(int cid, OrderStatus status);
 
+	/**
+	 * 通过预约id查询订单
+	 */
+	public List<Order> findByRid(int rid);
 }

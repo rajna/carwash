@@ -25,12 +25,15 @@
  */
 package com.carwash.ctrl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.Customer;
+import com.carwash.entity.Order;
 import com.carwash.entity.OrderStatus;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
@@ -48,30 +51,58 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/order")
-public class ApiOrder {
+public class ApiOrder
+{
 	@Autowired
 	private OrderServiceI orderService;
 
 	@Cwp(0)
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list(String status) {
+	public JSON list(String status)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		OrderStatus os = null;
 
-		if (status != null) {
+		if (status != null)
+		{
 			status = status.toUpperCase().trim();
-			try {
+			try
+			{
 				os = OrderStatus.valueOf(status);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 			}
 		}
 
 		return new JSON(true, "查询成功").append("orders",
 				orderService.findByCid(customer.getId(), os));
+	}
+
+	/**
+	 * 通过预约编号查询订单
+	 * 
+	 * @param rid
+	 * @return
+	 */
+	@Cwp(1)
+	@RequestMapping("listforrese")
+	@ResponseBody
+	public JSON listforRese(String rid)
+	{
+		// TODO 权限判断
+		int resId = 0;
+		try
+		{
+			resId = Integer.valueOf(rid);
+		}
+		catch (Exception e)
+		{
+		}
+		List<Order> orders = orderService.findByRid(resId);
+		return new JSON(true, "查询成功").append("orders", orders);
 	}
 }

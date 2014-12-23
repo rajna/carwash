@@ -46,27 +46,40 @@ import com.carwash.service.OrderServiceI;
  * <p>
  */
 @Service("orderService")
-public class OrderServiceImpl implements OrderServiceI {
+public class OrderServiceImpl implements OrderServiceI
+{
 	@Autowired
 	private BaseDaoI<Order> oDao;
 
 	@Override
-	public void saveOrUpdate(Order order) {
+	public void saveOrUpdate(Order order)
+	{
 		oDao.saveOrUpdate(order);
 	}
 
 	@Override
-	public List<Order> findByCid(int cid, OrderStatus status) {
+	public List<Order> findByCid(int cid, OrderStatus status)
+	{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("cid", cid);
 		StringBuffer hql = new StringBuffer(
 				"From Order o where o.customerId=:cid ");
-		if (status != null) {
+		if (status != null)
+		{
 			params.put("status", status);
 			hql.append(" and o.orderStatus=:status ");
 		}
 		hql.append(" Order By o.create_date desc");
 		return oDao.find(hql.toString(), params);
+	}
+
+	@Override
+	public List<Order> findByRid(int rid)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("rid", rid);
+		return oDao
+				.find(" From Order o where o.reservationId=:rid ORDER BY o.id DESC");
 	}
 
 }
