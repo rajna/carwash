@@ -1,0 +1,274 @@
+<link rel="import" href="../../../cwresources/components/polymer/polymer.html">
+
+<link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog-transition.html">
+<link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../cwresources/components/core-ajax/core-ajax.html">
+<link rel="import" href="../../../cwresources/components/paper-button/paper-button.html">
+<link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
+<link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
+<polymer-element name="p-table" attributes="data columns categories sortColumn sortDescending">
+    <template>
+      <style>
+      
+     
+    paper-dialog {
+      width: 50%;
+      min-width: 350px;
+    }
+    .c-form{
+      width:90%;
+      margin:24px auto 0;
+    }
+    .c-form paper-input{
+      width:100%;
+    }
+      table.g_table {
+		  width: 100%;
+		  margin:0 auto;
+		  border-collapse: collapse;
+      }
+      table.g_table tr:nth-of-type(even) {
+		cursor: pointer;
+		border-radius: 5px;
+      }
+    
+      table.g_table td,
+      table.g_table th {
+		  padding: 0.75em 0;
+		  margin: 0.3em 0;
+		  text-align: left;
+		  color: #616161;
+		  font-size:14px;
+      }
+      table.g_table th {
+		  font-weight: 800;
+		  cursor: pointer;
+		  color:#bdbdbd;
+		  border-bottom:1px solid #bdbdbd;
+		  padding-bottom:14px;
+      }
+      table.g_table td:first-of-type {
+  text-align: left;
+      }
+      
+      .p-select{
+	width:100%;
+	border:none;
+	border:1px solid #757575;
+	font-size:18px;
+	color:#757575;
+	background:none;
+}
+
+.p_file{
+	font-size:18px;
+	color:#757575;
+	margin-top:8px;
+}
+.c-type{
+   font-size:18px;
+	color:#757575;
+	margin-bottom:12px;
+}
+
+/* FAB */
+    .fab {
+      position: relative;
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      color: #fff;
+      overflow: hidden;
+      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-delay: 0.2s;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    }
+    
+    .fab.red {
+      background-color: #d23f31;
+    }
+    
+    .fab.blue {
+      background-color: #4285f4;
+    }
+    
+    .fab.green {
+      background-color: #0f9d58;
+    }
+    
+    .fab:active {
+      box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+      transition-delay: 0s;
+    }
+    
+    .fab > core-icon {
+      margin: 16px;
+    }
+    
+    .fab > core-icon::shadow path {
+      fill: #fff;
+    }
+    </style>
+    
+   
+    <paper-toast id="msgtoast" role="alert">
+	 </paper-toast>
+    <paper-dialog heading="编辑" id="editPanel" transition="paper-dialog-transition-center">
+          <div class="c-form">
+            <div class="f-inner">
+              <core-ajax id="ajaxediteform" handleAs="json" on-core-response="{{handleEdite}}" url="../../api/product/post"  method="post" ></core-ajax>
+              <!--  <div class="c-type">类别:{{singleItem.categoryId}}</div>
+              <select class="p-select" selectedIndex={{formdata.categoryId}}>
+				<template repeat="{{category in categories}}">
+					<option name="{{category.id}}">{{category.name}}</option>
+				</template>
+				</select>
+			  -->
+              <paper-input label="名称" inputValue="{{formdata.name}}" placeholder="名称:{{singleItem.name}}" floatingLabel></paper-input>
+              <paper-input label="价格" type="number" step="0.1" inputValue="{{formdata.price}}" placeholder="价格:{{singleItem.price}}"  floatingLabel></paper-input>
+              <paper-input label="描述"  inputValue="{{formdata.description}}" placeholder="描述:{{singleItem.description}}" floatingLabel></paper-input>
+              <!-- <img src="../../cwresources/{{singleItem.imageLink}}" width="100%;"/>--><input type="file" name="image" id="p_file"  class="p_file" on-change={{fileselect}}>
+            </div>
+          </div>
+
+    <paper-button label="取消" affirmative on-click="{{cansleEdit}}"></paper-button>
+    <paper-button label="确定" affirmative autofocus on-click={{confirm}}></paper-button>
+
+  </paper-dialog>
+      <table class="g_table">
+        <tr>
+          <template repeat="{{column in columns}}">
+            <th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
+          </template>
+        </tr>
+        <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
+          <tr>
+            <template repeat="{{column in columns}}">
+              <template if="{{column.name!='action'}}">
+                <td hidden?="{{column.name!='imageLink'}}">
+                  <img style="width:90px;" src="{{column.name!='imageLink'?'':'../../cwresources/'+row[column.name]}}"/>
+                </td>
+                <td hidden?="{{column.name=='imageLink'}}">
+                  <span>{{row[column.name]}}</span>
+                </td>
+              </template>
+              <template if="{{column.name=='action'}}">
+                <td on-click="{{editeRow}}"><paper-button label="修改" ></paper-button></td>
+              </template>
+            </template>
+          </tr>
+        </template>
+      </table>
+    </template>
+    
+    <script>
+      PolymerExpressions.prototype.sortByKey = function(array, key, desc) {
+          return array.sort(function(a, b) {
+              var x = a[key];
+              var y = b[key];
+
+              if (typeof x == "string"){
+                x = x.toLowerCase(); 
+                y = y.toLowerCase();
+              }
+              if(desc){
+                return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+              }else{
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              }
+          });
+      };
+      Polymer('p-table', {
+          data: [],
+          columns: [],
+          categories:[],
+          sortColumn: null,
+          sortDescending: false,
+          singleItem:null,
+          formData:new FormData(),
+          formdata:{},
+          changeSort: function(e,p,o){
+            var clickedSortColumn = o.templateInstance_.model.column.name;
+            if(clickedSortColumn == this.sortColumn){
+             
+              this.sortDescending = !this.sortDescending;
+            }else{
+              this.sortColumn = clickedSortColumn;
+            }
+          },
+          cansleEdit:function(event, detail, sender){
+            //this.$.editPanel.toggle();
+          },
+          editeRow:function(event, detail, sender){
+            this.formdata={};
+            this.formData=new FormData();
+            this.singleItem =sender.templateInstance_.model.row;
+            this.formdata.id=this.singleItem.id;
+            this.formdata.categoryId=this.singleItem.categoryId;
+            this.$.editPanel.toggle();
+          },
+          confirm:function(event, detail, sender){
+            
+            /*if(!this.formdata.categoryId){
+					this.formdata.categoryId=0;
+				}
+			*/
+			console.log(this.singleItem);
+			console.log(this.singleItem.categoryId);
+			/*if((this.formdata.categoryId+1)!=this.singleItem.categoryId){
+				this.formData.append("categoryId",this.formdata.categoryId+1);
+			}else{
+				this.formData.append("categoryId",this.singleItem.categoryId);
+			}
+			*/
+			if(this.formdata.name){
+				this.formData.append("name",this.formdata.name);
+			}else{
+				this.formData.append("name",this.singleItem.name);
+			}
+			if(this.formdata.price){
+				this.formData.append("price",this.formdata.price);
+			}else{
+				this.formData.append("price",this.singleItem.price);
+			}
+			if(this.formdata.description){
+				this.formData.append("description",this.formdata.description);
+			}else{
+				this.formData.append("description",this.singleItem.description);
+			}
+			if(!this.formdata.imageLink){
+				this.formData.append("imageLink",this.singleItem.imageLink);
+			}
+			console.log(this.formdata);
+			this.formData.append("id",this.formdata.id);
+			this.formData.append("categoryId",this.formdata.categoryId);
+			this.$.ajaxediteform.body = this.formData;
+		    this.$.ajaxediteform.contentType = null;
+		    this.$.ajaxediteform.go();
+          },
+          fileselect:function(event, detail, sender){
+          	for (var i = 0, f; f = sender.files[i]; ++i) {
+		          this.formData.append(sender.name,f,f.name);
+		        }
+		        this.formdata.imageLink=this.$.p_file.value;
+		        this.$.ajaxediteform.body = this.formData;
+		        // Override default type set by core-ajax.
+		        // Allow browser to set the mime multipart content type itself. 
+		        this.$.ajaxediteform.contentType = null;
+          },
+          handleEdite:function(e, detail, sender){
+			    if(e.detail.response.success){
+			    	this.$.msgtoast.text=e.detail.response.message;
+			    }else{
+			    	this.$.msgtoast.text="添加失败";
+			    }
+			    
+			    this.$.msgtoast.show();
+			    this.fire('product-refresh');
+          }
+      });
+    </script>
+    
+</polymer-element>
+

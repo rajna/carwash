@@ -1,0 +1,181 @@
+<link rel="import" href="../../../cwresources/components/polymer/polymer.html">
+
+<link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog-transition.html">
+<link rel="import" href="../../../cwresources/components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../cwresources/components/core-ajax/core-ajax.html">
+<link rel="import" href="../../../cwresources/components/paper-button/paper-button.html">
+<link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
+<link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
+<link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
+<polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending rowStatus">
+    <template>
+      <style>
+      
+     
+    paper-dialog {
+      width: 50%;
+      min-width: 350px;
+    }
+    .c-form{
+      width:90%;
+      margin:24px auto 0;
+    }
+    .c-form paper-input{
+      width:100%;
+    }
+      table.g_table {
+		  width: 100%;
+		  margin:0 auto;
+		  border-collapse: collapse;
+      }
+      table.g_table tr:nth-of-type(even) {
+		cursor: pointer;
+		border-radius: 5px;
+      }
+    
+      table.g_table td,
+      table.g_table th {
+		  padding: 0.75em 0;
+		  margin: 0.3em 0;
+		  text-align: left;
+		  color: #616161;
+		  font-size:14px;
+      }
+      table.g_table th {
+		  font-weight: 800;
+		  cursor: pointer;
+		  color:#bdbdbd;
+		  border-bottom:1px solid #bdbdbd;
+		  padding-bottom:14px;
+      }
+      table.g_table td:first-of-type {
+  text-align: left;
+      }
+      
+      .p-select{
+	width:100%;
+	border:none;
+	border:1px solid #757575;
+	font-size:18px;
+	color:#757575;
+	background:none;
+}
+
+.p_file{
+	font-size:18px;
+	color:#757575;
+	margin-top:8px;
+}
+.c-type{
+   font-size:18px;
+	color:#757575;
+	margin-bottom:12px;
+}
+
+ .c-p-caption{
+padding: 12px;
+  display: block;
+  margin: 0.3em 0 0.6em 0;
+  cursor: pointer;
+  background: #e0e0e0;
+}
+
+    </style>
+    
+   
+    <paper-toast id="msgtoast" role="alert">
+	 </paper-toast>
+      <div class="c-p-caption" id="itemSelect" on-change={{itemSelect}}>
+			<div horizontal layout>
+			    <paper-radio-group class="p_select_item" selected={{rowStatus}}>
+			       <paper-radio-button name='PROCESSING' label='处理中预约'>
+					</paper-radio-button>
+				    <paper-radio-button name='COMPLETED' label='已完成预约'>
+					</paper-radio-button>
+					<paper-radio-button name='CANCELED' label='已取消预约'>
+					</paper-radio-button>
+				</paper-radio-group>
+			</div>
+		</div>
+	  <div layout vertical center>
+	  
+      <table class="g_table">
+        <tr>
+          <template repeat="{{column in columns}}">
+            <th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
+          </template>
+        </tr>
+        <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
+          <template if="{{row['reservationStatus']==rowStatus}}">
+          <tr>
+            <template repeat="{{column in columns}}">
+	            <template if="{{column.name!='action'}}">
+	                <td>
+	                  <span>{{row[column.name]}}</span>
+	                  <!--  <audio src="{{row[column.name]}}">您的浏览器不支持 audio 标签。</audio>-->
+	                </td>
+	            </template>
+	            <template if="{{column.name=='action'}}">
+	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}"><paper-button label="创建订单" on-click="{{editeRow}}"></paper-button><paper-button label="取消" ></paper-button></td>
+	             </template>
+	         </template>
+          </tr>
+          </template>
+          
+          </template>
+        </template>
+      </table>
+      
+      </div>
+      
+      
+    </template>
+    
+    <script>
+      PolymerExpressions.prototype.sortByKey = function(array, key, desc) {
+          return array.sort(function(a, b) {
+              var x = a[key];
+              var y = b[key];
+
+              if (typeof x == "string"){
+                x = x.toLowerCase(); 
+                y = y.toLowerCase();
+              }
+              if(desc){
+                return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+              }else{
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+              }
+          });
+      };
+      Polymer('reservation-table', {
+          data: [],
+          columns: [],
+          sortColumn: null,
+          sortDescending: false,
+          singleItem:null,
+          rowStatus:null,
+          changeSort: function(e,p,o){
+            var clickedSortColumn = o.templateInstance_.model.column.name;
+            if(clickedSortColumn == this.sortColumn){
+             
+              this.sortDescending = !this.sortDescending;
+            }else{
+              this.sortColumn = clickedSortColumn;
+            }
+          },
+          cansleEdit:function(event, detail, sender){
+            //this.$.editPanel.toggle();
+          },
+          editeRow:function(event, detail, sender){
+            this.fire('orderlist-show');
+          },
+          itemSelect:function(event, detail, sender){
+          	var status=event.target.getAttribute('name');
+          	this.rowStatus=status;
+          }
+      });
+    </script>
+    
+</polymer-element>
+
