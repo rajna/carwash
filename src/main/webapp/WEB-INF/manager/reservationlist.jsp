@@ -59,6 +59,9 @@
 	rel="import">
 <link rel="import" href="../../cwresources/components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../cwresources/components/paper-toggle-button/paper-toggle-button.html">
+<link href="../../cwresources/components/core-animated-pages/core-animated-pages.html" rel="import">
+<link href="../../cwresources/components/core-animated-pages/transitions/cross-fade.html" rel="import">
+<link href="../../cwresources/components/core-animated-pages/transitions/slide-from-right.html" rel="import">
 <link href="../mycomponents/reservationcard/reservation-table.html" rel="import">
 
 <link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
@@ -92,11 +95,25 @@
 	right: 24px;
 	bottom:24px;
 }
+core-animated-pages {
+      position: absolute;
+      top: 0px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      overflow: hidden;
+    }
+
+    section > div {
+      height: 100%;
+      color: white;
+    }
 </style>
 </head>
 
 
 <body unresolved class="p_body">
+     
      <paper-toast id="p-a-msg" role="alert">
 	 </paper-toast>
 	 
@@ -129,37 +146,87 @@
 	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
 	</paper-dialog>
 
-	<core-ajax auto url="../api/reservation/list" class="p_list"  handleAs="json"></core-ajax>
-
-	<template repeat="{{data}}">
-	<div>{{name}}</div>
-	</template>
-
-	<core-scroll-header-panel condenses keepCondensedHeader
-		condensedHeaderHeight="80" mode="cover"> <core-toolbar
-		id="mainheader">
-	<div class="bottom indent bottom-text" self-end>
-		<div class="c_m_title">预约列表</div>
-		<div class="subtitle">预约信息查看</div>
-	</div>
-	<div flex=""></div>
-	</core-toolbar>
-	<div class="content c-product-main" >
-	    <div class="fab red c-fab-fixed">
-		      <core-icon icon="add"></core-icon>
-		      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
-		    </div>
-		
-		<template id="tableTemplate" bind> <customer-table
-			data="{{data}}" columns="{{columns}}" sortColumn="id"
-			sortDescending="false"></customer-table> </template>
-
-	</div>
-	</core-scroll-header-panel>
+	
+	
+	<core-animated-pages  transitions="slide-from-right">
+    <section>
+              <core-ajax auto url="../api/reservation/all" class="p_list"  handleAs="json"></core-ajax>
+		      <core-scroll-header-panel condenses keepCondensedHeader
+				condensedHeaderHeight="80" mode="cover"> 
+				<core-toolbar id="mainheader">
+				<div class="bottom indent bottom-text" self-end>
+					<div class="c_m_title">预约列表</div>
+					<div class="subtitle">预约信息查看</div>
+				</div>
+				<div flex=""></div>
+				</core-toolbar>
+				<div class="content c-product-main" >
+				    <div class="fab red c-fab-fixed">
+					      <core-icon icon="add"></core-icon>
+					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+					    </div>
+					
+					<template id="tableTemplate" bind> 
+					   <reservation-table
+						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} sortColumn="id"
+						sortDescending="true"></reservation-table> 
+				   </template>
+				   
+				   <div horizontal layout>
+					  <div class="button raised more">
+					      <div class="center" fit>加载更多</div>
+					      <paper-ripple fit></paper-ripple>
+					    </div>
+					   <div flex></div>
+					  <div>
+					  	<template id="pageTemplate" bind> 
+						  <div style="color:#646464;font-size:14px;line-height:32px;">共{{pages}}页，第{{curpage}}页</div>
+					   </template>
+					  </div>
+					</div>
+				</div>
+				</core-scroll-header-panel>
+    </section>
+    <section>
+      <div layout vertical center center-justified>
+          <core-scroll-header-panel condenses
+				condensedHeaderHeight="80" mode="cover">
+				<core-toolbar id="mainheader"  style="background-color:#e91e63;">
+				<div class="bottom indent bottom-text" self-end>
+					<div class="c_m_title">新建订单</div>
+					<div class="subtitle">预约详情</div>
+				</div>
+				<div flex=""></div>
+				</core-toolbar>
+		  </core-scroll-header-panel>
+      </div>
+    </section>
+    </core-animated-pages>
+	<script>
+    var up = true;
+    var max = 1;
+    function stuff() {
+      var p = document.querySelector('core-animated-pages');
+      if (up && p.selected === max || !up && p.selected === 0) {
+        up = !up;
+      }
+      if (up) {
+        p.selected += 1;
+      } else {
+        p.selected -= 1;
+      }
+    }
+    
+    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
+			    stuff();
+	});
+    </script>
 	<script>
 		
 		window.addEventListener('polymer-ready', function() {
 			var ajaxlist = document.querySelector('.p_list');
+			var tableTemplate=document.getElementById('tableTemplate');
+			var pageTemplate=document.getElementById('pageTemplate')
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.item={};
@@ -173,63 +240,82 @@
 			
 			//end显示添加表单
 			
-			//start提交添加表单
 			
 			
-			var p_confirm_button = document.querySelector('.p_confirm');
-			var addformajax = document.querySelector('.addform');
-			p_confirm_button.addEventListener("click", function(e) {
-				addformajax.params=add_p_form.item;
-				addformajax.go();
-				
-			});
-			//end提交添加表单
+			var listdata=[];
+			 var page=1;
+			 var pages=0;
+			var rowStatus="PROCESSING";
 			
-			//start
-			addformajax.addEventListener("core-response",function(e){
-			    formData=new FormData();
-			    var msgtoast= document.querySelector('#p-a-msg');
-			    if(e.detail.response.success){
-			    	msgtoast.text=e.detail.response.message;
-			    }else{
-			    	msgtoast.text="添加失败"+e.detail.response.message;
-			    }
-			    
-			    msgtoast.show();
-			    ajaxlist.go();
-			});
-			//end
-			
-			
-			//start获取列表
-			ajaxlist.addEventListener("core-response", function(e) {
-			  
-			   
-				var columns = [{
+			var columns = [{
 					name : 'id',
 					title : '编号'
 				}, {
-					name : 'name',
-					title : '时间'
+					name : 'customer_mobile',
+					title : '客户电话'
 				}, {
-					name : 'centerX',
-					title : '地址'
+					name : 'customer_name',
+					title : '客户姓名'
 				}, {
-					name : 'centerY',
+					name : 'carNo',
 					title : '车牌'
 				}, {
-					name : 'radius',
-					title : '半径'
+					name : 'address',
+					title : '地址'
 				}, {
-					name : 'description',
-					title : '区域描述'
+					name : 'create_date',
+					title : '创建时间'
+				}, {
+					name : 'message_text',
+					title : '客户留言'
+				}, {
+					name : 'message_voice_url',
+					title : '客户语音'
+				}, {
+					name : 'action',
+					title : '操作'
 				}];
-				document.getElementById('tableTemplate').model = {
-					data : e.detail.response.reservation,
-					columns : columns
+			
+			//start获取列表
+			ajaxlist.addEventListener("core-response", function(e) {
+			    var newdata=e.detail.response.reservations;
+			    pages=e.detail.response.pages;
+			    for ( var i=0 ; i < newdata.length ; ++i ){
+			    	listdata.push(newdata[i]);
+			    }
+			    
+			    pageTemplate.model={
+			    	pages:pages,
+					curpage:page
+			    }
+				
+				tableTemplate.model = {
+					data : listdata,
+					columns : columns,
+					rowStatus:rowStatus
 				};
 			});
 			//end获取列表
+			
+			//start加载更多
+			var moreButton = document.querySelector('.more');
+			moreButton.addEventListener("click", function(e) {
+			   rowStatus=tableTemplate.model.rowStatus;
+			  
+			   if(!ajaxlist.params){
+			   		page=2;
+			   		ajaxlist.params={'pid':page};
+			   }else{
+			   		var pid=ajaxlist.params;
+			   		if(page<pages){
+			   			page=pid.pid+1;
+			   		};
+			   		
+			   		ajaxlist.params={'pid':page};
+			   }
+			  
+			});
+			//end
 			
 			
 		});

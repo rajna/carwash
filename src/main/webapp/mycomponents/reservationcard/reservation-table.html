@@ -6,7 +6,8 @@
 <link rel="import" href="../../../cwresources/components/paper-button/paper-button.html">
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
-<polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending">
+<link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
+<polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending rowStatus">
     <template>
       <style>
       
@@ -71,50 +72,33 @@
 	margin-bottom:12px;
 }
 
-/* FAB */
-    .fab {
-      position: relative;
-      display: inline-block;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      color: #fff;
-      overflow: hidden;
-      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      transition-delay: 0.2s;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    }
-    
-    .fab.red {
-      background-color: #d23f31;
-    }
-    
-    .fab.blue {
-      background-color: #4285f4;
-    }
-    
-    .fab.green {
-      background-color: #0f9d58;
-    }
-    
-    .fab:active {
-      box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
-      transition-delay: 0s;
-    }
-    
-    .fab > core-icon {
-      margin: 16px;
-    }
-    
-    .fab > core-icon::shadow path {
-      fill: #fff;
-    }
+ .c-p-caption{
+padding: 12px;
+  display: block;
+  margin: 0.3em 0 0.6em 0;
+  cursor: pointer;
+  background: #e0e0e0;
+}
+
     </style>
     
    
     <paper-toast id="msgtoast" role="alert">
 	 </paper-toast>
-    
+      <div class="c-p-caption" id="itemSelect" on-change={{itemSelect}}>
+			<div horizontal layout>
+			    <paper-radio-group class="p_select_item" selected={{rowStatus}}>
+			       <paper-radio-button name='PROCESSING' label='处理中预约'>
+					</paper-radio-button>
+				    <paper-radio-button name='COMPLETED' label='已完成预约'>
+					</paper-radio-button>
+					<paper-radio-button name='CANCELED' label='已取消预约'>
+					</paper-radio-button>
+				</paper-radio-group>
+			</div>
+		</div>
+	  <div layout vertical center>
+	  
       <table class="g_table">
         <tr>
           <template repeat="{{column in columns}}">
@@ -122,16 +106,29 @@
           </template>
         </tr>
         <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
+          <template if="{{row['reservationStatus']==rowStatus}}">
           <tr>
             <template repeat="{{column in columns}}">
-             
-                <td>
-                  <span>{{row[column.name]}}</span>
-                </td>
-            </template>
+	            <template if="{{column.name!='action'}}">
+	                <td>
+	                  <span>{{row[column.name]}}</span>
+	                  <!--  <audio src="{{row[column.name]}}">您的浏览器不支持 audio 标签。</audio>-->
+	                </td>
+	            </template>
+	            <template if="{{column.name=='action'}}">
+	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}"><paper-button label="创建订单" on-click="{{editeRow}}"></paper-button><paper-button label="取消" ></paper-button></td>
+	             </template>
+	         </template>
           </tr>
+          </template>
+          
+          </template>
         </template>
       </table>
+      
+      </div>
+      
+      
     </template>
     
     <script>
@@ -157,8 +154,7 @@
           sortColumn: null,
           sortDescending: false,
           singleItem:null,
-          formData:new FormData(),
-          formdata:{},
+          rowStatus:null,
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
@@ -172,59 +168,11 @@
             //this.$.editPanel.toggle();
           },
           editeRow:function(event, detail, sender){
-            this.formdata={};
-            this.formData=new FormData();
-            this.singleItem =sender.templateInstance_.model.row;
-            this.formdata.id=this.singleItem.id;
-            this.formdata.categoryId=this.singleItem.categoryId;
-            this.$.editPanel.toggle();
+            this.fire('orderlist-show');
           },
-          confirm:function(event, detail, sender){
-            
-			if(this.formdata.name){
-				this.formData.append("name",this.formdata.name);
-			}else{
-				this.formData.append("name",this.singleItem.name);
-			}
-			if(this.formdata.price){
-				this.formData.append("price",this.formdata.price);
-			}else{
-				this.formData.append("price",this.singleItem.price);
-			}
-			if(this.formdata.description){
-				this.formData.append("description",this.formdata.description);
-			}else{
-				this.formData.append("description",this.singleItem.description);
-			}
-			if(!this.formdata.imageLink){
-				this.formData.append("imageLink",this.singleItem.imageLink);
-			}
-			console.log(this.formdata);
-			this.formData.append("id",this.formdata.id);
-			this.formData.append("categoryId",this.formdata.categoryId);
-			this.$.ajaxediteform.body = this.formData;
-		    this.$.ajaxediteform.contentType = null;
-		    this.$.ajaxediteform.go();
-          },
-          fileselect:function(event, detail, sender){
-          	for (var i = 0, f; f = sender.files[i]; ++i) {
-		          this.formData.append(sender.name,f,f.name);
-		        }
-		        this.formdata.imageLink=this.$.p_file.value;
-		        this.$.ajaxediteform.body = this.formData;
-		        // Override default type set by core-ajax.
-		        // Allow browser to set the mime multipart content type itself. 
-		        this.$.ajaxediteform.contentType = null;
-          },
-          handleEdite:function(e, detail, sender){
-			    if(e.detail.response.success){
-			    	this.$.msgtoast.text=e.detail.response.message;
-			    }else{
-			    	this.$.msgtoast.text="添加失败";
-			    }
-			    
-			    this.$.msgtoast.show();
-			    this.fire('product-refresh');
+          itemSelect:function(event, detail, sender){
+          	var status=event.target.getAttribute('name');
+          	this.rowStatus=status;
           }
       });
     </script>
