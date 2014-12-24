@@ -172,7 +172,6 @@ padding: 12px;
           },
           orderList:function(event, detail,sender){
             var row=sender.templateInstance_.model.row;
-            console.log(row.id);
             this.reservationId=row.id;
             this.fire('orderlist-show');
           },

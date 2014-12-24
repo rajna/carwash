@@ -88,7 +88,7 @@ public class ApiOrder
 	 * @param rid
 	 * @return
 	 */
-	@Cwp(1)
+	//@Cwp(1)
 	@RequestMapping("listforrese")
 	@ResponseBody
 	public JSON listforRese(String rid)

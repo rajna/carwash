@@ -62,7 +62,7 @@
 <link href="../../cwresources/components/core-animated-pages/transitions/cross-fade.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/transitions/slide-from-right.html" rel="import">
 <link href="../mycomponents/reservationcard/reservation-table.html" rel="import">
-
+<link href="../mycomponents/reservationcard/order-table.html" rel="import">
 <link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
 
 
@@ -190,10 +190,11 @@ core-animated-pages {
       <div layout vertical center center-justified>
           <core-scroll-header-panel condenses
 				condensedHeaderHeight="80" mode="cover">
+				<core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
 				<core-toolbar id="mainheader"  style="background-color:#e91e63;">
 				<div class="bottom indent bottom-text" self-end>
 					<div class="c_m_title">新建订单</div>
-					<div class="subtitle">预约详情</div>
+					<div class="subtitle">订单详情</div>
 				</div>
 				<div flex=""></div>
 				</core-toolbar>
@@ -201,36 +202,18 @@ core-animated-pages {
 					<template id="orderListTemplate" bind> 
 					   <order-table
 						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} reservationId={{reservationId}} sortColumn="id"
-						sortDescending="true"></reservation-table> 
+						sortDescending="true"></order-table> 
 				    </template>
 				</div>
 		  </core-scroll-header-panel>
       </div>
     </section>
     </core-animated-pages>
+	
 	<script>
-    var up = true;
-    var max = 1;
-    function stuff() {
-      var p = document.querySelector('core-animated-pages');
-      if (up && p.selected === max || !up && p.selected === 0) {
-        up = !up;
-      }
-      if (up) {
-        p.selected += 1;
-      } else {
-        p.selected -= 1;
-      }
-    }
-    
-    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
-			    stuff();
-	});
-    </script>
-	<script>
-		
 		window.addEventListener('polymer-ready', function() {
 			var ajaxlist = document.querySelector('.p_list');
+			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
 			var pageTemplate=document.getElementById('pageTemplate')
 			
@@ -287,7 +270,6 @@ core-animated-pages {
 			ajaxlist.addEventListener("core-response", function(e) {
 			    var newdata=e.detail.response.reservations;
 			    pages=e.detail.response.pages;
-			    console.log(newdata);
 			    for ( var i=0 ; i < newdata.length; ++i ){
 			    	listdata.push(newdata[i]);
 			    }
@@ -326,7 +308,28 @@ core-animated-pages {
 			});
 			//end
 			
-			
+			//start订单列表获取
+			    var up = true;
+			    var max = 1;
+			    function stuff() {
+			      var p = document.querySelector('core-animated-pages');
+			      if (up && p.selected === max || !up && p.selected === 0) {
+			        up = !up;
+			      }
+			      if (up) {
+			        p.selected += 1;
+			      } else {
+			        p.selected -= 1;
+			      }
+			    }
+			    
+			    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
+			    	reservationId=tableTemplate.model.reservationId;
+			    	ajaxorderlist.params={'rid':reservationId};
+			    	ajaxorderlist.go();
+					stuff();
+				});
+			   //end订单列表获取
 		});
 	</script>
 	<script src="../../cwresources/js/app.js"></script>
