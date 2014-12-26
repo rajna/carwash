@@ -157,14 +157,9 @@ core-animated-pages {
 					<div class="c_m_title">预约列表</div>
 					<div class="subtitle">预约信息查看</div>
 				</div>
-				<div flex=""></div>
+				<div flex></div>
 				</core-toolbar>
 				<div class="content c-product-main" >
-				    <div class="fab red c-fab-fixed">
-					      <core-icon icon="add"></core-icon>
-					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
-					    </div>
-					
 					<template id="tableTemplate" bind> 
 					   <reservation-table
 						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} reservationId={{reservationId}} sortColumn="id"
@@ -187,26 +182,29 @@ core-animated-pages {
 				</core-scroll-header-panel>
     </section>
     <section>
-      <div layout vertical center center-justified>
-          <core-scroll-header-panel condenses
-				condensedHeaderHeight="80" mode="cover">
-				<core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
-				<core-toolbar id="mainheader"  style="background-color:#e91e63;">
-				<div class="bottom indent bottom-text" self-end>
-					<div class="c_m_title">新建订单</div>
-					<div class="subtitle">订单详情</div>
-				</div>
-				<div flex=""></div>
+    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
+          <core-scroll-header-panel condenses>
+				
+				<core-toolbar class="tall mainheader" style="background-color:#e91e63;">
+					<div class="bottom indent bottom-text" self-end>
+						<div class="c_m_title">新建订单</div>
+						<div class="subtitle">订单详情</div>
+					</div>
+					<div flex></div>
 				</core-toolbar>
-				<div class="content c-product-main" >
+				<div class="content c-product-main" style="margin-top:256px;">
+				      <div class="fab blue c-fab-fixed">
+					      <core-icon icon="add"></core-icon>
+					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+					</div>
 					<template id="orderListTemplate" bind> 
 					   <order-table
-						data="{{data}}" columns="{{columns}}" rowStatus={{rowStatus}} reservationId={{reservationId}} sortColumn="id"
-						sortDescending="true"></order-table> 
+						data="{{data}}" columns="{{columns}}" itemcolumns={{itemcolumns}} sortColumn="id"
+						sortDescending="true">
+						</order-table> 
 				    </template>
 				</div>
 		  </core-scroll-header-panel>
-      </div>
     </section>
     </core-animated-pages>
 	
@@ -215,7 +213,8 @@ core-animated-pages {
 			var ajaxlist = document.querySelector('.p_list');
 			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
-			var pageTemplate=document.getElementById('pageTemplate')
+			var pageTemplate=document.getElementById('pageTemplate');
+			var orderListTemplate=document.getElementById('orderListTemplate');
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.item={};
@@ -328,6 +327,47 @@ core-animated-pages {
 			    	ajaxorderlist.params={'rid':reservationId};
 			    	ajaxorderlist.go();
 					stuff();
+				});
+				
+				var ordercolumns = [{
+					name : 'orderItems',
+					title : '购买商品'
+				}, {
+					name : 'carNo',
+					title : '车牌'
+				}, {
+					name : 'address',
+					title : '地址'
+				}, {
+					name : 'create_date',
+					title : '创建时间'
+				}, {
+					name : 'action',
+					title : '操作'
+				}];
+				
+				var itemcolumns = [{
+					name : 'imageLink',
+					title : '图片'
+				}, {
+					name : 'name',
+					title : '名字'
+				}, {
+					name : 'price',
+					title : '价格'
+				}, {
+					name : 'amount',
+					title : '数量'
+				}];
+				
+				ajaxorderlist.addEventListener("core-response", function(e) {
+				    var newdata=e.detail.response.orders;
+				    
+					orderListTemplate.model = {
+						data : newdata,
+						columns : ordercolumns,
+						itemcolumns:itemcolumns
+					};
 				});
 			   //end订单列表获取
 		});

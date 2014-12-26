@@ -13,8 +13,9 @@ core-scroll-header-panel {
     bottom: 0;
     left: 0;
 }
-#mainheader{
+#mainheader,.mainheader{
     height: 256px;
+    display:block;
 }
 
 .bottom-text {
@@ -45,6 +46,7 @@ core-toolbar {
   padding: 24px 64px;
   max-width: 912px;
   min-height: 300px;
+  position:relative;
 }
 
 /* drawer is always visible on a wide screen

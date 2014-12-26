@@ -7,7 +7,7 @@
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
-<polymer-element name="order-table" attributes="data columns categories sortColumn sortDescending">
+<polymer-element name="order-table" attributes="data columns itemcolumns categories sortColumn sortDescending">
     <template>
       <style>
       
@@ -49,54 +49,55 @@
 		  padding-bottom:14px;
       }
       table.g_table td:first-of-type {
-  text-align: left;
+  		text-align: left;
+      }
+      table.g_table td{
+      	border-bottom:1px solid #e0e0e0;
+      }
+      
+      table.g_table td div{
+      	border-bottom:1px solid #eeeeee;
+      	padding:12px 0px;
+      	margin:0px 12px;
+      }
+      
+      table.g_table td div:last-child{
+      	border-bottom:0px solid #eeeeee;
       }
       
       .p-select{
-	width:100%;
-	border:none;
-	border:1px solid #757575;
-	font-size:18px;
-	color:#757575;
-	background:none;
-}
+			width:100%;
+			border:none;
+			border:1px solid #757575;
+			font-size:18px;
+			color:#757575;
+			background:none;
+		}
 
-.p_file{
-	font-size:18px;
-	color:#757575;
-	margin-top:8px;
-}
-.c-type{
-   font-size:18px;
-	color:#757575;
-	margin-bottom:12px;
-}
-
- .c-p-caption{
-padding: 12px;
-  display: block;
-  margin: 0.3em 0 0.6em 0;
-  cursor: pointer;
-  background: #e0e0e0;
-}
+		.p_file{
+			font-size:18px;
+			color:#757575;
+			margin-top:8px;
+		}
+		.c-type{
+		   font-size:18px;
+			color:#757575;
+			margin-bottom:12px;
+		}
+		
+		 .c-p-caption{
+		  padding: 12px;
+		  display: block;
+		  margin: 0.3em 0 0.6em 0;
+		  cursor: pointer;
+		  background: #e0e0e0;
+		}
 
     </style>
     
    
     <paper-toast id="msgtoast" role="alert">
 	 </paper-toast>
-      <div class="c-p-caption" id="itemSelect" on-change={{itemSelect}}>
-			<div horizontal layout>
-			    <paper-radio-group class="p_select_item" selected={{rowStatus}}>
-			       <paper-radio-button name='PROCESSING' label='处理中预约'>
-					</paper-radio-button>
-				    <paper-radio-button name='COMPLETED' label='已完成预约'>
-					</paper-radio-button>
-					<paper-radio-button name='CANCELED' label='已取消预约'>
-					</paper-radio-button>
-				</paper-radio-group>
-			</div>
-		</div>
 	  <div layout vertical center>
 	  
       <table class="g_table">
@@ -114,16 +115,34 @@ padding: 12px;
           <template if="{{row['reservationStatus']==rowStatus}}">
           <tr>
             <template repeat="{{column in columns}}">
-	            <template if="{{column.name!='action'}}">
+	            <template if="{{column.name!='action'&&column.name!='orderItems'}}">
 	                <td>
 	                  <span>{{row[column.name]}}</span>
-	                  <!--  <audio src="{{row[column.name]}}">您的浏览器不支持 audio 标签。</audio>-->
 	                </td>
 	            </template>
 	            <template if="{{column.name=='action'}}">
-	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td><paper-button label="取消" ></paper-button></td>
+	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td></td>
 	             </template>
+	             
+	             <template if="{{column.name=='orderItems'}}">
+	                <td>
+	                 <template repeat="{{item in row[column.name]}}">
+	                   <div>
+	                 	<template repeat="{{icolumn in itemcolumns}}">
+	                 	    <template if="{{icolumn.name=='imageLink'}}">
+	                 	    <img style="width:40px;" src="{{'../../cwresources/'+item[icolumn.name]}}"/>
+	                 		</template>
+	                 		<template if="{{icolumn.name!='imageLink'}}">
+	                 		{{icolumn.title}}:{{item[icolumn.name]}}
+	                 		</template>
+	                 	</template>
+	                 	</div>
+	                 </template>
+	                 </td>
+	            </template>
 	         </template>
+	         
+             	
           </tr>
           </template>
           
@@ -156,6 +175,7 @@ padding: 12px;
       Polymer('order-table', {
           data: [],
           columns: [],
+          itemcolumns:[],
           sortColumn: null,
           sortDescending: false,
           changeSort: function(e,p,o){
