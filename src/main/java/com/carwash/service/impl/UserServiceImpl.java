@@ -25,6 +25,9 @@
  */
 package com.carwash.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.carwash.entity.User;
@@ -39,13 +42,23 @@ import com.carwash.service.UserServiceI;
  * Date:2014年11月13日 Time:下午11:17:52
  * <p>
  */
-public class UserServiceImpl implements UserServiceI {
+public class UserServiceImpl implements UserServiceI
+{
 	@Autowired
 	private BaseDaoI<User> userDao;
 
 	@Override
-	public void saveOrUpdate(User o) {
+	public void saveOrUpdate(User o)
+	{
 		userDao.saveOrUpdate(o);
+	}
+
+	@Override
+	public User get(String mobile)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("mobile", mobile);
+		return userDao.get("From User u where u.mobile=:mobile", params);
 	}
 
 }

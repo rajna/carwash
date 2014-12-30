@@ -40,8 +40,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Device;
+import com.carwash.entity.User;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.service.RecommendServiceI;
+import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 import com.carwash.util.PhoneMessage;
@@ -63,6 +65,8 @@ public class Api
 	private CustomerServiceI customerService;
 	@Autowired
 	private RecommendServiceI recommendService;
+	@Autowired
+	private UserServiceI userService;
 
 	/**
 	 * 客户通过手机端获取验证码
@@ -146,4 +150,23 @@ public class Api
 				recommendService.findInuse());
 	}
 
+	/**
+	 * 用户登录
+	 */
+	@RequestMapping("userlogin")
+	@ResponseBody
+	public JSON userlogin(String mobile, String password)
+	{
+		if (mobile == null || password == null) { return new JSON(false,
+				"登录参数不完整"); }
+		Pattern p = Pattern.compile(Constant.MOBILEREG);
+		Matcher m = p.matcher(mobile);
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		User user = userService.get(mobile);
+		if (user == null) { return new JSON(false, "该手机号码尚未注册"); }
+		if (!user.isInuse()) { return new JSON(false, "该账户已停用"); }
+		if (!user.getPassword().equals(password)) { return new JSON(false,
+				"登录密码不正确"); }
+		return new JSON(true, "登录成功").append("user", JSONObject.toJSON(user));
+	}
 }

@@ -44,5 +44,8 @@ public interface UserServiceI
 	 */
 	public void saveOrUpdate(User o);
 
-	
+	/**
+	 * 通过手机号码查询用户
+	 */
+	public User get(String mobile);
 }

@@ -80,8 +80,20 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{customer}`：JSONObject customer对象模型(success=true时存在)
+	
+二、用户数据接口	
+------------	
+#### 1.用户登录
+- URL:`/api/userlogin`
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{user}`：JSONObject user对象模型	
 		
-二、产品数据接口
+三、产品数据接口
 ------------		
 #### 1.产品分类与手机首界面的推荐信息
 - URL:`/api/categoriesandrecommends`
@@ -100,9 +112,9 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{products}`,jsonarray
+	
 		
-		
-二、订单数据接口
+四、订单数据接口
 #### 1.订单列表(根据客户查询的列表)
 - URL:`/api/order/list`
 	* 请求方式:get OR post
