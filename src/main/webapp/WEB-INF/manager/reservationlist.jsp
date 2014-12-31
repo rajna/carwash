@@ -61,8 +61,12 @@
 <link href="../../cwresources/components/core-animated-pages/core-animated-pages.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/transitions/cross-fade.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/transitions/slide-from-right.html" rel="import">
+
+<link href="../../cwresources/components/paper-menu-button/paper-menu-button.html" rel="import">
+<link href="../../cwresources/components/paper-item/paper-item.html" rel="import">
 <link href="../mycomponents/reservationcard/reservation-table.html" rel="import">
 <link href="../mycomponents/reservationcard/order-table.html" rel="import">
+<link href="../mycomponents/productcard/orderp-table.html" rel="import">
 <link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
 
 
@@ -107,6 +111,50 @@ core-animated-pages {
       height: 100%;
       color: white;
     }
+    
+    .c-shopcard{
+    	border-radius: 2px;
+		box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+		background-color:#fff;
+    }
+    .shopwrap{
+    	width: 304px;
+		margin: 0 auto;
+		padding: 40px 24px 48px;
+    }
+    .shopitem{
+		padding: 12px 0px;
+		color:#757575;
+		font-size:14px;
+	}
+	.shopitem img{
+		padding-right:6px;
+	}
+	.order-category{
+		position:absolute;
+		top:0px;
+		left:0px;
+		width:100%;
+	}
+	.order-category paper-item{
+		color:#616161;
+	}
+	
+	.order-category core-toolbar{
+		border-bottom: 1px solid #bdbdbd;
+		background-color:#b9f6ca;
+		z-index:500;
+		width:45%;
+	}
+	
+	.order-category span{
+		color:#656565;
+	}
+	
+	paper-icon-button::shadow core-icon,paper-menu-button::shadow core-icon {
+        fill: #656565;
+    }
+	
 </style>
 </head>
 
@@ -191,6 +239,7 @@ core-animated-pages {
 						<div class="subtitle">订单详情</div>
 					</div>
 					<div flex></div>
+						 <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
 				</core-toolbar>
 				<div class="content c-product-main" style="margin-top:256px;">
 				      <div class="fab blue c-fab-fixed">
@@ -199,13 +248,77 @@ core-animated-pages {
 					</div>
 					<template id="orderListTemplate" bind> 
 					   <order-table
-						data="{{data}}" columns="{{columns}}" itemcolumns={{itemcolumns}} sortColumn="id"
+						data="{{data}}" columns="{{columns}}" itemcolumns={{itemcolumns}} shopitem={{shopitem}} sortColumn="id"
 						sortDescending="true">
 						</order-table> 
 				    </template>
 				</div>
 		  </core-scroll-header-panel>
     </section>
+        <section>
+	    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
+	          <core-scroll-header-panel condenses style="background-color:#b9f6ca;">
+					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:103px;z-index:500;">
+						<div flex></div>
+					    <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
+					</core-toolbar>
+					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;background-color:#b9f6ca;">
+					    <div horizontal layout flex>
+						  <div style="width:45%;margin-left:15px;padding-top:64px;height:580px;overflow:auto;">
+						    <core-ajax auto url="../api/product/list" class="category_list" params='{"cid":"1"}' handleAs="json"></core-ajax>
+						    <div class="order-category">
+						  	<core-toolbar>
+						  		<template id="categoryTitle" bind="{{categorytitle}}" is="auto-binding"> 
+						  	    	<span class="o-c-title">{{categorytitle}}</span>
+						  	    </template>
+								<paper-menu-button class="o-c-menu" icon="arrow-drop-down" halign="right" noTransition>
+								    <c:forEach items="${categories }" var="category">
+								      <paper-item name="${category.id }" label="${category.name }" onclick="getCateroty(this);"></paper-item>
+										</paper-radio-button>
+									</c:forEach> 
+						        </paper-menu-button>
+							</core-toolbar>
+							</div>
+						  	<template id="categoryTemplate" bind> 
+						  	<orderp-table data="{{data}}" columns="{{columns}}" sortColumn="id" sortDescending="false">
+							</orderp-table> 
+							</template>
+						  </div>
+						  <div style="width:55%;">
+						    <div class="c-shopcard">
+						  	<core-toolbar class="tall mainheader" style="background-color:#1de9b6;">
+								<div class="bottom indent bottom-text" self-end>
+									<div class="c_m_title">已购商品</div>
+									<div class="subtitle">订单明细</div>
+								</div>
+								<div flex></div>
+							</core-toolbar>
+							<div flex>
+							<template id="shopTemplate" bind="{{shopitem}}" is="auto-binding"> 
+							<div class="shopwrap">
+							<template repeat="{{item in shopitem.orderItems}}" >
+							<div horizontal layout class="shopitem">
+							  <div><img style="width:40px;" src="{{'../../cwresources/'+item.imageLink}}"/></div>
+							  <div flex style="line-height:28px;">{{item.name}} 价格:{{item.price}}</div>
+							  <div><paper-input label="数量" placeholder="{{item.amount}}" style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
+							</div>
+							
+							</template>
+							<paper-input label="车牌" placeholder="车牌:{{shopitem.carNo}}" floatingLabel></paper-input>
+							<paper-input label="地址" placeholder="地址:{{shopitem.address}}" floatingLabel></paper-input>
+							<paper-input label="创建时间" placeholder="创建时间:{{shopitem.create_date}}" floatingLabel></paper-input>
+							<paper-input label="客服" placeholder="客服:{{shopitem.supportorName}}" floatingLabel></paper-input>
+							<paper-input label="服务人员" placeholder="服务人员:{{shopitem.workerName}}" floatingLabel></paper-input>
+							</div>
+							
+							</template>
+							</div>
+							</div>
+						  </div>
+						</div>
+					</div>
+			  </core-scroll-header-panel>
+	    </section>
     </core-animated-pages>
 	
 	<script>
@@ -214,7 +327,12 @@ core-animated-pages {
 			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
 			var pageTemplate=document.getElementById('pageTemplate');
+			var shopTemplate=document.getElementById('shopTemplate');
+			var categoryTemplate=document.getElementById('categoryTemplate');
+			var categoryTitle=document.getElementById('categoryTitle');
 			var orderListTemplate=document.getElementById('orderListTemplate');
+			
+			categoryTitle.categorytitle="选择产品类别";
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.item={};
@@ -309,7 +427,7 @@ core-animated-pages {
 			
 			//start订单列表获取
 			    var up = true;
-			    var max = 1;
+			    var max = 2;
 			    function stuff() {
 			      var p = document.querySelector('core-animated-pages');
 			      if (up && p.selected === max || !up && p.selected === 0) {
@@ -320,7 +438,12 @@ core-animated-pages {
 			      } else {
 			        p.selected -= 1;
 			      }
-			    }
+			    };
+			    
+			    this.back=function() {
+			      up=false;
+			      stuff();
+			    };
 			    
 			    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
 			    	reservationId=tableTemplate.model.reservationId;
@@ -341,6 +464,12 @@ core-animated-pages {
 				}, {
 					name : 'create_date',
 					title : '创建时间'
+				}, {
+					name : 'workerName',
+					title : '服务人员姓名'
+				}, {
+					name : 'supportorName',
+					title : '客服'
 				}, {
 					name : 'action',
 					title : '操作'
@@ -370,6 +499,50 @@ core-animated-pages {
 					};
 				});
 			   //end订单列表获取
+			   
+			   //start修改订单
+			   var categoryajax = document.querySelector('.category_list');
+			   var editeitem=null;
+			    document.querySelector('.p_body').addEventListener("editeorder-show",function(e){
+			    	shopitem=orderListTemplate.model.shopitem;
+			    	//ajaxorderlist.params={'rid':reservationId};
+			    	//ajaxorderlist.go();
+			    	up=true;
+					stuff();
+					console.log(shopitem);
+					shopTemplate.shopitem=shopitem;
+				});
+				
+				
+				categoryajax.addEventListener("core-response", function(e) {
+				var categorycolumns = [{
+					name : 'imageLink',
+					title : '图片'
+				}, {
+					name : 'name',
+					title : '名称'
+				}, {
+					name : 'price',
+					title : '价格'
+				}, {
+					name : 'action',
+					title : '添加'
+				} ];
+				categoryTemplate.model = {
+					data : e.detail.response.products,
+					columns : categorycolumns
+				};
+				});
+			   //end修改订单
+			   
+			   //start根据类别切换
+			   this.getCateroty=function(e){
+			   	var cid=e.getAttribute('name');
+			   	var cname=e.getAttribute('label');
+			   	categoryTitle.categorytitle=cname;
+			   	categoryajax.params={"cid":cid};
+			   }
+			   //end根据类别切换
 		});
 	</script>
 	<script src="../../cwresources/js/app.js"></script>

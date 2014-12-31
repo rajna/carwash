@@ -209,7 +209,6 @@
 		        // Allow browser to set the mime multipart content type itself. 
 		        addProductformajax.contentType = null;
 				addProductformajax.go();
-				
 			});
 			//end提交添加表单
 			

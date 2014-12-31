@@ -81,6 +81,8 @@ public class ManagerCtrl
 	public ModelAndView reservationlist(HttpServletRequest request)
 	{
 		ModelAndView mv = new ModelAndView("/manager/reservationlist");
+		List<Category> categories = CategoryUtil.getCategories();
+		mv.addObject("categories", categories);
 		return mv;
 	}
 }

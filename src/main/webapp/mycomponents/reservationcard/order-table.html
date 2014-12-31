@@ -7,7 +7,7 @@
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
-<polymer-element name="order-table" attributes="data columns itemcolumns categories sortColumn sortDescending">
+<polymer-element name="order-table" attributes="data columns itemcolumns sortColumn sortDescending shopitem">
     <template>
       <style>
       
@@ -121,7 +121,7 @@
 	                </td>
 	            </template>
 	            <template if="{{column.name=='action'}}">
-	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td></td>
+	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{editOrder}}"><paper-button label="修改订单" ></paper-button></td><td></td>
 	             </template>
 	             
 	             <template if="{{column.name=='orderItems'}}">
@@ -178,6 +178,7 @@
           itemcolumns:[],
           sortColumn: null,
           sortDescending: false,
+          shopitem:null,
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
@@ -186,6 +187,11 @@
             }else{
               this.sortColumn = clickedSortColumn;
             }
+          },
+          editOrder: function(e,p,o){
+            var row=o.templateInstance_.model.row;
+            this.shopitem=row;
+            this.fire('editeorder-show');
           }
       });
     </script>
