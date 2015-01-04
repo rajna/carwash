@@ -6,7 +6,7 @@
 <link rel="import" href="../../../cwresources/components/paper-button/paper-button.html">
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
-<polymer-element name="orderp-table" attributes="data columns categories sortColumn sortDescending">
+<polymer-element name="orderp-table" attributes="data columns categories newCategory isAdd sortColumn sortDescending">
     <template>
       <style>
       
@@ -111,31 +111,6 @@
     }
     </style>
     
-   
-    <paper-toast id="msgtoast" role="alert">
-	 </paper-toast>
-    <paper-dialog heading="编辑" id="editPanel" transition="paper-dialog-transition-center">
-          <div class="c-form">
-            <div class="f-inner">
-              <core-ajax id="ajaxediteform" handleAs="json" on-core-response="{{handleEdite}}" url="../../api/product/post"  method="post" ></core-ajax>
-              <!--  <div class="c-type">类别:{{singleItem.categoryId}}</div>
-              <select class="p-select" selectedIndex={{formdata.categoryId}}>
-				<template repeat="{{category in categories}}">
-					<option name="{{category.id}}">{{category.name}}</option>
-				</template>
-				</select>
-			  -->
-              <paper-input label="名称" inputValue="{{formdata.name}}" placeholder="名称:{{singleItem.name}}" floatingLabel></paper-input>
-              <paper-input label="价格" type="number" step="0.1" inputValue="{{formdata.price}}" placeholder="价格:{{singleItem.price}}"  floatingLabel></paper-input>
-              <paper-input label="描述"  inputValue="{{formdata.description}}" placeholder="描述:{{singleItem.description}}" floatingLabel></paper-input>
-              <!-- <img src="../../cwresources/{{singleItem.imageLink}}" width="100%;"/>--><input type="file" name="image" id="p_file"  class="p_file" on-change={{fileselect}}>
-            </div>
-          </div>
-
-    <paper-button label="取消" affirmative on-click="{{cansleEdit}}"></paper-button>
-    <paper-button label="确定" affirmative autofocus on-click={{confirm}}></paper-button>
-
-  </paper-dialog>
       <table class="g_table">
         <tr>
           <template repeat="{{column in columns}}">
@@ -159,8 +134,8 @@
                 </td>
               </template>
               <template if="{{column.name=='action'}}">
-                <td on-click="{{editeRow}}"><paper-icon-button icon="add-circle"></paper-icon-button></td>
-                <td on-click="{{editeRow}}"><paper-icon-button icon="remove-circle"></paper-icon-button></td>
+                <td on-click="{{add}}"><paper-icon-button icon="add-circle"></paper-icon-button></td>
+                <td on-click="{{remove}}"><paper-icon-button icon="remove-circle"></paper-icon-button></td>
               </template>
             </template>
           </tr>
@@ -188,91 +163,29 @@
       Polymer('orderp-table', {
           data: [],
           columns: [],
-          categories:[],
           sortColumn: null,
           sortDescending: false,
-          singleItem:null,
-          formData:new FormData(),
-          formdata:{},
+          newCategory:{},
+          isAdd:true,
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
-             
               this.sortDescending = !this.sortDescending;
             }else{
               this.sortColumn = clickedSortColumn;
             }
           },
-          cansleEdit:function(event, detail, sender){
-            //this.$.editPanel.toggle();
+          add:function(event, detail, sender){
+            this.newCategory =sender.templateInstance_.model.row;
+            this.isAdd=true;
+            this.fire('order-refresh');
           },
-          editeRow:function(event, detail, sender){
-            this.formdata={};
-            this.formData=new FormData();
-            this.singleItem =sender.templateInstance_.model.row;
-            this.formdata.id=this.singleItem.id;
-            this.formdata.categoryId=this.singleItem.categoryId;
-            this.$.editPanel.toggle();
-          },
-          confirm:function(event, detail, sender){
-            
-            /*if(!this.formdata.categoryId){
-					this.formdata.categoryId=0;
-				}
-			*/
-			console.log(this.singleItem);
-			console.log(this.singleItem.categoryId);
-			/*if((this.formdata.categoryId+1)!=this.singleItem.categoryId){
-				this.formData.append("categoryId",this.formdata.categoryId+1);
-			}else{
-				this.formData.append("categoryId",this.singleItem.categoryId);
-			}
-			*/
-			if(this.formdata.name){
-				this.formData.append("name",this.formdata.name);
-			}else{
-				this.formData.append("name",this.singleItem.name);
-			}
-			if(this.formdata.price){
-				this.formData.append("price",this.formdata.price);
-			}else{
-				this.formData.append("price",this.singleItem.price);
-			}
-			if(this.formdata.description){
-				this.formData.append("description",this.formdata.description);
-			}else{
-				this.formData.append("description",this.singleItem.description);
-			}
-			if(!this.formdata.imageLink){
-				this.formData.append("imageLink",this.singleItem.imageLink);
-			}
-			console.log(this.formdata);
-			this.formData.append("id",this.formdata.id);
-			this.formData.append("categoryId",this.formdata.categoryId);
-			this.$.ajaxediteform.body = this.formData;
-		    this.$.ajaxediteform.contentType = null;
-		    this.$.ajaxediteform.go();
-          },
-          fileselect:function(event, detail, sender){
-          	for (var i = 0, f; f = sender.files[i]; ++i) {
-		          this.formData.append(sender.name,f,f.name);
-		        }
-		        this.formdata.imageLink=this.$.p_file.value;
-		        this.$.ajaxediteform.body = this.formData;
-		        // Override default type set by core-ajax.
-		        // Allow browser to set the mime multipart content type itself. 
-		        this.$.ajaxediteform.contentType = null;
-          },
-          handleEdite:function(e, detail, sender){
-			    if(e.detail.response.success){
-			    	this.$.msgtoast.text=e.detail.response.message;
-			    }else{
-			    	this.$.msgtoast.text="添加失败";
-			    }
-			    
-			    this.$.msgtoast.show();
-			    this.fire('product-refresh');
+          remove:function(event, detail, sender){
+            this.newCategory =sender.templateInstance_.model.row;
+             this.isAdd=false;
+             this.fire('order-refresh');
           }
+          
       });
     </script>
     

@@ -248,7 +248,7 @@ core-animated-pages {
 					</div>
 					<template id="orderListTemplate" bind> 
 					   <order-table
-						data="{{data}}" columns="{{columns}}" itemcolumns={{itemcolumns}} shopitem={{shopitem}} sortColumn="id"
+						data="{{data}}" columns="{{columns}}" itemcolumns={{itemcolumns}} shopitem={{shopitem}}  sortColumn="id"
 						sortDescending="true">
 						</order-table> 
 				    </template>
@@ -280,7 +280,7 @@ core-animated-pages {
 							</core-toolbar>
 							</div>
 						  	<template id="categoryTemplate" bind> 
-						  	<orderp-table data="{{data}}" columns="{{columns}}" sortColumn="id" sortDescending="false">
+						  	<orderp-table data="{{data}}" columns="{{columns}}" newCategory="{{newCategory}}" isAdd="{{isAdd}}" sortColumn="id" sortDescending="false">
 							</orderp-table> 
 							</template>
 						  </div>
@@ -294,6 +294,8 @@ core-animated-pages {
 								<div flex></div>
 							</core-toolbar>
 							<div flex>
+							<template id="shopTemplatecopy" bind="{{shopitemcopy}}" is="auto-binding"> 
+							</template>
 							<template id="shopTemplate" bind="{{shopitem}}" is="auto-binding"> 
 							<div class="shopwrap">
 							<template repeat="{{item in shopitem.orderItems}}" >
@@ -323,11 +325,26 @@ core-animated-pages {
 	
 	<script>
 		window.addEventListener('polymer-ready', function() {
+			Array.prototype.remove=function(dx) 
+			{ 
+			    if(isNaN(dx)||dx>this.length){return false;} 
+			    for(var i=0,n=0;i<this.length;i++) 
+			    { 
+			        if(this[i]!=this[dx]) 
+			        { 
+			            this[n++]=this[i] 
+			        } 
+			    } 
+			    this.length-=1 
+			} 
+		
 			var ajaxlist = document.querySelector('.p_list');
 			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
 			var pageTemplate=document.getElementById('pageTemplate');
 			var shopTemplate=document.getElementById('shopTemplate');
+			var shopTemplatecopy=document.getElementById('shopTemplatecopy');
+			
 			var categoryTemplate=document.getElementById('categoryTemplate');
 			var categoryTitle=document.getElementById('categoryTitle');
 			var orderListTemplate=document.getElementById('orderListTemplate');
@@ -504,13 +521,12 @@ core-animated-pages {
 			   var categoryajax = document.querySelector('.category_list');
 			   var editeitem=null;
 			    document.querySelector('.p_body').addEventListener("editeorder-show",function(e){
-			    	shopitem=orderListTemplate.model.shopitem;
-			    	//ajaxorderlist.params={'rid':reservationId};
-			    	//ajaxorderlist.go();
+			    	var shopitem=orderListTemplate.model.shopitem;
 			    	up=true;
 					stuff();
 					console.log(shopitem);
 					shopTemplate.shopitem=shopitem;
+					shopTemplatecopy.shopitemcopy=shopitem;
 				});
 				
 				
@@ -530,7 +546,9 @@ core-animated-pages {
 				} ];
 				categoryTemplate.model = {
 					data : e.detail.response.products,
-					columns : categorycolumns
+					columns : categorycolumns,
+					newCategory:{},
+					isAdd:true
 				};
 				});
 			   //end修改订单
@@ -543,6 +561,48 @@ core-animated-pages {
 			   	categoryajax.params={"cid":cid};
 			   }
 			   //end根据类别切换
+			   
+			   
+			   //start修改购物车
+			   document.querySelector('.p_body').addEventListener("order-refresh",function(e){
+			    	var isAdd=categoryTemplate.model.isAdd;
+			    	var newCategory=categoryTemplate.model.newCategory;
+					var productitems=shopTemplate.shopitem.orderItems;
+			    	var isIn=false;
+			    	for(var i=0;i<productitems.length;i++){
+			    		if(newCategory.name==productitems[i].name){
+			    			isIn=true;
+			    			if(isAdd){
+			    				productitems[i].amount+=1;
+			    			}else{
+			    				if(productitems[i].amount==1){
+			    					productitems.remove(i);
+			    				}else{
+			    					productitems[i].amount-=1;
+			    				}
+			    			}
+			    			
+			    		}
+			    	};
+			    	
+			    	if(!isIn){
+			    		var newItem={
+			    				amount:1,
+			    				categoryId:newCategory.categoryId,
+			    				description:newCategory.description,
+			    				imageLink:newCategory.imageLink,
+			    				name:newCategory.name,
+			    				price:newCategory.price,
+			    				productId:newCategory.id
+			    			};
+			    	    if(isAdd){
+			    	    	shopTemplate.shopitem.orderItems.push(newItem);
+			    	    }
+			    	}else{
+			    		
+			    	}
+				});
+			   //end修改购物车
 		});
 	</script>
 	<script src="../../cwresources/js/app.js"></script>
