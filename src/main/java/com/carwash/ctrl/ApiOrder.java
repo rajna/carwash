@@ -32,6 +32,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Order;
 import com.carwash.entity.OrderStatus;
@@ -120,29 +121,32 @@ public class ApiOrder
 	// @Cwp(1)
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String oid, String carNo, String wid, String status)
+	public JSON update(String id, String carNo, String workerId,
+			String orderStatus, String orderItems)
 	{
+		System.out.println(orderItems);
+		List<Item> items = JSONArray.parseArray(orderItems, Item.class);
+		System.out.println(items.size());
 		// TODO 登录权限校验
-		int id = 0;
-		OrderStatus orderStatus = null;
-		if (status == null || "".equals(status.trim())) { return new JSON(
+		int oid = 0;
+		OrderStatus oStatus = null;
+		if (orderStatus == null || "".equals(orderStatus.trim())) { return new JSON(
 				false, "不存在该状态"); }
-		
 		try
 		{
-			orderStatus = OrderStatus.valueOf(status);
+			oStatus = OrderStatus.valueOf(orderStatus);
 		}
 		catch (Exception e)
 		{
 		}
-		if (orderStatus == null) { return new JSON(false, "不存在该状态"); }
+		if (oStatus == null) { return new JSON(false, "不存在该状态"); }
 		try
 		{
-			if (oid == null) { return new JSON(false, "订单编号不存在(null)"); }
-			id = Integer.valueOf(oid);
-			Order order = orderService.get(id);
+			if (id == null) { return new JSON(false, "订单编号不存在(null)"); }
+			oid = Integer.valueOf(id);
+			Order order = orderService.get(oid);
 			if (order == null) { return new JSON(false, "该订单不存在"); }
-			
+
 		}
 
 		catch (Exception e)
@@ -151,4 +155,47 @@ public class ApiOrder
 		}
 		return null;
 	}
+
+	/**
+	 * 前台传递的订单子项对象
+	 * 
+	 */
+	public static class Item
+	{
+		private int id;
+		private int productId;
+		private int amount;
+
+		public int getId()
+		{
+			return id;
+		}
+
+		public void setId(int id)
+		{
+			this.id = id;
+		}
+
+		public int getProductId()
+		{
+			return productId;
+		}
+
+		public void setProductId(int productId)
+		{
+			this.productId = productId;
+		}
+
+		public int getAmount()
+		{
+			return amount;
+		}
+
+		public void setAmount(int amount)
+		{
+			this.amount = amount;
+		}
+
+	}
+
 }
