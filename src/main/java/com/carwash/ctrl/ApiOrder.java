@@ -88,7 +88,7 @@ public class ApiOrder
 	 * @param rid
 	 * @return
 	 */
-	//@Cwp(1)
+	// @Cwp(1)
 	@RequestMapping("listforrese")
 	@ResponseBody
 	public JSON listforRese(String rid)
@@ -104,5 +104,51 @@ public class ApiOrder
 		}
 		List<Order> orders = orderService.findByRid(resId);
 		return new JSON(true, "查询成功").append("orders", orders);
+	}
+
+	/**
+	 * 更新订单
+	 * 
+	 * @param oid
+	 *            订单编号
+	 * @param carNo
+	 *            车牌号
+	 * @param wid
+	 *            服务人员编号
+	 * @return
+	 */
+	// @Cwp(1)
+	@RequestMapping("update")
+	@ResponseBody
+	public JSON update(String oid, String carNo, String wid, String status)
+	{
+		// TODO 登录权限校验
+		int id = 0;
+		OrderStatus orderStatus = null;
+		if (status == null || "".equals(status.trim())) { return new JSON(
+				false, "不存在该状态"); }
+		
+		try
+		{
+			orderStatus = OrderStatus.valueOf(status);
+		}
+		catch (Exception e)
+		{
+		}
+		if (orderStatus == null) { return new JSON(false, "不存在该状态"); }
+		try
+		{
+			if (oid == null) { return new JSON(false, "订单编号不存在(null)"); }
+			id = Integer.valueOf(oid);
+			Order order = orderService.get(id);
+			if (order == null) { return new JSON(false, "该订单不存在"); }
+			
+		}
+
+		catch (Exception e)
+		{
+			// TODO: handle exception
+		}
+		return null;
 	}
 }

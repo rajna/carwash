@@ -55,8 +55,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @org.hibernate.annotations.Table(comment = "订单数据结构模型", appliesTo = "cw_order")
 public class Order
 {
-	private int id;
-	private int customerId; // 客户编号
+ 	private int customerId; // 客户编号
 	private int reservationId; // 预约编号
 	private String carNo;
 	private String orderId;

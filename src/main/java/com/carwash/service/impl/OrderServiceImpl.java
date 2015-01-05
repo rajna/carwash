@@ -78,8 +78,17 @@ public class OrderServiceImpl implements OrderServiceI
 	{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("rid", rid);
-		return oDao
-				.find(" From Order o where o.reservationId=:rid ORDER BY o.id DESC",params);
+		return oDao.find(
+				" From Order o where o.reservationId=:rid ORDER BY o.id DESC",
+				params);
+	}
+
+	@Override
+	public Order get(int id)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		return oDao.get(" From Order o where o.id=:id", params);
 	}
 
 }

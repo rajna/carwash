@@ -51,4 +51,9 @@ public interface OrderServiceI
 	 * 通过预约id查询订单
 	 */
 	public List<Order> findByRid(int rid);
+
+	/**
+	 * 查询订单
+	 */
+	public Order get(int id);
 }
