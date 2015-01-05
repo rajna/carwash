@@ -25,6 +25,7 @@
  */
 package com.carwash.ctrl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,9 +125,6 @@ public class ApiOrder
 	public JSON update(String id, String carNo, String workerId,
 			String orderStatus, String orderItems)
 	{
-		System.out.println(orderItems);
-		List<Item> items = JSONArray.parseArray(orderItems, Item.class);
-		System.out.println(items.size());
 		// TODO 登录权限校验
 		int oid = 0;
 		OrderStatus oStatus = null;
@@ -140,13 +138,14 @@ public class ApiOrder
 		{
 		}
 		if (oStatus == null) { return new JSON(false, "不存在该状态"); }
+		if(carNo==null||"".equals(carNo.trim())){return new JSON(false, "车牌号不存在");}
 		try
 		{
 			if (id == null) { return new JSON(false, "订单编号不存在(null)"); }
 			oid = Integer.valueOf(id);
 			Order order = orderService.get(oid);
 			if (order == null) { return new JSON(false, "该订单不存在"); }
-
+			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
 		}
 
 		catch (Exception e)
