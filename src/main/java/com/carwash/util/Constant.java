@@ -34,7 +34,7 @@ package com.carwash.util;
  * <p>
  */
 public class Constant {
-	public final static boolean isDebug = true;
+	public final static boolean isDebug = false;
 	/**
 	 * 手机号码校验规则
 	 */
