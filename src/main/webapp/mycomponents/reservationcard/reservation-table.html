@@ -105,7 +105,7 @@ padding: 12px;
             <template if="{{column.title!='操作'}}">
             	<th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
             </template>
-             <template if="{{column.title=='操作'}}">
+             <template if="{{column.title=='操作'&&rowStatus!='CANCELED'}}">
              	<th colspan="2" on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
              </template>
           </template>
@@ -121,7 +121,7 @@ padding: 12px;
 	                </td>
 	            </template>
 	            <template if="{{column.name=='action'}}">
-	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td><paper-button label="取消" ></paper-button></td>
+	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td hidden?="{{row['reservationStatus']=='CANCELED'}}"><paper-button label="取消" ></paper-button></td>
 	             </template>
 	         </template>
           </tr>
