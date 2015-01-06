@@ -98,6 +98,34 @@
 	right: 24px;
 	bottom:24px;
 }
+.e-fab-fixed-false{
+	position:fixed;
+	right: 24px;
+	top:96px;
+	color:#757575;
+	
+	transition: transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
+	-webkit-transition: -webkit-transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
+	-webkit-transform: scale(0);
+	transform: scale(0);
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+}
+
+.e-fab-fixed-true{
+    position:fixed;
+	right: 24px;
+	top:96px;
+	color:#757575;
+	
+	transition: transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
+	-webkit-transition: -webkit-transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	
+}
 core-animated-pages {
       position: absolute;
       top: 0px;
@@ -144,7 +172,7 @@ core-animated-pages {
 		border-bottom: 1px solid #bdbdbd;
 		background-color:#b9f6ca;
 		z-index:500;
-		width:45%;
+		width:45.7%;
 	}
 	
 	.order-category span{
@@ -232,17 +260,16 @@ core-animated-pages {
     <section>
     <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
           <core-scroll-header-panel condenses>
-				
 				<core-toolbar class="tall mainheader" style="background-color:#e91e63;">
 					<div class="bottom indent bottom-text" self-end>
 						<div class="c_m_title">新建订单</div>
 						<div class="subtitle">订单详情</div>
 					</div>
 					<div flex></div>
-						 <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
+					<paper-icon-button icon="close" onclick="back();"></paper-icon-button>
 				</core-toolbar>
 				<div class="content c-product-main" style="margin-top:256px;">
-				      <div class="fab blue c-fab-fixed">
+				    <div class="fab blue c-fab-fixed">
 					      <core-icon icon="add"></core-icon>
 					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
 					</div>
@@ -258,11 +285,19 @@ core-animated-pages {
         <section>
 	    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
 	          <core-scroll-header-panel condenses style="background-color:#b9f6ca;">
-					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:103px;z-index:500;">
+	                 
+					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:128px;z-index:500;">
 						<div flex></div>
 					    <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
+					    <template id="sumbitButton" bind="{{isHidden}}" is="auto-binding">
+					     <div class="fab grey e-fab-fixed-{{isHidden}}" onclick="submitwediteorder();">
+					      <core-icon icon="check"></core-icon>
+					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+					     </div>
+					     </template>
 					</core-toolbar>
 					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;background-color:#b9f6ca;">
+					    
 					    <div horizontal layout flex>
 						  <div style="width:45%;margin-left:15px;padding-top:64px;height:580px;overflow:auto;">
 						    <core-ajax auto url="../api/product/list" class="category_list" params='{"cid":"1"}' handleAs="json"></core-ajax>
@@ -285,6 +320,7 @@ core-animated-pages {
 							</template>
 						  </div>
 						  <div style="width:55%;">
+						    <core-ajax url="../api/order/update" id="ajanxupdateorder" handleAs="json"></core-ajax>
 						    <div class="c-shopcard">
 						  	<core-toolbar class="tall mainheader" style="background-color:#1de9b6;">
 								<div class="bottom indent bottom-text" self-end>
@@ -302,15 +338,13 @@ core-animated-pages {
 							<div horizontal layout class="shopitem">
 							  <div><img style="width:40px;" src="{{'../../cwresources/'+item.imageLink}}"/></div>
 							  <div flex style="line-height:28px;">{{item.name}} 价格:{{item.price}}</div>
-							  <div><paper-input label="数量" placeholder="{{item.amount}}" style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
+							  <div><paper-input label="数量" type="number" min="0" step="1" placeholder="{{item.amount}}" value={{item.amount}} style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
 							</div>
 							
 							</template>
-							<paper-input label="车牌" placeholder="车牌:{{shopitem.carNo}}" floatingLabel></paper-input>
-							<paper-input label="地址" placeholder="地址:{{shopitem.address}}" floatingLabel></paper-input>
-							<paper-input label="创建时间" placeholder="创建时间:{{shopitem.create_date}}" floatingLabel></paper-input>
-							<paper-input label="客服" placeholder="客服:{{shopitem.supportorName}}" floatingLabel></paper-input>
-							<paper-input label="服务人员" placeholder="服务人员:{{shopitem.workerName}}" floatingLabel></paper-input>
+							<paper-input label="车牌" placeholder="车牌:{{shopitem.carNo}}" value={{shopitem.carNo}} floatingLabel></paper-input>
+							<paper-input label="地址" placeholder="地址:{{shopitem.address}}" value={{shopitem.address}} floatingLabel></paper-input>
+							<paper-input label="服务人员" placeholder="服务人员:{{shopitem.workerName}}" value={{shopitem.workerName}} floatingLabel></paper-input>
 							</div>
 							
 							</template>
@@ -325,6 +359,78 @@ core-animated-pages {
 	
 	<script>
 		window.addEventListener('polymer-ready', function() {
+		    var Serialize=function(obj){
+		        console.log(obj.constructor);
+		    	switch(obj.constructor){     
+				        case Object:     
+				            var str = "{";     
+				            for(var o in obj){     
+				                str += o + ":" + Serialize(obj[o]) +",";     
+				            }     
+				            if(str.substr(str.length-1) == ",")     
+				                str = str.substr(0,str.length -1);     
+				             return str + "}";     
+				             break;     
+				         case Array:                 
+				             var str = "[";     
+				             for(var o in obj){  
+				             	if(Serialize(obj[o])){
+				             		str += Serialize(obj[o]) +",";   
+				             	}   
+				                   
+				             }  
+				             if(str.substr(str.length-1) == ","){
+				             	str = str.substr(0,str.length-1);
+				             }    
+				             return str + "]";     
+				             break;     
+				         case Boolean:     
+				             return "\"" + obj.toString() + "\"";     
+				             break;     
+				         case Date:     
+				             return "\"" + obj.toString() + "\"";     
+				             break;     
+				         case Function: 
+				             return ""   
+				             break;     
+				         case Number:     
+				             return "\"" + obj.toString() + "\"";     
+				             break;      
+				         case String:     
+				             return "\"" + obj.toString() + "\"";     
+				             break;         
+				     }     
+		    }
+		    var cloneAll=function(obj){   
+			  var o;  
+			    switch(typeof obj){  
+			    case 'undefined': break;  
+			    case 'string'   : o = obj + '';break;  
+			    case 'number'   : o = obj - 0;break;  
+			    case 'boolean'  : o = obj;break;  
+			    case 'object'   :  
+			        if(obj === null){  
+			            o = null;  
+			        }else{  
+			            if(obj instanceof Array){  
+			                o = [];  
+			                for(var i = 0, len = obj.length; i < len; i++){  
+			                    o.push(cloneAll(obj[i]));  
+			                }  
+			            }else{  
+			                o = {};  
+			                for(var k in obj){  
+			                    o[k] = cloneAll(obj[k]);  
+			                }  
+			            }  
+			        }  
+			        break;  
+			    default:          
+			        o = obj;break;  
+			    }  
+			    return o;   
+			}
+			
 			Array.prototype.remove=function(dx) 
 			{ 
 			    if(isNaN(dx)||dx>this.length){return false;} 
@@ -337,19 +443,22 @@ core-animated-pages {
 			    } 
 			    this.length-=1 
 			} 
-		
+		   
+		    var ajanxupdateorder=document.getElementById('ajanxupdateorder');
 			var ajaxlist = document.querySelector('.p_list');
 			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
 			var pageTemplate=document.getElementById('pageTemplate');
 			var shopTemplate=document.getElementById('shopTemplate');
 			var shopTemplatecopy=document.getElementById('shopTemplatecopy');
+			var sumbitButton=document.getElementById('sumbitButton');
 			
 			var categoryTemplate=document.getElementById('categoryTemplate');
 			var categoryTitle=document.getElementById('categoryTitle');
 			var orderListTemplate=document.getElementById('orderListTemplate');
 			
 			categoryTitle.categorytitle="选择产品类别";
+			sumbitButton.isHidden=false;
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.item={};
@@ -458,8 +567,29 @@ core-animated-pages {
 			    };
 			    
 			    this.back=function() {
+			      sumbitButton.isHidden=false;
+			      shopTemplate.shopitem={};
+			      shopTemplate.shopitem=cloneAll(shopTemplatecopy.shopitemcopy);
 			      up=false;
 			      stuff();
+			      
+			    };
+			    
+			    this.submitwediteorder=function(){
+				      var items=cloneAll(shopTemplate.shopitem.orderItems);
+				      var orderItems=[];
+				      for(var i=0;i<items.length;i++){
+				        var order={};
+				      	if(items[i]!=undefined){
+				      		order.id=items[i].id?items[i].id:0;
+				      		order.productId=items[i].productId;
+				      		order.amount=items[i].amount;
+				      	}
+				      	orderItems.push(order);
+				      }
+				      ajanxupdateorder.params=cloneAll(shopTemplate.shopitem);
+				      ajanxupdateorder.params.orderItems=Serialize(orderItems);
+				      ajanxupdateorder.go();
 			    };
 			    
 			    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
@@ -521,12 +651,13 @@ core-animated-pages {
 			   var categoryajax = document.querySelector('.category_list');
 			   var editeitem=null;
 			    document.querySelector('.p_body').addEventListener("editeorder-show",function(e){
-			    	var shopitem=orderListTemplate.model.shopitem;
+			        
+			        var shopitem={};
+			    	shopitem=orderListTemplate.model.shopitem;
 			    	up=true;
 					stuff();
-					console.log(shopitem);
 					shopTemplate.shopitem=shopitem;
-					shopTemplatecopy.shopitemcopy=shopitem;
+					shopTemplatecopy.shopitemcopy=cloneAll(shopitem)
 				});
 				
 				
@@ -565,6 +696,7 @@ core-animated-pages {
 			   
 			   //start修改购物车
 			   document.querySelector('.p_body').addEventListener("order-refresh",function(e){
+			        sumbitButton.isHidden=true;
 			    	var isAdd=categoryTemplate.model.isAdd;
 			    	var newCategory=categoryTemplate.model.newCategory;
 					var productitems=shopTemplate.shopitem.orderItems;
@@ -575,8 +707,8 @@ core-animated-pages {
 			    			if(isAdd){
 			    				productitems[i].amount+=1;
 			    			}else{
-			    				if(productitems[i].amount==1){
-			    					productitems.remove(i);
+			    				if(productitems[i].amount<=1){
+			    					productitems[i].amount=0;
 			    				}else{
 			    					productitems[i].amount-=1;
 			    				}
@@ -598,8 +730,6 @@ core-animated-pages {
 			    	    if(isAdd){
 			    	    	shopTemplate.shopitem.orderItems.push(newItem);
 			    	    }
-			    	}else{
-			    		
 			    	}
 				});
 			   //end修改购物车

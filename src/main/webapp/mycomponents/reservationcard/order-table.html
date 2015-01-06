@@ -100,6 +100,10 @@
 	 </paper-toast>
 	  <div layout vertical center>
 	  
+	   <template if="{{data[0]==null}}">
+	   <span style="color:#E91E63;line-height: 60px;font-weight: inherit;font-size: 40px;">暂无订单</span>
+	   </template>
+	  <template if="{{data[0]!=null}}">
       <table class="g_table">
         <tr>
           <template repeat="{{column in columns}}">
@@ -111,7 +115,7 @@
              </template>
           </template>
         </tr>
-        <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
+        <template  repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
           <template if="{{row['reservationStatus']==rowStatus}}">
           <tr>
             <template repeat="{{column in columns}}">
@@ -149,6 +153,7 @@
           </template>
         </template>
       </table>
+      </template>
       
       </div>
       
@@ -179,6 +184,35 @@
           sortColumn: null,
           sortDescending: false,
           shopitem:null,
+          cloneAll:function(obj){
+          	var o;  
+			    switch(typeof obj){  
+			    case 'undefined': break;  
+			    case 'string'   : o = obj + '';break;  
+			    case 'number'   : o = obj - 0;break;  
+			    case 'boolean'  : o = obj;break;  
+			    case 'object'   :  
+			        if(obj === null){  
+			            o = null;  
+			        }else{  
+			            if(obj instanceof Array){  
+			                o = [];  
+			                for(var i = 0, len = obj.length; i < len; i++){  
+			                    o.push(this.cloneAll(obj[i]));  
+			                }  
+			            }else{  
+			                o = {};  
+			                for(var k in obj){  
+			                    o[k] = this.cloneAll(obj[k]);  
+			                }  
+			            }  
+			        }  
+			        break;  
+			    default:          
+			        o = obj;break;  
+			    }  
+			    return o;  
+          },
           changeSort: function(e,p,o){
             var clickedSortColumn = o.templateInstance_.model.column.name;
             if(clickedSortColumn == this.sortColumn){
@@ -190,7 +224,7 @@
           },
           editOrder: function(e,p,o){
             var row=o.templateInstance_.model.row;
-            this.shopitem=row;
+            this.shopitem=this.cloneAll(row);
             this.fire('editeorder-show');
           }
       });
