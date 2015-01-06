@@ -179,9 +179,9 @@ public class ApiReservation
 	 * 取消预约
 	 */
 	@Cwp(0)
-	@RequestMapping("cancle")
+	@RequestMapping("cancel")
 	@ResponseBody
-	public JSON cancle(String rid)
+	public JSON cancel(String rid)
 	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
 		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)

@@ -58,7 +58,7 @@
 		+ `{message}`,String
 
 #### 5.客户取消预约
-- URL:`/api/reservation/cancle`
+- URL:`/api/reservation/cancel`
 	* 请求方式:get OR post
 	* 参数`{mobile}`：String
 	* 参数`{password}`：String
