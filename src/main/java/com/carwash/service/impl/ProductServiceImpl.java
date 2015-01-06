@@ -84,4 +84,12 @@ public class ProductServiceImpl implements ProductServiceI
 		ids_string.append("0)");
 		return pDao.find("From Product p where p.id in " + ids_string);
 	}
+
+	@Override
+	public Product get(int id)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		return pDao.get("From Product p where p.id=:id", params);
+	}
 }

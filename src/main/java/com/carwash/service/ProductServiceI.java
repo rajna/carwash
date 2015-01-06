@@ -51,4 +51,6 @@ public interface ProductServiceI {
 	public List<Product> find();
 	
 	public List<Product> find(List<Integer> ids);
+	
+	public Product get(int id);
 }

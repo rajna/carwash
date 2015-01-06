@@ -27,6 +27,7 @@ package com.carwash.ctrl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -158,33 +159,83 @@ public class ApiOrder
 			order.setWorkerId(wid);
 			order.setWorkerName(worker.getName());
 			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
-			List<Integer> add_product_ids = new ArrayList<Integer>();
-			List<Integer> modify_product_ids = new ArrayList<Integer>();
+			List<Item> add_orderItems = new ArrayList<Item>();
+			List<Item> modify_orderItems = new ArrayList<Item>();
+			Set<OrderItem> all_orderitems = order.getOrderItems();
 			for (Item item : items)
 			{
 				if (item.getId() == 0)
 				{
-					add_product_ids.add(item.getProductId());
+					add_orderItems.add(item);
 				}
 				else
 				{
-					modify_product_ids.add(item.getProductId());
+					modify_orderItems.add(item);
 				}
 			}
-			// 查询出待增加的产品
-			List<Product> products = productService.find(add_product_ids);
-			// 修改的订单子项id
-			for (int modify_id : modify_product_ids)
+			List<Integer> not_delete_item_ids = new ArrayList<Integer>();
+			for (Item item : modify_orderItems)
 			{
-				for (OrderItem oi : order.getOrderItems())
+				for (OrderItem oi : all_orderitems)
 				{
-					if (modify_id == oi.getId())
+					if (oi.getId() == item.getId())
 					{
-						
+						oi.setAmount(item.getAmount());
+						if (item.getAmount() != 0)
+						{
+							not_delete_item_ids.add(oi.getId());
+						}
 					}
 				}
 			}
-
+			List<Integer> delete_item_ids = new ArrayList<Integer>();
+			for (OrderItem oi : all_orderitems)
+			{
+				boolean isContain = false;
+				for (int not_delete_item_id : not_delete_item_ids)
+				{
+					if (oi.getId() == not_delete_item_id)
+					{
+						isContain = true;
+					}
+				}
+				if (!isContain)
+				{
+					delete_item_ids.add(oi.getId());
+				}
+			}
+			for (OrderItem oi : all_orderitems)
+			{
+				for (int delete_item_id : delete_item_ids)
+				{
+					if (oi.getId() == delete_item_id)
+					{
+						all_orderitems.remove(oi);
+					}
+				}
+			}
+			// 查询出待增加的产品
+			for (Item item : add_orderItems)
+			{
+				if (item.getAmount() == 0)
+				{
+					continue;
+				}
+				Product product = productService.get(item.getProductId());
+				if (product == null)
+				{
+					continue;
+				}
+				OrderItem oi = new OrderItem();
+				oi.setAmount(item.getAmount());
+				oi.setCategoryId(product.getCategoryId());
+				oi.setDescription(product.getDescription());
+				oi.setImageLink(product.getImageLink());
+				oi.setName(product.getName());
+				oi.setPrice(product.getPrice());
+				oi.setProductId(product.getId());
+				all_orderitems.add(oi);
+			}
 			orderService.saveOrUpdate(order);
 		}
 		catch (Exception e)
