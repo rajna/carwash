@@ -132,7 +132,7 @@ public class ApiOrder
 	// @Cwp(1)
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String id, String carNo, String workerId,
+	public JSON update(String id, String carNo, String workerId,String address,
 			String orderStatus, String orderItems)
 	{
 		// TODO 登录权限校验
@@ -147,6 +147,8 @@ public class ApiOrder
 			if (oStatus == null) { return new JSON(false, "不存在该状态"); }
 			if (carNo == null || "".equals(carNo.trim())) { return new JSON(
 					false, "车牌号不存在"); }
+			if (address == null || "".equals(address.trim())) { return new JSON(
+					false, "订单地址不能为空"); }
 			if (id == null) { return new JSON(false, "订单编号不存在(null)"); }
 			oid = Integer.valueOf(id);
 			Order order = orderService.get(oid);
