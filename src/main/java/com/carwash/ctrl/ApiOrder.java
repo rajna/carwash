@@ -158,10 +158,10 @@ public class ApiOrder
 			order.setCarNo(carNo);
 			order.setWorkerId(wid);
 			order.setWorkerName(worker.getName());
+			Set<OrderItem> all_orderitems = order.getOrderItems();
 			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
 			List<Item> add_orderItems = new ArrayList<Item>();
 			List<Item> modify_orderItems = new ArrayList<Item>();
-			Set<OrderItem> all_orderitems = order.getOrderItems();
 			for (Item item : items)
 			{
 				if (item.getId() == 0)
@@ -204,17 +204,18 @@ public class ApiOrder
 					delete_item_ids.add(oi.getId());
 				}
 			}
+			List<OrderItem> delorderItems = new ArrayList<OrderItem>();
 			for (OrderItem oi : all_orderitems)
 			{
 				for (int delete_item_id : delete_item_ids)
 				{
 					if (oi.getId() == delete_item_id)
 					{
-						all_orderitems.remove(oi);
+						delorderItems.add(oi);
 					}
 				}
 			}
-			// 查询出待增加的产品
+			all_orderitems.removeAll(delorderItems);
 			for (Item item : add_orderItems)
 			{
 				if (item.getAmount() == 0)
@@ -236,13 +237,15 @@ public class ApiOrder
 				oi.setProductId(product.getId());
 				all_orderitems.add(oi);
 			}
+			order.setOrderItems(all_orderitems);
 			orderService.saveOrUpdate(order);
 		}
 		catch (Exception e)
 		{
-			// TODO: handle exception
+			e.printStackTrace();
+			return new JSON(false, "订单修改失败!" + e.getMessage());
 		}
-		return null;
+		return new JSON(true, "订单修改成功!");
 	}
 
 	/**
