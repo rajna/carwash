@@ -60,4 +60,6 @@ public interface ReservationServiceI
 	 *            状态
 	 */
 	public List<Reservation> findByCid(int cid, ReservationStatus status);
+	
+	public Reservation get(int id);
 }

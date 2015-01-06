@@ -108,4 +108,12 @@ public class ReservationServiceImpl implements ReservationServiceI
 		return rDao.find(hql.toString(), params);
 	}
 
+	@Override
+	public Reservation get(int id)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		return rDao.get("from Reservation r where r.id=:id", params);
+	}
+
 }

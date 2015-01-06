@@ -56,7 +56,8 @@ import com.carwash.util.UploadUtil;
  */
 @Controller
 @RequestMapping("/api/reservation")
-public class ApiReservation {
+public class ApiReservation
+{
 	@Autowired
 	private ReservationServiceI reservationService;
 	@Autowired
@@ -71,12 +72,11 @@ public class ApiReservation {
 	public JSON post(
 			HttpServletRequest request,
 			Reservation reservation,
-			@RequestParam(required = false, value = "voice") MultipartFile voiceFile) {
+			@RequestParam(required = false, value = "voice") MultipartFile voiceFile)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		String message_voice_url = UploadUtil.saveVoiceToDisk(request,
 				voiceFile);
 		reservation.setMessage_voice_url(message_voice_url);
@@ -85,21 +85,26 @@ public class ApiReservation {
 		reservation.setCustomer_name(customer.getName());
 		reservation.setReservationStatus(ReservationStatus.PROCESSING);
 		String address = reservation.getAddress();
-		if (address == null || "".equals(address.trim())) {
+		if (address == null || "".equals(address.trim()))
+		{
 			address = "未填写地址";
 			reservation.setAddress(address);
 		}
-		try {
+		try
+		{
 			String carNo = reservation.getCarNo();
 			boolean carNoIsChange = carNo != null
 					&& !carNo.equals(customer.getCarNo());
-			if (carNoIsChange) {
+			if (carNoIsChange)
+			{
 				customer.setCarNo(carNo);
 				customerService.saveOrUpdate(customer);
 			}
 			reservationService.saveOrUpdate(reservation);
 			return new JSON(true, "预约成功");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 		return new JSON(false, "预约失败");
@@ -111,18 +116,21 @@ public class ApiReservation {
 	@Cwp(0)
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list(String status) {
+	public JSON list(String status)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		ReservationStatus os = null;
-		if (status != null) {
+		if (status != null)
+		{
 			status = status.toUpperCase().trim();
-			try {
+			try
+			{
 				os = ReservationStatus.valueOf(status);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 			}
 		}
 		return new JSON(true, "查询成功").append("reservations",
@@ -132,24 +140,32 @@ public class ApiReservation {
 	/**
 	 * 后台查询接口
 	 */
-	//@Cwp(1)
+	// @Cwp(1)
 	// 如果
 	@RequestMapping("all")
 	@ResponseBody
-	public JSON all(String status, String pid) {
+	public JSON all(String status, String pid)
+	{
 		// TODO 校验登录
 		ReservationStatus os = null;
-		if (status != null) {
+		if (status != null)
+		{
 			status = status.toUpperCase().trim();
-			try {
+			try
+			{
 				os = ReservationStatus.valueOf(status);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 			}
 		}
 		int pageId = 0;
-		try {
+		try
+		{
 			pageId = Integer.valueOf(pid);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 		}
 		long total = reservationService.count(os);
 		long temp = total % Constant.SIZEPERPAGE;
@@ -158,4 +174,41 @@ public class ApiReservation {
 		return new JSON(true, "查询成功").append("reservations",
 				reservationService.find(os, pageId)).append("pages", pages);
 	}
+
+	/**
+	 * 取消预约
+	 */
+	@Cwp(0)
+	@RequestMapping("cancle")
+	@ResponseBody
+	public JSON cancle(String rid)
+	{
+		Customer customer = Interceptor.threadLocalCustomer.get();
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
+		int id = 0;
+		try
+		{
+			id = Integer.valueOf(rid);
+		}
+		catch (Exception e)
+		{
+		}
+		if (id == 0) { return new JSON(false, "预约编号不存在"); }
+		Reservation reservation = reservationService.get(id);
+		if (reservation == null) { return new JSON(false, "该预约不存在"); }
+		if (reservation.getCustomer_id() != customer.getId()) { return new JSON(
+				false, "您无权取消该预约"); }
+		reservation.setReservationStatus(ReservationStatus.CANCELED);
+		try
+		{
+			reservationService.saveOrUpdate(reservation);
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "预约取消失败");
+		}
+		return new JSON(true, "预约已取消");
+	}
+
 }
