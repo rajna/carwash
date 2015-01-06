@@ -49,4 +49,6 @@ public interface ProductServiceI {
 	 * 查询所有
 	 */
 	public List<Product> find();
+	
+	public List<Product> find(List<Integer> ids);
 }

@@ -36,10 +36,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Order;
+import com.carwash.entity.OrderItem;
 import com.carwash.entity.OrderStatus;
+import com.carwash.entity.Product;
+import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.OrderServiceI;
+import com.carwash.service.ProductServiceI;
+import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 
@@ -57,6 +62,10 @@ public class ApiOrder
 {
 	@Autowired
 	private OrderServiceI orderService;
+	@Autowired
+	private UserServiceI userService;
+	@Autowired
+	private ProductServiceI productService;
 
 	@Cwp(0)
 	@RequestMapping("list")
@@ -127,27 +136,57 @@ public class ApiOrder
 	{
 		// TODO 登录权限校验
 		int oid = 0;
+		int wid = 0;
 		OrderStatus oStatus = null;
 		if (orderStatus == null || "".equals(orderStatus.trim())) { return new JSON(
 				false, "不存在该状态"); }
 		try
 		{
 			oStatus = OrderStatus.valueOf(orderStatus);
-		}
-		catch (Exception e)
-		{
-		}
-		if (oStatus == null) { return new JSON(false, "不存在该状态"); }
-		if(carNo==null||"".equals(carNo.trim())){return new JSON(false, "车牌号不存在");}
-		try
-		{
+			if (oStatus == null) { return new JSON(false, "不存在该状态"); }
+			if (carNo == null || "".equals(carNo.trim())) { return new JSON(
+					false, "车牌号不存在"); }
 			if (id == null) { return new JSON(false, "订单编号不存在(null)"); }
 			oid = Integer.valueOf(id);
 			Order order = orderService.get(oid);
 			if (order == null) { return new JSON(false, "该订单不存在"); }
+			wid = Integer.valueOf(workerId);
+			User worker = userService.get(wid);
+			if (worker == null) { return new JSON(false, "该服务人员不存在"); }
+			order.setOrderStatus(oStatus);
+			order.setCarNo(carNo);
+			order.setWorkerId(wid);
+			order.setWorkerName(worker.getName());
 			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
-		}
+			List<Integer> add_product_ids = new ArrayList<Integer>();
+			List<Integer> modify_product_ids = new ArrayList<Integer>();
+			for (Item item : items)
+			{
+				if (item.getId() == 0)
+				{
+					add_product_ids.add(item.getProductId());
+				}
+				else
+				{
+					modify_product_ids.add(item.getProductId());
+				}
+			}
+			// 查询出待增加的产品
+			List<Product> products = productService.find(add_product_ids);
+			// 修改的订单子项id
+			for (int modify_id : modify_product_ids)
+			{
+				for (OrderItem oi : order.getOrderItems())
+				{
+					if (modify_id == oi.getId())
+					{
+						
+					}
+				}
+			}
 
+			orderService.saveOrUpdate(order);
+		}
 		catch (Exception e)
 		{
 			// TODO: handle exception

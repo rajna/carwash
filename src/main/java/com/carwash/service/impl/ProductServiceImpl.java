@@ -37,7 +37,7 @@ import com.carwash.service.BaseDaoI;
 import com.carwash.service.ProductServiceI;
 
 /**
- * TODO: File comments
+ * 产品的服务类
  * <p>
  * Author: ilvel
  * <p>
@@ -45,17 +45,20 @@ import com.carwash.service.ProductServiceI;
  * <p>
  */
 @Service("productService")
-public class ProductServiceImpl implements ProductServiceI {
+public class ProductServiceImpl implements ProductServiceI
+{
 	@Autowired
 	private BaseDaoI<Product> pDao;
 
 	@Override
-	public void saveOrUpdate(Product o) {
+	public void saveOrUpdate(Product o)
+	{
 		pDao.saveOrUpdate(o);
 	}
 
 	@Override
-	public List<Product> find(int categoryId) {
+	public List<Product> find(int categoryId)
+	{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("inuse", true);
 		params.put("categoryId", categoryId);
@@ -65,7 +68,20 @@ public class ProductServiceImpl implements ProductServiceI {
 	}
 
 	@Override
-	public List<Product> find() {
+	public List<Product> find()
+	{
 		return pDao.find("From Product p Order By p.id desc");
+	}
+
+	@Override
+	public List<Product> find(List<Integer> ids)
+	{
+		StringBuffer ids_string = new StringBuffer("(");
+		for (int id : ids)
+		{
+			ids_string.append(id + ",");
+		}
+		ids_string.append("0)");
+		return pDao.find("From Product p where p.id in " + ids_string);
 	}
 }

@@ -63,4 +63,12 @@ public class UserServiceImpl implements UserServiceI
 		return userDao.get("From User u where u.mobile=:mobile", params);
 	}
 
+	@Override
+	public User get(int id)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		return userDao.get("From User u where u.id=:id", params);
+	}
+
 }

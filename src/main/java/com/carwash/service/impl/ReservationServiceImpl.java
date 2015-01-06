@@ -95,11 +95,11 @@ public class ReservationServiceImpl implements ReservationServiceI
 		if (status == null)
 		{
 			StringBuffer hql = new StringBuffer(
-					"From Reservation r where r.customer_id=:cid and r.reservationStatus="
+					"From Reservation r where r.customer_id=:cid and (r.reservationStatus="
 							+ ReservationStatus.COMPLETED.ordinal()
 							+ " OR r.reservationStatus="
 							+ ReservationStatus.PROCESSING.ordinal()
-							+ " Order By r.create_date desc");
+							+ ") Order By r.create_date desc");
 			return rDao.find(hql.toString(), params);
 		}
 		params.put("status", status);
