@@ -59,7 +59,7 @@
 
 #### 5.客户取消预约
 - URL:`/api/reservation/cancle`
-	* 请求方式:post
+	* 请求方式:get OR post
 	* 参数`{mobile}`：String
 	* 参数`{password}`：String
 	* 参数`{rid}`：String
