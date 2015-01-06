@@ -57,7 +57,18 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 
-#### 5.客户预约查询
+#### 5.客户取消预约
+- URL:`/api/reservation/cancle`
+	* 请求方式:post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{rid}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+
+
+#### 6.客户预约查询
 - URL:`/api/reservation/list`
 	* 请求方式:post
 	* 参数`{mobile}`：String
@@ -69,7 +80,7 @@
 		+ `{message}`,String
 		+ `{reservations}`,jsonarray(success=true时存在)
 				
-#### 6.客户修改姓名与车牌号
+#### 7.客户修改姓名与车牌号
 - URL:`/api/customer/update`
 	* 请求方式:get Or post
 	* 参数`{mobile}`：String
@@ -126,3 +137,6 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{orders}`,jsonarray(success=true时存在)
+	
+		
+		
