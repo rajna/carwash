@@ -201,6 +201,7 @@ public class ApiOrder
 				ois.add(oi);
 			}
 			order.setOrderItems(ois);
+			orderService.saveOrUpdate(order);
 		}
 		catch (Exception e)
 		{

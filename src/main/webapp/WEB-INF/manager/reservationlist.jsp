@@ -191,41 +191,10 @@ core-animated-pages {
      
      <paper-toast id="p-a-msg" role="alert">
 	 </paper-toast>
-	 
-	<paper-dialog heading="添加" class="c-p-add"
-		transition="paper-dialog-transition-center">
-	<div class="c-form">
-		    <core-ajax class="addform" 
-		               handleAs="json"
-		               url="../api/area/post" 
-		               method="post"
-		               >
-		    </core-ajax>
-		    <template bind="{{item}}" is="auto-binding" id="add_p_form">
-			
-			<paper-input label="名称" inputValue="{{item.name}}"
-				placeholder="名称" floatingLabel  required></paper-input>
-			
-			<paper-input label="X" inputValue="{{item.centerX}}"
-				placeholder="X" floatingLabel></paper-input>
-			<paper-input label="Y"  inputValue="{{item.centerY}}"
-				placeholder="Y" floatingLabel></paper-input>
-			<paper-input label="半径"  inputValue="{{item.radius}}"
-				placeholder="半径" floatingLabel></paper-input>
-			<paper-input label="区域描述"  inputValue="{{item.description}}"
-				placeholder="区域描述" floatingLabel></paper-input>
-			</template>
-	</div>
-
-	<paper-button label="取消" affirmative></paper-button>
-	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
-	</paper-dialog>
-
-	
 	
 	<core-animated-pages  transitions="slide-from-right">
     <section>
-              <core-ajax auto url="../api/reservation/all" class="p_list"  handleAs="json"></core-ajax>
+              <core-ajax url="../api/reservation/all" class="p_list"  handleAs="json"></core-ajax>
 		      <core-scroll-header-panel condenses keepCondensedHeader
 				condensedHeaderHeight="80" mode="cover"> 
 				<core-toolbar id="mainheader">
@@ -321,6 +290,7 @@ core-animated-pages {
 						  </div>
 						  <div style="width:55%;">
 						    <core-ajax url="../api/order/update" id="ajanxupdateorder" handleAs="json"></core-ajax>
+						    <core-ajax url="../api/order/post" id="ajanxaddorder" handleAs="json"></core-ajax>
 						    <div class="c-shopcard">
 						  	<core-toolbar class="tall mainheader" style="background-color:#1de9b6;">
 								<div class="bottom indent bottom-text" self-end>
@@ -342,9 +312,9 @@ core-animated-pages {
 							</div>
 							
 							</template>
-							<paper-input label="车牌" onchange="showsubmit();" placeholder="车牌:{{shopitem.carNo}}" value={{shopitem.carNo}} floatingLabel></paper-input>
-							<paper-input label="地址" onchange="showsubmit();" placeholder="地址:{{shopitem.address}}" value={{shopitem.address}} floatingLabel></paper-input>
-							<paper-input label="服务人员" onchange="showsubmit();" placeholder="服务人员:{{shopitem.workerName}}" value={{shopitem.workerName}} floatingLabel></paper-input>
+							<paper-input label="车牌" onchange="showsubmit();" placeholder="车牌" value={{shopitem.carNo}} floatingLabel></paper-input>
+							<paper-input label="地址" onchange="showsubmit();" placeholder="地址" value={{shopitem.address}} floatingLabel></paper-input>
+							<paper-input label="服务人员" onchange="showsubmit();" placeholder="服务人员" value={{shopitem.workerName}} floatingLabel></paper-input>
 							</div>
 							
 							</template>
@@ -360,7 +330,6 @@ core-animated-pages {
 	<script>
 		window.addEventListener('polymer-ready', function() {
 		    var Serialize=function(obj){
-		        console.log(obj.constructor);
 		    	switch(obj.constructor){     
 				        case Object:     
 				            var str = "{";     
@@ -443,8 +412,9 @@ core-animated-pages {
 			    } 
 			    this.length-=1 
 			} 
-		   
+		    var msgtoast= document.querySelector('#p-a-msg');
 		    var ajanxupdateorder=document.getElementById('ajanxupdateorder');
+		    var ajanxaddorder=document.getElementById('ajanxaddorder');
 			var ajaxlist = document.querySelector('.p_list');
 			var ajaxorderlist = document.querySelector('.o_list');
 			var tableTemplate=document.getElementById('tableTemplate');
@@ -460,23 +430,11 @@ core-animated-pages {
 			categoryTitle.categorytitle="选择产品类别";
 			sumbitButton.isHidden=false;
 			
-			var add_p_form=document.querySelector('#add_p_form');
-			add_p_form.item={};
-			//start显示添加表单
-			var fab_fixed=document.querySelector('.c-fab-fixed');
-			var addPanel = document.querySelector('.c-p-add');
-			fab_fixed.addEventListener("click", function(e) {
-			   add_p_form.item={};
-				addPanel.toggle();
-			});
-			
-			//end显示添加表单
-			
 			
 			//start预约列表
 			var listdata=[];
-			 var page=1;
-			 var pages=0;
+			var page=0;
+			var pages=0;
 			var rowStatus="PROCESSING";
 			var reservationId=null;
 			
@@ -509,9 +467,11 @@ core-animated-pages {
 					title : '操作'
 				}];
 			
-			
+			ajaxlist.params={'pid':0,'status':"PROCESSING"};
+			ajaxlist.go();
 			ajaxlist.addEventListener("core-response", function(e) {
 			    var newdata=e.detail.response.reservations;
+			    var curpage=page+1;
 			    pages=e.detail.response.pages;
 			    for ( var i=0 ; i < newdata.length; ++i ){
 			    	listdata.push(newdata[i]);
@@ -519,7 +479,7 @@ core-animated-pages {
 			    
 			    pageTemplate.model={
 			    	pages:pages,
-					curpage:page
+					curpage:curpage
 			    }
 				
 				tableTemplate.model = {
@@ -536,20 +496,34 @@ core-animated-pages {
 			moreButton.addEventListener("click", function(e) {
 			   rowStatus=tableTemplate.model.rowStatus;
 			  
-			   if(!ajaxlist.params){
-			   		page=1;
-			   		ajaxlist.params={'pid':page};
-			   }else{
-			   		var pid=ajaxlist.params;
-			   		if(page<pages){
-			   			page=pid.pid+1;
+			   //if(!ajaxlist.params){
+			   //		page=1;
+			   //		ajaxlist.params={'pid':page};
+			   //}else{
+			   		var params=ajaxlist.params;
+			   		var pid=params.pid;
+			   		if(page<pages-1){
+			   			page=pid+1;
+			   			console.log(page);
+			   			console.log(pages);
+			   		    ajaxlist.params={'pid':page,'status':rowStatus};
+			   		    ajaxlist.go();
 			   		};
 			   		
-			   		ajaxlist.params={'pid':page};
-			   }
 			  
 			});
 			//end
+			
+			//start根据类别加载
+			document.querySelector('.p_body').addEventListener("orderlist-category",function(e){
+			    	rowStatus=tableTemplate.model.rowStatus;
+			    	listdata=[];
+			    	page=0;
+			        pages=0;
+			    	ajaxlist.params={'pid':0,'status':rowStatus};
+			    	ajaxlist.go();
+				});
+		    //end
 			
 			//start订单列表获取
 			    var up = true;
@@ -578,23 +552,7 @@ core-animated-pages {
 			    	sumbitButton.isHidden=true;
 			    };
 			    
-			    this.submitwediteorder=function(){
-				      var items=cloneAll(shopTemplate.shopitem.orderItems);
-				      var orderItems=[];
-				      for(var i=0;i<items.length;i++){
-				        var order={};
-				      	if(items[i]!=undefined){
-				      		order.id=items[i].id?items[i].id:0;
-				      		order.productId=items[i].productId;
-				      		order.amount=items[i].amount;
-				      	}
-				      	orderItems.push(order);
-				      }
-				      ajanxupdateorder.params=cloneAll(shopTemplate.shopitem);
-				      ajanxupdateorder.params.orderItems=Serialize(orderItems);
-				      ajanxupdateorder.params.workerId=1;
-				      ajanxupdateorder.go();
-			    };
+			    
 			    
 			    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
 			    	reservationId=tableTemplate.model.reservationId;
@@ -602,6 +560,10 @@ core-animated-pages {
 			    	ajaxorderlist.go();
 					stuff();
 				});
+				
+				
+				
+				
 				
 				var ordercolumns = [{
 					name : 'carNo',
@@ -652,17 +614,61 @@ core-animated-pages {
 			   //end订单列表获取
 			   
 			   //start修改订单
+			   var ajaxtype="";
 			   var categoryajax = document.querySelector('.category_list');
 			   var editeitem=null;
 			    document.querySelector('.p_body').addEventListener("editeorder-show",function(e){
-			        
+			        ajaxtype="update";
 			        var shopitem={};
 			    	shopitem=orderListTemplate.model.shopitem;
+			    	shopTemplate.shopitem=shopitem;
+					shopTemplatecopy.shopitemcopy=cloneAll(shopitem);
 			    	up=true;
 					stuff();
-					shopTemplate.shopitem=shopitem;
-					shopTemplatecopy.shopitemcopy=cloneAll(shopitem)
+					
 				});
+				
+				var fab_fixed=document.querySelector('.c-fab-fixed');
+				
+				//增加订单
+				fab_fixed.addEventListener("click", function(e) {
+				    ajaxtype="add";
+				    var shopitem={};
+				    shopitem.id=tableTemplate.model.reservationId;
+				    
+				    shopTemplate.shopitem=shopitem;
+				    shopTemplate.shopitem.orderItems=shopTemplate.shopitem.orderItems?shopTemplate.shopitem.orderItems:[];
+				    up=true;
+					stuff();
+				});
+				
+				this.submitwediteorder=function(){
+				    var items=cloneAll(shopTemplate.shopitem.orderItems);
+					      var orderItems=[];
+					      for(var i=0;i<items.length;i++){
+					        var order={};
+					      	if(items[i]!=undefined){
+					      		order.id=items[i].id?items[i].id:0;
+					      		order.productId=items[i].productId;
+					      		order.amount=items[i].amount;
+					      	}
+					      	orderItems.push(order);
+					      }
+			    	if(ajaxtype=="update"){
+			    		
+					      ajanxupdateorder.params=cloneAll(shopTemplate.shopitem);
+					      ajanxupdateorder.params.orderItems=Serialize(orderItems);
+					      ajanxupdateorder.params.workerId=1;
+					      ajanxupdateorder.go();
+			    	};
+			    	if(ajaxtype=="add"){
+			    		  ajanxaddorder.params=cloneAll(shopTemplate.shopitem);
+					      ajanxaddorder.params.orderItems=Serialize(orderItems);
+					      ajanxaddorder.params.workerId=1;
+					      ajanxaddorder.go();
+			    	}
+				      
+			    };
 				
 				
 				categoryajax.addEventListener("core-response", function(e) {
@@ -688,6 +694,20 @@ core-animated-pages {
 				});
 			   //end修改订单
 			   
+			   //start响应订单修改
+			   ajanxupdateorder.addEventListener("core-response", function(e) {
+			   	ajaxorderlist.go();
+			   	back();
+			   	
+			    if(e.detail.response.success){
+			    	msgtoast.text=e.detail.response.message;
+			    }else{
+			    	msgtoast.text="添加失败";
+			    }
+			    msgtoast.show();
+			   });
+			   //end响应订单修改
+			   
 			   //start根据类别切换
 			   this.getCateroty=function(e){
 			   	var cid=e.getAttribute('name');
@@ -705,21 +725,24 @@ core-animated-pages {
 			    	var newCategory=categoryTemplate.model.newCategory;
 					var productitems=shopTemplate.shopitem.orderItems;
 			    	var isIn=false;
-			    	for(var i=0;i<productitems.length;i++){
-			    		if(newCategory.name==productitems[i].name){
-			    			isIn=true;
-			    			if(isAdd){
-			    				productitems[i].amount+=1;
-			    			}else{
-			    				if(productitems[i].amount<=1){
-			    					productitems[i].amount=0;
-			    				}else{
-			    					productitems[i].amount-=1;
-			    				}
-			    			}
-			    			
-			    		}
-			    	};
+			    	if(productitems){
+			    		for(var i=0;i<productitems.length;i++){
+				    		if(newCategory.name==productitems[i].name){
+				    			isIn=true;
+				    			if(isAdd){
+				    				productitems[i].amount+=1;
+				    			}else{
+				    				if(productitems[i].amount<=1){
+				    					productitems[i].amount=0;
+				    				}else{
+				    					productitems[i].amount-=1;
+				    				}
+				    			}
+				    			
+				    		}
+				    	};
+			    	}
+			    	
 			    	
 			    	if(!isIn){
 			    		var newItem={

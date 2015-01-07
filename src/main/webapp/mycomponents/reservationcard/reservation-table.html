@@ -119,7 +119,6 @@ padding: 12px;
           </template>
         </tr>
         <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
-          <template if="{{row['reservationStatus']==rowStatus}}">
           <tr>
             <template repeat="{{column in columns}}">
 	            <template if="{{column.name!='action'}}">
@@ -133,7 +132,6 @@ padding: 12px;
 	             </template>
 	         </template>
           </tr>
-          </template>
           
           </template>
         </template>
@@ -186,6 +184,7 @@ padding: 12px;
           itemSelect:function(event, detail, sender){
           	var status=event.target.getAttribute('name');
           	this.rowStatus=status;
+          	this.fire('orderlist-category');
           }
       });
     </script>
