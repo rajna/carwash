@@ -38,7 +38,6 @@
 		  padding: 0.75em 0;
 		  margin: 0.3em 0;
 		  text-align: left;
-		  color: #616161;
 		  font-size:14px;
       }
       table.g_table th {
@@ -51,18 +50,32 @@
       table.g_table td:first-of-type {
   		text-align: left;
       }
-      table.g_table td{
-      	border-bottom:1px solid #e0e0e0;
-      }
       
       table.g_table td div{
-      	border-bottom:1px solid #eeeeee;
       	padding:12px 0px;
       	margin:0px 12px;
       }
       
       table.g_table td div:last-child{
       	border-bottom:0px solid #eeeeee;
+      }
+      
+      .card{
+      	border-radius: 2px;
+		box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+		background-color: #fff;
+		margin-bottom:12px;
+      }
+      
+      .card-left{
+      	width:30%;
+      	background-color:#3f51b5;
+        padding-left:12px;
+        color:#fff;
+      }
+      
+      .card-right{
+      	width:70%;
       }
       
       .p-select{
@@ -105,6 +118,7 @@
 	   </template>
 	  <template if="{{data[0]!=null}}">
       <table class="g_table">
+       <!--  
         <tr>
           <template repeat="{{column in columns}}">
             <template if="{{column.title!='操作'}}">
@@ -115,43 +129,57 @@
              </template>
           </template>
         </tr>
+        -->
         <template  repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
-          <template if="{{row['reservationStatus']==rowStatus}}">
           <tr>
-            <template repeat="{{column in columns}}">
-	            <template if="{{column.name!='action'&&column.name!='orderItems'}}">
-	                <td>
-	                  <span>{{row[column.name]}}</span>
-	                </td>
-	            </template>
-	            <template if="{{column.name=='action'}}">
-	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{editOrder}}"><paper-button label="修改订单" ></paper-button></td><td></td>
+            
+            <div class="card" horizontal layout flex>
+            
+            
+            <div class="card-left"><template repeat="{{column in columns}}">
+                <template if="{{column.name!='orderItems'}}">
+                 <tr style="width:50%;">
+		            <template if="{{column.name!='action'&&column.name!='orderItems'}}">
+		                <td>
+		                  <span>{{column.title}}:{{row[column.name]}}</span>
+		                </td>
+		            </template>
+		            <template if="{{column.name=='action'}}">
+		                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{editOrder}}"><paper-button label="修改订单" ></paper-button></td>
+		             </template>
+		         </tr>
 	             </template>
 	             
+	            
+	         </template></div>
+	         
+	          <div class="card-right"><template repeat="{{column in columns}}">
 	             <template if="{{column.name=='orderItems'}}">
 	                <td>
+	                <div horizontal layout flex>
 	                 <template repeat="{{item in row[column.name]}}">
 	                   <div>
 	                 	<template repeat="{{icolumn in itemcolumns}}">
 	                 	    <template if="{{icolumn.name=='imageLink'}}">
-	                 	    <img style="width:40px;" src="{{'../../cwresources/'+item[icolumn.name]}}"/>
+	                 	    <img style="width:60px;" src="{{'../../cwresources/'+item[icolumn.name]}}"/>
 	                 		</template>
 	                 		<template if="{{icolumn.name!='imageLink'}}">
-	                 		{{icolumn.title}}:{{item[icolumn.name]}}
+	                 		<p>{{icolumn.title}}:{{item[icolumn.name]}}</p>
 	                 		</template>
 	                 	</template>
 	                 	</div>
 	                 </template>
+	                 </div>
 	                 </td>
 	            </template>
-	         </template>
-	         
-             	
+	         </template></div>
+           
+            
+	         </div>
           </tr>
           </template>
           
           </template>
-        </template>
       </table>
       </template>
       

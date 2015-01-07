@@ -338,13 +338,13 @@ core-animated-pages {
 							<div horizontal layout class="shopitem">
 							  <div><img style="width:40px;" src="{{'../../cwresources/'+item.imageLink}}"/></div>
 							  <div flex style="line-height:28px;">{{item.name}} 价格:{{item.price}}</div>
-							  <div><paper-input label="数量" type="number" min="0" step="1" placeholder="{{item.amount}}" value={{item.amount}} style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
+							  <div><paper-input onchange="showsubmit();" label="数量" type="number" min="0" step="1" placeholder="{{item.amount}}" value={{item.amount}} style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
 							</div>
 							
 							</template>
-							<paper-input label="车牌" placeholder="车牌:{{shopitem.carNo}}" value={{shopitem.carNo}} floatingLabel></paper-input>
-							<paper-input label="地址" placeholder="地址:{{shopitem.address}}" value={{shopitem.address}} floatingLabel></paper-input>
-							<paper-input label="服务人员" placeholder="服务人员:{{shopitem.workerName}}" value={{shopitem.workerName}} floatingLabel></paper-input>
+							<paper-input label="车牌" onchange="showsubmit();" placeholder="车牌:{{shopitem.carNo}}" value={{shopitem.carNo}} floatingLabel></paper-input>
+							<paper-input label="地址" onchange="showsubmit();" placeholder="地址:{{shopitem.address}}" value={{shopitem.address}} floatingLabel></paper-input>
+							<paper-input label="服务人员" onchange="showsubmit();" placeholder="服务人员:{{shopitem.workerName}}" value={{shopitem.workerName}} floatingLabel></paper-input>
 							</div>
 							
 							</template>
@@ -537,7 +537,7 @@ core-animated-pages {
 			   rowStatus=tableTemplate.model.rowStatus;
 			  
 			   if(!ajaxlist.params){
-			   		page=2;
+			   		page=1;
 			   		ajaxlist.params={'pid':page};
 			   }else{
 			   		var pid=ajaxlist.params;
@@ -572,7 +572,10 @@ core-animated-pages {
 			      shopTemplate.shopitem=cloneAll(shopTemplatecopy.shopitemcopy);
 			      up=false;
 			      stuff();
-			      
+			    };
+			    
+			    this.showsubmit=function(){
+			    	sumbitButton.isHidden=true;
 			    };
 			    
 			    this.submitwediteorder=function(){
@@ -589,6 +592,7 @@ core-animated-pages {
 				      }
 				      ajanxupdateorder.params=cloneAll(shopTemplate.shopitem);
 				      ajanxupdateorder.params.orderItems=Serialize(orderItems);
+				      ajanxupdateorder.params.workerId=1;
 				      ajanxupdateorder.go();
 			    };
 			    
@@ -600,9 +604,6 @@ core-animated-pages {
 				});
 				
 				var ordercolumns = [{
-					name : 'orderItems',
-					title : '购买商品'
-				}, {
 					name : 'carNo',
 					title : '车牌'
 				}, {
@@ -620,6 +621,9 @@ core-animated-pages {
 				}, {
 					name : 'action',
 					title : '操作'
+				},{
+					name : 'orderItems',
+					title : '购买商品'
 				}];
 				
 				var itemcolumns = [{
