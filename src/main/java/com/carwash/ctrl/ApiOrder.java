@@ -26,6 +26,7 @@
 package com.carwash.ctrl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,11 +41,13 @@ import com.carwash.entity.Order;
 import com.carwash.entity.OrderItem;
 import com.carwash.entity.OrderStatus;
 import com.carwash.entity.Product;
+import com.carwash.entity.Reservation;
 import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.OrderServiceI;
 import com.carwash.service.ProductServiceI;
+import com.carwash.service.ReservationServiceI;
 import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
@@ -67,6 +70,8 @@ public class ApiOrder
 	private UserServiceI userService;
 	@Autowired
 	private ProductServiceI productService;
+	@Autowired
+	private ReservationServiceI reservationService;
 
 	@Cwp(0)
 	@RequestMapping("list")
@@ -119,9 +124,95 @@ public class ApiOrder
 	}
 
 	/**
+	 * 新增订单
+	 * 
+	 * @param id
+	 *            预约编号
+	 * @param carNo
+	 * @param workerId
+	 * @param address
+	 * @param orderItems
+	 * @return
+	 */
+	// @Cwp(1)
+	@RequestMapping("post")
+	@ResponseBody
+	public JSON post(String id, String carNo, String workerId, String address,
+			String orderItems)
+	{
+		// TODO 登录权限校验
+		// 预约编号
+		int rid = 0;
+		// 工作人员编号
+		int wid = 0;
+		try
+		{
+			rid = Integer.valueOf(id);
+			wid = Integer.valueOf(workerId);
+		}
+		catch (Exception e)
+		{
+		}
+		if (rid == 0) { return new JSON(false, "该预约不存在"); }
+		if (wid == 0) { return new JSON(false, "该服务人员不存在"); }
+		Reservation reservation = reservationService.get(rid);
+		User worker = userService.get(wid);
+		if (reservation == null) { return new JSON(false, "该预约不存在"); }
+		if (worker == null) { return new JSON(false, "该服务人员不存在"); }
+		if (carNo == null || "".equals(carNo.trim())) { return new JSON(false,
+				"车牌号不存在"); }
+		if (address == null || "".equals(address.trim())) { return new JSON(
+				false, "订单地址不能为空"); }
+		Order order = new Order();
+		order.setAddress(address);
+		order.setCarNo(carNo);
+		order.setCustomerId(reservation.getCustomer_id());
+		order.setReservation_date(reservation.getCreate_date());
+		order.setReservationId(reservation.getId());
+		// TODO 登陆者的id
+		// order.setSupportorId(supportorId);
+		// TODO 登陆者的名称
+		// order.setSupportorName(supportorName);
+		order.setWorkerId(worker.getId());
+		order.setWorkerName(worker.getName());
+		try
+		{
+			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
+			if (items == null)
+			{
+				items = new ArrayList<Item>();
+			}
+			Set<OrderItem> ois = new HashSet<OrderItem>();
+			for (Item item : items)
+			{
+				Product product = productService.get(item.getProductId());
+				if (product == null)
+				{
+					continue;
+				}
+				OrderItem oi = new OrderItem();
+				oi.setAmount(item.getAmount());
+				oi.setCategoryId(product.getCategoryId());
+				oi.setDescription(product.getDescription());
+				oi.setImageLink(product.getImageLink());
+				oi.setName(product.getName());
+				oi.setPrice(product.getPrice());
+				oi.setProductId(product.getId());
+				ois.add(oi);
+			}
+			order.setOrderItems(ois);
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "订单创建失败!" + e.getMessage());
+		}
+		return new JSON(true, "订单创建成功!");
+	}
+
+	/**
 	 * 更新订单
 	 * 
-	 * @param oid
+	 * @param id
 	 *            订单编号
 	 * @param carNo
 	 *            车牌号
@@ -132,8 +223,8 @@ public class ApiOrder
 	// @Cwp(1)
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String id, String carNo, String workerId,String address,
-			String orderStatus, String orderItems)
+	public JSON update(String id, String carNo, String workerId,
+			String address, String orderStatus, String orderItems)
 	{
 		// TODO 登录权限校验
 		int oid = 0;
@@ -160,6 +251,7 @@ public class ApiOrder
 			order.setCarNo(carNo);
 			order.setWorkerId(wid);
 			order.setWorkerName(worker.getName());
+			order.setAddress(address);
 			Set<OrderItem> all_orderitems = order.getOrderItems();
 			List<Item> items = JSONArray.parseArray(orderItems, Item.class);
 			List<Item> add_orderItems = new ArrayList<Item>();
@@ -244,7 +336,6 @@ public class ApiOrder
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 			return new JSON(false, "订单修改失败!" + e.getMessage());
 		}
 		return new JSON(true, "订单修改成功!");
