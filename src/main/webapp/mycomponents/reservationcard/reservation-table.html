@@ -121,15 +121,25 @@ padding: 12px;
         <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
           <tr>
             <template repeat="{{column in columns}}">
-	            <template if="{{column.name!='action'}}">
+	            <template if="{{column.name!='action'&&column.name!='message_voice_url'}}">
 	                <td>
 	                  <span>{{row[column.name]}}</span>
-	                  <!--  <audio src="{{row[column.name]}}">您的浏览器不支持 audio 标签。</audio>-->
+	                </td>
+	            </template>
+	             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&row[column.name]}}">
+	                <td>
+	                  <audio src="{{'http://192.168.1.113:8088/cwresources/'+row[column.name]}}">您的浏览器不支持 audio 标签。</audio>
+	                </td>
+	            </template>
+	             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&!row[column.name]}}">
+	                <td>
+	                  
 	                </td>
 	            </template>
 	            <template if="{{column.name=='action'}}">
 	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td hidden?="{{row['reservationStatus']=='CANCELED'}}"><paper-button label="取消" ></paper-button></td>
 	             </template>
+	             
 	         </template>
           </tr>
           

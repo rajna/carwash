@@ -172,7 +172,7 @@ core-animated-pages {
 		border-bottom: 1px solid #bdbdbd;
 		background-color:#b9f6ca;
 		z-index:500;
-		width:45.7%;
+		width:100%;
 	}
 	
 	.order-category span{
@@ -212,7 +212,7 @@ core-animated-pages {
 				    </template>
 				   
 				   <div horizontal layout>
-					  <div class="button raised more">
+					  <div class="button raised more" style="margin-top:12px;">
 					      <div class="center" fit>加载更多</div>
 					      <paper-ripple fit></paper-ripple>
 					    </div>
@@ -252,23 +252,8 @@ core-animated-pages {
 		  </core-scroll-header-panel>
     </section>
         <section>
-	    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
-	          <core-scroll-header-panel condenses style="background-color:#b9f6ca;">
-	                 
-					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:128px;z-index:500;">
-						<div flex></div>
-					    <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
-					    <template id="sumbitButton" bind="{{isHidden}}" is="auto-binding">
-					     <div class="fab grey e-fab-fixed-{{isHidden}}" onclick="submitwediteorder();">
-					      <core-icon icon="check"></core-icon>
-					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
-					     </div>
-					     </template>
-					</core-toolbar>
-					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;background-color:#b9f6ca;">
-					    
-					    <div horizontal layout flex>
-						  <div style="width:45%;margin-left:15px;padding-top:64px;height:580px;overflow:auto;">
+        
+        <div style="width:394px;margin-left:15px;position:absolute;top:64px;left:0px;z-index:2;">
 						    <core-ajax auto url="../api/product/list" class="category_list" params='{"cid":"1"}' handleAs="json"></core-ajax>
 						    <div class="order-category">
 						  	<core-toolbar>
@@ -283,12 +268,31 @@ core-animated-pages {
 						        </paper-menu-button>
 							</core-toolbar>
 							</div>
-						  	<template id="categoryTemplate" bind> 
-						  	<orderp-table data="{{data}}" columns="{{columns}}" newCategory="{{newCategory}}" isAdd="{{isAdd}}" sortColumn="id" sortDescending="false">
-							</orderp-table> 
-							</template>
+							<div style="height:580px;overflow:auto;margin-top:64px;">
+							  	<template id="categoryTemplate" bind> 
+							  	<orderp-table data="{{data}}" columns="{{columns}}" newCategory="{{newCategory}}" isAdd="{{isAdd}}" sortColumn="id" sortDescending="false">
+								</orderp-table> 
+								</template>
+							</div>
 						  </div>
-						  <div style="width:55%;">
+	    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
+	          <core-scroll-header-panel condenses style="background-color:#b9f6ca;z-index:1;">
+	                 
+					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:128px;z-index:500;">
+						<div flex></div>
+					    <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
+					    <template id="sumbitButton" bind="{{isHidden}}" is="auto-binding">
+					     <div class="fab grey e-fab-fixed-{{isHidden}}" onclick="submitwediteorder();">
+					      <core-icon icon="check"></core-icon>
+					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
+					     </div>
+					     </template>
+					</core-toolbar>
+					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;background-color:#b9f6ca;">
+					    
+					    <div horizontal layout flex style="padding-bottom:64px;">
+						  
+						  <div style="width:55%;margin-left:45%;">
 						    <core-ajax url="../api/order/update" id="ajanxupdateorder" handleAs="json"></core-ajax>
 						    <core-ajax url="../api/order/post" id="ajanxaddorder" handleAs="json"></core-ajax>
 						    <div class="c-shopcard">
@@ -596,10 +600,12 @@ core-animated-pages {
 					title : '名字'
 				}, {
 					name : 'price',
-					title : '价格'
+					title : '价格',
+					more:'元'
 				}, {
 					name : 'amount',
-					title : '数量'
+					title : '数量',
+					more:'个'
 				}];
 				
 				ajaxorderlist.addEventListener("core-response", function(e) {
@@ -707,6 +713,22 @@ core-animated-pages {
 			    msgtoast.show();
 			   });
 			   //end响应订单修改
+			   
+			   //start响应订单添加
+			   ajanxaddorder.addEventListener("core-response", function(e) {
+			    reservationId=tableTemplate.model.reservationId;
+			    ajaxorderlist.params={'rid':reservationId};
+			    ajaxorderlist.go();
+			   	back();
+			   	
+			    if(e.detail.response.success){
+			    	msgtoast.text=e.detail.response.message;
+			    }else{
+			    	msgtoast.text="添加失败";
+			    }
+			    msgtoast.show();
+			   });
+			   //end响应订单添加
 			   
 			   //start根据类别切换
 			   this.getCateroty=function(e){
