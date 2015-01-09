@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Reservation;
 import com.carwash.entity.ReservationStatus;
+import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.CustomerServiceI;
@@ -175,17 +176,9 @@ public class ApiReservation
 				reservationService.find(os, pageId)).append("pages", pages);
 	}
 
-	/**
-	 * 取消预约
-	 */
-	@Cwp(0)
-	@RequestMapping("cancel")
-	@ResponseBody
-	public JSON cancel(String rid)
+	private JSON calcelForClientAndWeb(String rid, Customer customer, User user)
 	{
-		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
-				.append("relogin", true); }
+		if (customer == null && user != null) { return new JSON(false, "预约无权取消"); }
 		int id = 0;
 		try
 		{
@@ -197,9 +190,11 @@ public class ApiReservation
 		if (id == 0) { return new JSON(false, "预约编号不存在"); }
 		Reservation reservation = reservationService.get(id);
 		if (reservation == null) { return new JSON(false, "该预约不存在"); }
-		if (reservation.getCustomer_id() != customer.getId()) { return new JSON(
-				false, "您无权取消该预约"); }
-		reservation.setReservationStatus(ReservationStatus.CANCELED);
+		if (customer != null)
+		{
+			if (reservation.getCustomer_id() != customer.getId()) { return new JSON(
+					false, "您无权取消该预约"); }
+		}
 		try
 		{
 			reservationService.saveOrUpdate(reservation);
@@ -211,4 +206,27 @@ public class ApiReservation
 		return new JSON(true, "预约已取消");
 	}
 
+	/**
+	 * 取消预约
+	 */
+	@Cwp(0)
+	@RequestMapping("cancel")
+	@ResponseBody
+	public JSON cancel(String rid)
+	{
+		Customer customer = Interceptor.threadLocalCustomer.get();
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
+		return calcelForClientAndWeb(rid, customer, null);
+	}
+
+	// @Cwp(1)
+	@RequestMapping("cancelForWeb")
+	@ResponseBody
+	public JSON cancelForWeb(String rid)
+	{
+		// TODO 检查登录用户
+		User user = new User();
+		return calcelForClientAndWeb(rid, null, user);
+	}
 }
