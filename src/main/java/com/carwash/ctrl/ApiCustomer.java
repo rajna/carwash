@@ -118,6 +118,7 @@ public class ApiCustomer {
 			return new JSON(false, "该手机号码已经被使用");
 		}
 		try {
+			//TODO 设置用户的推荐人
 			customerService.saveOrUpdate(customer);
 			return new JSON(true, "新增客户成功");
 		} catch (Exception e) {
