@@ -17,47 +17,25 @@
 <meta name="viewport"
 	content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 <script src="../../cwresources/components/platform/platform.js"></script>
-<link rel="import"
-	href="../../cwresources/components/core-scroll-header-panel/core-scroll-header-panel.html">
-<link rel="import"
-	href="../../cwresources/components/core-toolbar/core-toolbar.html">
-
-<link href="../../cwresources/components/core-item/core-item.html"
-	rel="import">
-<link
-	href="../../cwresources/components/core-header-panel/core-header-panel.html"
-	rel="import">
-<link href="../../cwresources/components/core-icons/core-icons.html"
-	rel="import">
-<link
-	href="../../cwresources/components/paper-icon-button/paper-icon-button.html"
-	rel="import">
-<link
-	href="../../cwresources/components/paper-checkbox/paper-checkbox.html"
-	rel="import">
-<link
-	href="../../cwresources/components/paper-radio-group/paper-radio-group.html"
-	rel="import">
-<link href="../../cwresources/components/paper-item/paper-item.html"
-	rel="import">
-
-<link
-	href="../../cwresources/components/paper-menu-button/paper-menu-button.html"
-	rel="import">
-<link
-	href="../../cwresources/components/paper-dialog/paper-dialog-transition.html"
-	rel="import">
-<link href="../../cwresources/components/paper-dialog/paper-dialog.html"
-	rel="import">
-
-<link href="../../cwresources/components/paper-button/paper-button.html"
-	rel="import">
-<link href="../../cwresources/components/paper-input/paper-input.html"
-	rel="import">
-<link href="../../cwresources/components/core-ajax/core-ajax.html"
-	rel="import">
-<link rel="import" href="../../cwresources/components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../../cwresources/components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../cwresources/components/core-scroll-header-panel/core-scroll-header-panel.html">
+<link href="../../cwresources/components/core-toolbar/core-toolbar.html" rel="import">
+<link href="../../cwresources/components/core-item/core-item.html" rel="import">
+<link href="../../cwresources/components/core-header-panel/core-header-panel.html" rel="import">
+<link href="../../cwresources/components/core-icons/core-icons.html" rel="import">
+<link href="../../cwresources/components/core-icons/communication-icons.html" rel="import">
+<link href="../../cwresources/components/core-icons/maps-icons.html" rel="import">
+<link href="../../cwresources/components/paper-icon-button/paper-icon-button.html" rel="import">
+<link href="../../cwresources/components/paper-checkbox/paper-checkbox.html" rel="import">
+<link href="../../cwresources/components/paper-radio-group/paper-radio-group.html" rel="import">
+<link href="../../cwresources/components/paper-item/paper-item.html" rel="import">
+<link href="../../cwresources/components/paper-menu-button/paper-menu-button.html" rel="import">
+<link href="../../cwresources/components/paper-dialog/paper-dialog-transition.html" rel="import">
+<link href="../../cwresources/components/paper-dialog/paper-dialog.html" rel="import">
+<link href="../../cwresources/components/paper-button/paper-button.html" rel="import">
+<link href="../../cwresources/components/paper-input/paper-input.html" rel="import">
+<link href="../../cwresources/components/core-ajax/core-ajax.html" rel="import">
+<link href="../../cwresources/components/paper-ripple/paper-ripple.html" rel="import">
+<link href="../../cwresources/components/paper-toggle-button/paper-toggle-button.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/core-animated-pages.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/transitions/cross-fade.html" rel="import">
 <link href="../../cwresources/components/core-animated-pages/transitions/slide-from-right.html" rel="import">
@@ -67,7 +45,7 @@
 <link href="../mycomponents/reservationcard/reservation-table.html" rel="import">
 <link href="../mycomponents/reservationcard/order-table.html" rel="import">
 <link href="../mycomponents/productcard/orderp-table.html" rel="import">
-<link rel="import" href="../../cwresources/components/paper-toast/paper-toast.html">
+<link href="../../cwresources/components/paper-toast/paper-toast.html" rel="import" >
 
 
 <link rel='stylesheet' href='../css/carhome.css'>
@@ -102,7 +80,6 @@
 	position:fixed;
 	right: 24px;
 	top:96px;
-	color:#757575;
 	
 	transition: transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
 	-webkit-transition: -webkit-transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
@@ -116,8 +93,6 @@
     position:fixed;
 	right: 24px;
 	top:96px;
-	color:#757575;
-	
 	transition: transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
 	-webkit-transition: -webkit-transform 500ms cubic-bezier(0.4,0,.2,1) 500ms,background-color 500ms cubic-bezier(0.4,0,.2,1);
 	-webkit-transform: scale(1);
@@ -170,17 +145,15 @@ core-animated-pages {
 	
 	.order-category core-toolbar{
 		border-bottom: 1px solid #bdbdbd;
-		background-color:#b9f6ca;
 		z-index:500;
 		width:100%;
 	}
 	
 	.order-category span{
-		color:#656565;
 	}
 	
 	paper-icon-button::shadow core-icon,paper-menu-button::shadow core-icon {
-        fill: #656565;
+        fill: #fff;
     }
 	
 </style>
@@ -229,7 +202,7 @@ core-animated-pages {
     <section>
     <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
           <core-scroll-header-panel condenses>
-				<core-toolbar class="tall mainheader" style="background-color:#e91e63;">
+				<core-toolbar class="tall mainheader" style="background-color:#00bcd4;">
 					<div class="bottom indent bottom-text" self-end>
 						<div class="c_m_title">新建订单</div>
 						<div class="subtitle">订单详情</div>
@@ -238,7 +211,7 @@ core-animated-pages {
 					<paper-icon-button icon="close" onclick="back();"></paper-icon-button>
 				</core-toolbar>
 				<div class="content c-product-main" style="margin-top:256px;">
-				    <div class="fab blue c-fab-fixed">
+				    <div class="fab yellow c-fab-fixed">
 					      <core-icon icon="add"></core-icon>
 					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
 					</div>
@@ -253,7 +226,7 @@ core-animated-pages {
     </section>
         <section>
         
-        <div style="width:394px;margin-left:15px;position:absolute;top:64px;left:0px;z-index:2;">
+        <div style="width:394px;padding-left:15px;position:absolute;top:64px;left:0px;z-index:2;">
 						    <core-ajax auto url="../api/product/list" class="category_list" params='{"cid":"1"}' handleAs="json"></core-ajax>
 						    <div class="order-category">
 						  	<core-toolbar>
@@ -276,19 +249,19 @@ core-animated-pages {
 							</div>
 						  </div>
 	    <core-ajax url="../api/order/listforrese" class="o_list"  handleAs="json"></core-ajax>
-	          <core-scroll-header-panel condenses style="background-color:#b9f6ca;z-index:1;">
+	          <core-scroll-header-panel condenses style="background-color:#eeeeee;z-index:1;">
 	                 
-					<core-toolbar class="tall" style="background-color:#b9f6ca;border-bottom: 1px solid #bdbdbd;height:128px;z-index:500;">
+					<core-toolbar class="tall" style="border-bottom: 1px solid #bdbdbd;height:128px;z-index:500;">
 						<div flex></div>
 					    <paper-icon-button icon="close" onclick="back();"></paper-icon-button>
 					    <template id="sumbitButton" bind="{{isHidden}}" is="auto-binding">
-					     <div class="fab grey e-fab-fixed-{{isHidden}}" onclick="submitwediteorder();">
+					     <div class="fab red e-fab-fixed-{{isHidden}}" onclick="submitwediteorder();">
 					      <core-icon icon="check"></core-icon>
 					      <paper-ripple class="circle recenteringTouch" fit></paper-ripple>
 					     </div>
 					     </template>
 					</core-toolbar>
-					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;background-color:#b9f6ca;">
+					<div class="content c-product-main" style="margin-top:64px;padding:0 0 0 0;z-index:1000;">
 					    
 					    <div horizontal layout flex style="padding-bottom:64px;">
 						  
@@ -443,29 +416,38 @@ core-animated-pages {
 			var reservationId=null;
 			
 			var columns = [{
-					name : 'id',
-					title : '编号'
-				}, {
-					name : 'customer_mobile',
-					title : '客户电话'
-				}, {
 					name : 'customer_name',
-					title : '客户姓名'
+					title : '客户姓名',
+					type:'base',
+					icon:'account-box'
+				},{
+					name : 'customer_mobile',
+					title : '客户电话',
+					type:'base',
+					icon:'communication:call'
 				}, {
 					name : 'carNo',
-					title : '车牌'
+					title : '车牌',
+					type:'base',
+					icon:'maps:directions-car'
 				}, {
 					name : 'address',
-					title : '地址'
+					title : '地址',
+					type:'base',
+					icon:'room'
 				}, {
 					name : 'create_date',
-					title : '创建时间'
+					title : '创建时间',
+					type:'base',
+					icon:'due-date'
 				}, {
 					name : 'message_text',
-					title : '客户留言'
+					title : '客户留言',
+					icon:'icons:announcement'
 				}, {
 					name : 'message_voice_url',
-					title : '客户语音'
+					title : '客户语音',
+					icon:'icons:settings-voice'
 				}, {
 					name : 'action',
 					title : '操作'
@@ -500,16 +482,10 @@ core-animated-pages {
 			moreButton.addEventListener("click", function(e) {
 			   rowStatus=tableTemplate.model.rowStatus;
 			  
-			   //if(!ajaxlist.params){
-			   //		page=1;
-			   //		ajaxlist.params={'pid':page};
-			   //}else{
 			   		var params=ajaxlist.params;
 			   		var pid=params.pid;
 			   		if(page<pages-1){
 			   			page=pid+1;
-			   			console.log(page);
-			   			console.log(pages);
 			   		    ajaxlist.params={'pid':page,'status':rowStatus};
 			   		    ajaxlist.go();
 			   		};
@@ -571,19 +547,24 @@ core-animated-pages {
 				
 				var ordercolumns = [{
 					name : 'carNo',
-					title : '车牌'
+					title : '车牌',
+					icon:'maps:directions-car'
 				}, {
 					name : 'address',
-					title : '地址'
+					title : '地址',
+					icon:'room'
 				}, {
 					name : 'create_date',
-					title : '创建时间'
+					title : '创建时间',
+					icon:'due-date'
 				}, {
 					name : 'workerName',
-					title : '服务人员姓名'
+					title : '服务人员姓名',
+					icon:'account-child'
 				}, {
 					name : 'supportorName',
-					title : '客服'
+					title : '客服',
+					icon:'accessibility'
 				}, {
 					name : 'action',
 					title : '操作'

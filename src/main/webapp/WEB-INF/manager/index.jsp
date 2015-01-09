@@ -19,24 +19,32 @@
 
 <link rel="import" href="../mycomponents/m-frame/nav-frame.html">
 
-
+<style>
+core-submenu,core-item{
+  font-size:13px;
+  color:#212121;
+}
+html /deep/ core-icon {
+  color: #aaa;
+}
+</style>
 </head>
 
 <body unresolved>
-	<nav-frame> <core-submenu icon="chevron-right" label="产品管理">
+	<nav-frame> <core-submenu icon="expand-more" label="产品管理">
 
 	<core-item label="产品列表" tag="productlist" url="productlist"></core-item>
 	</core-submenu> 
-	<core-submenu icon="chevron-right" label="客户管理"> 
+	<core-submenu icon="expand-more" label="客户管理"> 
 		<core-item
 		label="客户列表" tag="customerslist" url="customerslist"></core-item> 
 	</core-submenu> 
-	<core-submenu icon="chevron-right" label="区域管理"> 
+	<core-submenu icon="expand-more" label="区域管理"> 
 		<core-item
 		label="区域列表" tag="arealist" url="arealist"></core-item> 
 	</core-submenu> 
 	<core-submenu
-		icon="chevron-right" label="预约管理"> 
+		icon="expand-more" label="预约管理"> 
 		<core-item
 		label="预约列表" tag="reservationlist" url="reservationlist">
 		</core-item>
