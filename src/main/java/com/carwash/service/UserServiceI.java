@@ -25,6 +25,8 @@
  */
 package com.carwash.service;
 
+import java.util.List;
+
 import com.carwash.entity.User;
 
 /**
@@ -50,4 +52,6 @@ public interface UserServiceI
 	public User get(String mobile);
 	
 	public User get(int id);
+	
+	public List<User> workers();
 }

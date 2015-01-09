@@ -26,11 +26,13 @@
 package com.carwash.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.UserServiceI;
@@ -69,6 +71,16 @@ public class UserServiceImpl implements UserServiceI
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 		return userDao.get("From User u where u.id=:id", params);
+	}
+
+	@Override
+	public List<User> workers()
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("inuse", true);
+		params.put("role", Role.WORKER);
+		return userDao.find(
+				"From User u where u.inuse=:inuse and u.role=:role ", params);
 	}
 
 }

@@ -19,33 +19,53 @@
  *                   `=---=' 
  *^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
  *佛祖保佑       永无BUG 
- * File name:          AreaServiceI.java
+ * File name:          ApiUser.java
  * Copyright@blog.ilvelh.com(China)
  * Editor:           JDK1.7_40
  */
-package com.carwash.service;
+package com.carwash.ctrl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.carwash.entity.Area;
+import com.carwash.entity.User;
+import com.carwash.service.UserServiceI;
+import com.carwash.util.JSON;
 
 /**
- * 服务地区接口
+ * TODO: File comments
  * <p>
  * Author: ilvel
  * <p>
- * Date:2014年12月8日 Time:上午9:49:33
+ * Date:2015年1月9日 Time:下午1:46:00
  * <p>
  */
 @Controller
-@RequestMapping("/api/area")
-public interface AreaServiceI
+@RequestMapping("/api/user")
+public class ApiUser
 {
-	public void saveOrUpdate(Area area);
+	@Autowired
+	private UserServiceI userService;
 
-	public List<Area> find();
-
+	@RequestMapping("workers")
+	@ResponseBody
+	public JSON workers()
+	{
+		List<User> workers = userService.workers();
+		List<User> respUsers = new ArrayList<User>();
+		for (User user : workers)
+		{
+			User respUser = new User();
+			BeanUtils.copyProperties(user, respUser);
+			respUser.setPassword(null);
+			respUsers.add(respUser);
+		}
+		return new JSON(true, "查询成功").append("workers", respUsers);
+	}
 }
