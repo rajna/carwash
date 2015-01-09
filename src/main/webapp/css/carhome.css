@@ -142,12 +142,17 @@ padding: 12px;
     }
     
     .fab.red {
-      background-color: #d23f31;
+      background-color: #e91e63;
     }
     
     .fab.blue {
       background-color: #4285f4;
     }
+    
+    .fab.yellow {
+      background-color: #ffeb3b;
+    }
+    
     
     .fab.green {
       background-color: #0f9d58;

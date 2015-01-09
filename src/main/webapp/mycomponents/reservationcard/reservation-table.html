@@ -7,10 +7,30 @@
 <link rel="import" href="../../../cwresources/components/paper-input/paper-input.html">
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../cwresources/components/core-icons/core-icons.html">
 <polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending rowStatus reservationId">
     <template>
       <style>
+    .card{
+      	border-radius: 2px;
+		box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+		background-color: #fff;
+		margin-bottom:12px;
+      }
       
+      .card-left{
+      	width:40%;
+      	over-flow:hidden;
+        padding:24px;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+        background-color:#fafafa;
+      }
+      
+      .card-right{
+      	width:60%;
+      	 padding:24px;
+      }  
      
     paper-dialog {
       width: 50%;
@@ -40,20 +60,13 @@
 		  text-align: left;
 		  color: #616161;
 		  font-size:14px;
-		  border-bottom:1px solid #e0e0e0;
 		  
       }
-      table.g_table td{
-      	  border-right:1px solid #e0e0e0;
-      }
-      table.g_table td:first-of-type{
-      	  border-left:1px solid #e0e0e0;
-      }
+      
       table.g_table th {
 		  font-weight: 800;
 		  cursor: pointer;
 		  color:#bdbdbd;
-		  border-bottom:1px solid #bdbdbd;
 		  padding-bottom:14px;
       }
       table.g_table td:first-of-type {
@@ -88,6 +101,11 @@ padding: 12px;
   background: #e0e0e0;
 }
 
+core-icon{
+	color: #aaa;
+	margin-right:32px;
+}
+
     </style>
     
    
@@ -108,39 +126,59 @@ padding: 12px;
 	  <div layout vertical center>
 	  
       <table class="g_table">
-        <tr>
-          <template repeat="{{column in columns}}">
-            <template if="{{column.title!='操作'}}">
-            	<th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
-            </template>
-             <template if="{{column.title=='操作'&&rowStatus!='CANCELED'}}">
-             	<th colspan="2" on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
-             </template>
-          </template>
-        </tr>
+        
         <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
           <tr>
-            <template repeat="{{column in columns}}">
-	            <template if="{{column.name!='action'&&column.name!='message_voice_url'}}">
+            <div class="card" horizontal layout flex>
+            <div class="card-left">
+             <template repeat="{{column in columns}}">
+             <tr style="width:50%;">
+	            <template if="{{column.name!='action'&&column.type=='base'}}">
+	            
 	                <td>
-	                  <span>{{row[column.name]}}</span>
+	                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]}}</span>
 	                </td>
 	            </template>
-	             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&row[column.name]}}">
-	                <td>
-	                  <audio src="{{'http://192.168.1.113:8088/cwresources/'+row[column.name]}}">您的浏览器不支持 audio 标签。</audio>
-	                </td>
-	            </template>
-	             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&!row[column.name]}}">
-	                <td>
-	                  
-	                </td>
-	            </template>
+	             
 	            <template if="{{column.name=='action'}}">
 	                <td hidden?="{{row['reservationStatus']=='CANCELED'}}" on-click="{{orderList}}"><paper-button label="创建订单" ></paper-button></td><td hidden?="{{row['reservationStatus']=='CANCELED'}}"><paper-button label="取消" ></paper-button></td>
+	                
 	             </template>
-	             
 	         </template>
+            </div>
+            <div class="card-right">
+            
+            	<template repeat="{{column in columns}}">
+		             <tr style="width:50%;">
+			             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&row[column.name]}}">
+			                <td>
+			                  <core-icon icon="{{column.icon}}"></core-icon><audio src="{{'http://192.168.1.113:8088/cwresources/'+row[column.name]}}">您的浏览器不支持 audio 标签。</audio>
+			                </td>
+			            </template>
+			             <template if="{{column.name!='action'&&column.name=='message_voice_url'&&!row[column.name]}}">
+			               
+			                <td>
+			                  <span><core-icon icon="{{column.icon}}"></core-icon>暂无语音留言</span>
+			                </td>
+			            </template>
+			            
+			            <template if="{{column.name!='action'&&column.name=='message_text'&&row[column.name]}}">
+			                <td>
+				                 <core-icon icon="{{column.icon}}"></core-icon> <span style="display:inline-block;width:330px;margin:10px;overflow:auto;">{{row[column.name]}}</span>
+				                </td>
+			            </template>
+			             <template if="{{column.name!='action'&&column.name=='message_text'&&!row[column.name]}}">
+			               
+			                <td>
+			                  <span><core-icon icon="{{column.icon}}"></core-icon>暂无留言</span>
+			                </td>
+			            </template>
+			            </tr>
+			          
+			         </template>
+            </div>
+            </div>
+           
           </tr>
           
           </template>

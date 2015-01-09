@@ -69,9 +69,8 @@
       
       .card-left{
       	width:30%;
-      	background-color:#3f51b5;
-        padding-left:12px;
-        color:#fff;
+      	padding:24px;
+        background-color:#fafafa;
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
       }
@@ -80,6 +79,11 @@
       	width:70%;
       }
       
+      core-icon{
+			color: #aaa;
+			margin-right:32px;
+		}
+
       .p-select{
 			width:100%;
 			border:none;
@@ -120,21 +124,9 @@
 	   </template>
 	  <template if="{{data[0]!=null}}">
       <table class="g_table">
-       <!--  
-        <tr>
-          <template repeat="{{column in columns}}">
-            <template if="{{column.title!='操作'}}">
-            	<th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
-            </template>
-             <template if="{{column.title=='操作'}}">
-             	<th colspan="2" on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
-             </template>
-          </template>
-        </tr>
-        -->
+       
         <template  repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
           <tr>
-            
             <div class="card" horizontal layout flex>
             
             
@@ -143,7 +135,7 @@
                  <tr style="width:50%;">
 		            <template if="{{column.name!='action'&&column.name!='orderItems'}}">
 		                <td>
-		                  <span>{{column.title}}:{{row[column.name]}}</span>
+		                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]}}</span>
 		                </td>
 		            </template>
 		            <template if="{{column.name=='action'}}">
