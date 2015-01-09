@@ -59,6 +59,7 @@ public class Reservation {
 	private String message_voice_url; // 用户发起预约时的语言留言
 	private String carNo; // 车牌号
 	private ReservationStatus reservationStatus;
+	private String cancelReason;
 
 	@Id
 	@GeneratedValue
@@ -151,6 +152,14 @@ public class Reservation {
 
 	public void setReservationStatus(ReservationStatus reservationStatus) {
 		this.reservationStatus = reservationStatus;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
 	}
 
 }
