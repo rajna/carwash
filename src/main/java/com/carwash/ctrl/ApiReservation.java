@@ -198,6 +198,7 @@ public class ApiReservation
 		try
 		{
 			reservation.setCancelReason(cancelReason);
+			reservation.setReservationStatus(ReservationStatus.CANCELED);
 			reservationService.saveOrUpdate(reservation);
 		}
 		catch (Exception e)

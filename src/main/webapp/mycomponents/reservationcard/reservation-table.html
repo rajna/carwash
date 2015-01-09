@@ -243,10 +243,8 @@ core-icon{
           },
           cancel:function(event, detail, sender){
             var row=sender.templateInstance_.model.row;
-            console.log(row);
-            console.log(this.data);
-            this.data.remove(row);
             this.canceldata.rid=row.id;
+            this.canceldata.index=this.data.indexOf(row)
           	this.$.canclePanel.toggle();
           },
           confirm:function(event, detail, sender){
@@ -259,14 +257,13 @@ core-icon{
           	this.fire('orderlist-category');
           },
           handleCancel:function(e, detail, sender){
+                this.$.msgtoast.text=e.detail.response.message;
+			    this.$.msgtoast.show();
 			    if(e.detail.response.success){
-			    	this.$.msgtoast.text=e.detail.response.message;
-			    	 this.fire('reservation-refresh');
-			    }else{
-			    	this.$.msgtoast.text="取消失败";
+			        this.data.remove(this.canceldata.index);
 			    }
 			    
-			    this.$.msgtoast.show();
+			   
 			   
           }
       });
