@@ -218,7 +218,7 @@ public class ApiReservation
 		Customer customer = Interceptor.threadLocalCustomer.get();
 		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
 				.append("relogin", true); }
-		return calcelForClientAndWeb(rid,"用户取消", customer, null);
+		return calcelForClientAndWeb(rid,"用户主动取消", customer, null);
 	}
 
 	// @Cwp(1)
