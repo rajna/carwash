@@ -178,7 +178,7 @@ public class ApiReservation
 
 	private JSON calcelForClientAndWeb(String rid,String cancelReason, Customer customer, User user)
 	{
-		if (customer == null && user != null) { return new JSON(false, "预约无权取消"); }
+		if (customer == null && user == null) { return new JSON(false, "预约无权取消"); }
 		int id = 0;
 		try
 		{
@@ -198,6 +198,7 @@ public class ApiReservation
 		try
 		{
 			reservation.setCancelReason(cancelReason);
+			reservation.setReservationStatus(ReservationStatus.CANCELED);
 			reservationService.saveOrUpdate(reservation);
 		}
 		catch (Exception e)
