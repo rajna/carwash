@@ -36,9 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
-import com.carwash.interceptor.Interceptor;
 import com.carwash.service.UserServiceI;
-import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 
 /**
