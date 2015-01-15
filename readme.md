@@ -159,7 +159,7 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		
-#### 2.设置所有消息已读		
+#### 3.设置所有消息已读		
 - URL:`/api/message/creadall`(客户接口) OR `/api/message/creadall`(用户接口)
 	* 请求方式:get OR post
 	* 参数`{mobile}`：String
