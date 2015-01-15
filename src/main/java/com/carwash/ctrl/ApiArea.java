@@ -75,8 +75,6 @@ public class ApiArea
 	@ResponseBody
 	public JSON post(Area area)
 	{
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		if (area.getName() == null || "".equals(area.getName())) { return new JSON(
 				false, "区域名称不能为空"); }
 		try

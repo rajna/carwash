@@ -82,8 +82,6 @@ public class ApiCustomer
 	@ResponseBody
 	public JSON list()
 	{
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		return new JSON(true, "查询成功").append("customers",
 				customerService.find());
 	}

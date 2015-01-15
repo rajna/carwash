@@ -74,8 +74,6 @@ public class ApiProduct
 			Product product,
 			@RequestParam(required = false, value = "image") MultipartFile imageFile)
 	{
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		try
 		{
 			String imageLink = UploadUtil.saveProductImageToDisk(request,

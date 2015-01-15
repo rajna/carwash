@@ -110,8 +110,6 @@ public class ApiOrder
 	@ResponseBody
 	public JSON listforRese(String rid)
 	{
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		int resId = 0;
 		try
 		{

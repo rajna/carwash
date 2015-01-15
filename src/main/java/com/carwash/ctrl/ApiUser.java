@@ -61,8 +61,6 @@ public class ApiUser
 	@ResponseBody
 	public JSON workers()
 	{
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		List<User> workers = userService.workers();
 		List<User> respUsers = new ArrayList<User>();
 		for (User u : workers)

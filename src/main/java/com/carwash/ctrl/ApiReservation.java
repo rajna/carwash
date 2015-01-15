@@ -146,9 +146,6 @@ public class ApiReservation
 	@ResponseBody
 	public JSON all(String status, String pid)
 	{
-		// 校验登录
-		User user = Interceptor.threadLocalUser.get();
-		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		ReservationStatus os = null;
 		if (status != null)
 		{
