@@ -32,6 +32,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.carwash.ctrl.Cache;
 import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.service.BaseDaoI;
@@ -55,6 +56,11 @@ public class UserServiceImpl implements UserServiceI
 	public void saveOrUpdate(User o)
 	{
 		userDao.saveOrUpdate(o);
+		if (o != null)
+		{
+			Cache.putUser(o);
+		}
+
 	}
 
 	@Override
@@ -70,7 +76,12 @@ public class UserServiceImpl implements UserServiceI
 	{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
-		return userDao.get("From User u where u.id=:id", params);
+		User u = userDao.get("From User u where u.id=:id", params);
+		if (u != null)
+		{
+			Cache.putUser(u);
+		}
+		return u;
 	}
 
 	@Override

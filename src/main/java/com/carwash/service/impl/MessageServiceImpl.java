@@ -25,7 +25,9 @@
  */
 package com.carwash.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,9 +69,54 @@ public class MessageServiceImpl implements MessageServiceI
 	}
 
 	@Override
-	public List<Message> find(int cid)
+	public List<Message> findByCid(int cid)
 	{
 		return mDao.find("From Message m where m.customerId=" + cid);
+	}
+
+	@Override
+	public List<Message> findByUid(int uid)
+	{
+		return mDao.find("From Message m where m.userId=" + uid);
+	}
+
+	@Override
+	public void readedMessage(int id)
+	{
+		Message m = get(id);
+		if (m != null)
+		{
+			m.setReaded(true);
+			saveOrUpdate(m);
+		}
+	}
+
+	@Override
+	public Message get(int id)
+	{
+		return mDao.get("From Message m where m.id=" + id);
+	}
+
+	@Override
+	public void readallByCid(int cid)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("readed", true);
+		params.put("customerId", cid);
+		mDao.executeHql(
+				"Update Message m set m.readed =:readed where m.customerId =:customerId",
+				params);
+	}
+
+	@Override
+	public void readallByUid(int uid)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("readed", true);
+		params.put("userId", uid);
+		mDao.executeHql(
+				"Update Message m set m.readed =:readed where m.userId =:userId",
+				params);
 	}
 
 }

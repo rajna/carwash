@@ -25,6 +25,8 @@
  */
 package com.carwash.interceptor;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,11 +34,12 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.carwash.ctrl.CustomerCache;
+import com.carwash.ctrl.Cache;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.service.CustomerServiceI;
+import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 
@@ -50,7 +53,11 @@ import com.carwash.util.JSON;
  */
 public class Interceptor implements HandlerInterceptor
 {
+	private static int CUSTOMERPASSWORDLENGTH = UUID.randomUUID().toString()
+			.replace("-", "").length();
 	private CustomerServiceI customerService;
+	private UserServiceI userService;
+
 	public final static ThreadLocal<Customer> threadLocalCustomer = new ThreadLocal<Customer>();
 	public final static ThreadLocal<User> threadLocalUser = new ThreadLocal<User>();
 
@@ -87,23 +94,47 @@ public class Interceptor implements HandlerInterceptor
 								"relogin", true).toJSONString());
 				return false;
 			}
-			Customer customer = CustomerCache.get(mObj.toString());
-			if (customer == null)
+			String password = pObj.toString().toString();
+			// 密码长度为CUSTOMERPASSWORDLENGTH的话则认为是客户
+			if (CUSTOMERPASSWORDLENGTH == password.length())
 			{
-				// 缓存中未取到用户的话直接从数据库中查询
-				customer = customerService.getByMobile(mObj.toString());
-				CustomerCache.put(customer);
+				Customer customer = Cache.getCustomer(mObj.toString());
+				if (customer == null)
+				{
+					// 缓存中未取到客户的话直接从数据库中查询
+					customer = customerService.getByMobile(mObj.toString());
+					Cache.putCustomer(customer);
+				}
+				if (customer == null
+						|| !password.equals(customer.getPassword()))
+				{
+					response.getWriter().write(
+							new JSON(false, Constant.ACCOUNTERROR).append(
+									"relogin", true).toJSONString());
+					return false;
+				}
+				threadLocalCustomer.set(customer);
+				return true;
 			}
-			if (customer == null
-					|| !pObj.toString().equals(customer.getPassword()))
+			else
 			{
-				response.getWriter().write(
-						new JSON(false, Constant.ACCOUNTERROR).append(
-								"relogin", true).toJSONString());
-				return false;
+				User user = Cache.getUser(mObj.toString());
+				if (user == null)
+				{
+					// 缓存中未取到用户的话直接从数据库中查询
+					user = userService.get(mObj.toString());
+					Cache.putUser(user);
+				}
+				if (user == null || !password.equals(user.getPassword()))
+				{
+					response.getWriter().write(
+							new JSON(false, Constant.ACCOUNTERROR).append(
+									"relogin", true).toJSONString());
+					return false;
+				}
+				threadLocalUser.set(user);
+				return true;
 			}
-			threadLocalCustomer.set(customer);
-			return true;
 		}
 		// 来是网页版访问
 		User user = (User) request.getSession().getAttribute("loginuser");
@@ -113,7 +144,7 @@ public class Interceptor implements HandlerInterceptor
 					new JSON(false, Constant.UNLOGIN).append("relogin", true)
 							.toJSONString());
 			return false;
-		} 
+		}
 		Role role = user.getRole();
 		if (role == null)
 		{
@@ -161,5 +192,4 @@ public class Interceptor implements HandlerInterceptor
 	{
 		this.customerService = customerService;
 	}
-
 }

@@ -32,7 +32,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.carwash.ctrl.CustomerCache;
+import com.carwash.ctrl.Cache;
 import com.carwash.entity.Customer;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.CustomerServiceI;
@@ -46,21 +46,22 @@ import com.carwash.service.CustomerServiceI;
  * <p>
  */
 @Service("customerService")
-public class CustomerServiceImpl implements CustomerServiceI {
+public class CustomerServiceImpl implements CustomerServiceI
+{
 	@Autowired
 	private BaseDaoI<Customer> customerDao;
 
 	@Override
-	public void saveOrUpdate(Customer o) {
+	public void saveOrUpdate(Customer o)
+	{
 		customerDao.saveOrUpdate(o);
-		CustomerCache.put(o);
+		Cache.putCustomer(o);
 	}
 
 	@Override
-	public Customer getByMobile(String mobile) {
-		if (mobile == null) {
-			return null;
-		}
+	public Customer getByMobile(String mobile)
+	{
+		if (mobile == null) { return null; }
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("mobile", mobile);
 		return customerDao
@@ -68,18 +69,21 @@ public class CustomerServiceImpl implements CustomerServiceI {
 	}
 
 	@Override
-	public List<Customer> find() {
+	public List<Customer> find()
+	{
 		return customerDao.find("From Customer c");
 	}
 
 	@Override
-	public Customer get(int id) {
+	public Customer get(int id)
+	{
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 		Customer customer = customerDao.get("From Customer c where c.id=:id",
 				params);
-		if (customer != null) {
-			CustomerCache.put(customer);
+		if (customer != null)
+		{
+			Cache.putCustomer(customer);
 		}
 		return customer;
 	}

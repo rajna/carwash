@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.carwash.entity.Customer;
+import com.carwash.entity.User;
 
 /**
  * 客户缓存
@@ -38,18 +39,31 @@ import com.carwash.entity.Customer;
  * Date:2014年12月8日 Time:上午11:01:48
  * <p>
  */
-public class CustomerCache
+public class Cache
 {
-	private static Map<String, Customer> caches = new ConcurrentHashMap<String, Customer>();
+	private static Map<String, Customer> customerCaches = new ConcurrentHashMap<String, Customer>();
+	private static Map<String, User> userCaches = new ConcurrentHashMap<String, User>();
 
-	public static void put(Customer customer)
+	public static void putCustomer(Customer customer)
 	{
 		if (customer == null || customer.getMobile() == null) { return; }
-		caches.put(customer.getMobile(), customer);
+		customerCaches.put(customer.getMobile(), customer);
 	}
 
-	public static Customer get(String mobile)
+	public static Customer getCustomer(String mobile)
 	{
-		return caches.get(mobile);
+		return customerCaches.get(mobile);
 	}
+
+	public static void putUser(User user)
+	{
+		if (user == null || user.getMobile() == null) { return; }
+		userCaches.put(user.getMobile(), user);
+	}
+
+	public static User getUser(String mobile)
+	{
+		return userCaches.get(mobile);
+	}
+
 }

@@ -55,5 +55,41 @@ public interface MessageServiceI
 	 * @param cid
 	 *            客户id
 	 */
-	public List<Message> find(int cid);
+	public List<Message> findByCid(int cid);
+
+	/**
+	 * 查询用户消息
+	 * 
+	 * @param cid
+	 *            用户id
+	 */
+	public List<Message> findByUid(int uid);
+
+	/**
+	 * 设置信息已读状态
+	 * 
+	 * @param id
+	 */
+	public void readedMessage(int id);
+
+	/**
+	 * 设置客户所有信息已读状态
+	 * 
+	 * @param id
+	 */
+	public void readallByCid(int cid);
+
+	/**
+	 * 设置用户所有信息已读状态
+	 * 
+	 * @param id
+	 */
+	public void readallByUid(int uid);
+
+	/**
+	 * 根据信息id查询信息
+	 * 
+	 * @param id
+	 */
+	public Message get(int id);
 }

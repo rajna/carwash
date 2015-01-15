@@ -36,7 +36,7 @@ import com.carwash.service.AreaServiceI;
 import com.carwash.util.JSON;
 
 /**
- * TODO: File comments
+ * 地区接口
  * <p>
  * Author: ilvel
  * <p>

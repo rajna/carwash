@@ -138,5 +138,33 @@
 		+ `{message}`,String
 		+ `{orders}`,jsonarray(success=true时存在)
 	
+五、消息数据接口	
+#### 1.消息列表
+- URL:`/api/message/clist`(客户消息) OR `/api/message/ulist`(用户消息)
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{messages}`,jsonarray(success=true时存在)	
 		
+#### 2.设置某一条消息已读		
+- URL:`/api/message/cread`(客户接口) OR `/api/message/uread`(用户接口)
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{mid}`：String 消息的Id
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		
+#### 2.设置所有消息已读		
+- URL:`/api/message/creadall`(客户接口) OR `/api/message/creadall`(用户接口)
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
 		
