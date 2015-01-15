@@ -45,7 +45,8 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/area")
-public class ApiArea {
+public class ApiArea
+{
 	@Autowired
 	private AreaServiceI areaService;
 
@@ -56,7 +57,8 @@ public class ApiArea {
 	 */
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list() {
+	public JSON list()
+	{
 		return new JSON(true, "查询成功").append("areas", areaService.find());
 	}
 
@@ -68,15 +70,17 @@ public class ApiArea {
 	@Cwp(1)
 	@RequestMapping("post")
 	@ResponseBody
-	public JSON post(Area area) {
-		// TODO 校验权限
-		if (area.getName() == null || "".equals(area.getName())) {
-			return new JSON(false, "区域名称不能为空");
-		}
-		try {
+	public JSON post(Area area)
+	{
+		if (area.getName() == null || "".equals(area.getName())) { return new JSON(
+				false, "区域名称不能为空"); }
+		try
+		{
 			areaService.saveOrUpdate(area);
 			return new JSON(true, "操作成功");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "操作失败," + e.getMessage());
 		}
 

@@ -107,7 +107,6 @@ public class Interceptor implements HandlerInterceptor
 		}
 		// 来是网页版访问
 		User user = (User) request.getSession().getAttribute("loginuser");
-
 		if (user == null)
 		{
 			response.getWriter().write(

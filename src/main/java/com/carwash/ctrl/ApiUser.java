@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.carwash.entity.User;
+import com.carwash.interceptor.Cwp;
 import com.carwash.service.UserServiceI;
 import com.carwash.util.JSON;
 
@@ -53,16 +54,17 @@ public class ApiUser
 	@Autowired
 	private UserServiceI userService;
 
+	@Cwp(1)
 	@RequestMapping("workers")
 	@ResponseBody
 	public JSON workers()
 	{
 		List<User> workers = userService.workers();
 		List<User> respUsers = new ArrayList<User>();
-		for (User user : workers)
+		for (User u : workers)
 		{
 			User respUser = new User();
-			BeanUtils.copyProperties(user, respUser);
+			BeanUtils.copyProperties(u, respUser);
 			respUser.setPassword(null);
 			respUsers.add(respUser);
 		}

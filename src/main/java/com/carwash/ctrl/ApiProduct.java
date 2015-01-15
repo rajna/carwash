@@ -55,7 +55,8 @@ import com.carwash.util.UploadUtil;
  */
 @Controller
 @RequestMapping("/api/product")
-public class ApiProduct {
+public class ApiProduct
+{
 	@Autowired
 	private ProductServiceI productService;
 
@@ -68,17 +69,21 @@ public class ApiProduct {
 	public JSON post(
 			HttpServletRequest request,
 			Product product,
-			@RequestParam(required = false, value = "image") MultipartFile imageFile) {
-
-		try {
+			@RequestParam(required = false, value = "image") MultipartFile imageFile)
+	{
+		try
+		{
 			String imageLink = UploadUtil.saveProductImageToDisk(request,
 					imageFile);
-			if (imageLink != null) {
+			if (imageLink != null)
+			{
 				product.setImageLink(imageLink);
 			}
 			productService.saveOrUpdate(product);
 			return new JSON(true, "操作成功");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "操作失败");
 		}
 
@@ -89,17 +94,23 @@ public class ApiProduct {
 	 */
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list(String cid) {
+	public JSON list(String cid)
+	{
 		int id = 0;
-		try {
+		try
+		{
 			id = Integer.valueOf(cid);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 		}
 		List<Product> products = productService.find(id);
-		for (Product p : products) {
+		for (Product p : products)
+		{
 			String cateogoryName = "未知分类";
 			Category category = CategoryUtil.getCategory(p.getCategoryId());
-			if (category != null) {
+			if (category != null)
+			{
 				cateogoryName = category.getName();
 			}
 			p.setCategory(cateogoryName);

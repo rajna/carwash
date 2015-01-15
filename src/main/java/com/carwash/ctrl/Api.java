@@ -190,7 +190,7 @@ public class Api
 		if (!user.isInuse()) { return new JSON(false, "该账户已停用"); }
 		if (!user.getPassword().equals(password)) { return new JSON(false,
 				"登录密码不正确"); }
-		request.getSession().setAttribute("user", user);
+		request.getSession().setAttribute("loginuser", user);
 		return new JSON(true, "登录成功");
 	}
 

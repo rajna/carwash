@@ -141,13 +141,11 @@ public class ApiReservation
 	/**
 	 * 后台查询接口
 	 */
-	// @Cwp(1)
-	// 如果
+	@Cwp(1)
 	@RequestMapping("all")
 	@ResponseBody
 	public JSON all(String status, String pid)
 	{
-		// TODO 校验登录
 		ReservationStatus os = null;
 		if (status != null)
 		{
@@ -176,7 +174,8 @@ public class ApiReservation
 				reservationService.find(os, pageId)).append("pages", pages);
 	}
 
-	private JSON calcelForClientAndWeb(String rid,String cancelReason, Customer customer, User user)
+	private JSON calcelForClientAndWeb(String rid, String cancelReason,
+			Customer customer, User user)
 	{
 		if (customer == null && user == null) { return new JSON(false, "预约无权取消"); }
 		int id = 0;
@@ -219,19 +218,19 @@ public class ApiReservation
 		Customer customer = Interceptor.threadLocalCustomer.get();
 		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
 				.append("relogin", true); }
-		return calcelForClientAndWeb(rid,"用户主动取消", customer, null);
+		return calcelForClientAndWeb(rid, "用户主动取消", customer, null);
 	}
 
-	// @Cwp(1)
+	@Cwp(1)
 	@RequestMapping("cancelForWeb")
 	@ResponseBody
-	public JSON cancelForWeb(String rid,String cancelReason)
+	public JSON cancelForWeb(String rid, String cancelReason)
 	{
-		// TODO 检查登录用户
-		User user = new User();
-		if(cancelReason==null||"".equals(cancelReason.trim())){
-			 return new JSON(false, "取消预约失败,请输入取消预约原因");
-		}
-		return calcelForClientAndWeb(rid,cancelReason, null, user);
+		// 检查登录用户
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
+		if (cancelReason == null || "".equals(cancelReason.trim())) { return new JSON(
+				false, "取消预约失败,请输入取消预约原因"); }
+		return calcelForClientAndWeb(rid, cancelReason, null, user);
 	}
 }

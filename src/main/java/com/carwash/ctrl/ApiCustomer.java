@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
+import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.CustomerServiceI;
@@ -51,23 +52,22 @@ import com.carwash.util.JSON;
  */
 @Controller
 @RequestMapping("/api/customer")
-public class ApiCustomer {
+public class ApiCustomer
+{
 	@Autowired
 	private CustomerServiceI customerService;
 
 	@Cwp(0)
 	@RequestMapping("view")
 	@ResponseBody
-	public JSON view() {
+	public JSON view()
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		customer = customerService.get(customer.getId());
-		if (customer == null) {
-			return new JSON(false, "账户不存在").append("relogin", true);
-		}
+		if (customer == null) { return new JSON(false, "账户不存在").append(
+				"relogin", true); }
 		return new JSON(true, "查询成功").append("customer",
 				JSONObject.toJSON(customer));
 	}
@@ -80,8 +80,8 @@ public class ApiCustomer {
 	@Cwp(1)
 	@RequestMapping("list")
 	@ResponseBody
-	public JSON list() {
-		// TODO 校验登录
+	public JSON list()
+	{
 		return new JSON(true, "查询成功").append("customers",
 				customerService.find());
 	}
@@ -94,34 +94,30 @@ public class ApiCustomer {
 	@Cwp(1)
 	@RequestMapping("post")
 	@ResponseBody
-	public JSON post(Customer customer) {
-		// TODO 校验登录
+	public JSON post(Customer customer)
+	{
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		String mobile = customer.getMobile();
-		if (mobile == null) {
-			return new JSON(false, "手机号码不能为空");
-		}
+		if (mobile == null) { return new JSON(false, "手机号码不能为空"); }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) {
-			return new JSON(false, "手机号码不规范");
-		}
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
 		String carNo = customer.getCarNo();
 		String name = customer.getName();
-		if (carNo == null || "".equals(carNo.trim())) {
-			return new JSON(false, "请填写车牌号");
-		}
-		if (name == null || "".equals(name)) {
-			return new JSON(false, "请填写客户姓名");
-		}
+		if (carNo == null || "".equals(carNo.trim())) { return new JSON(false,
+				"请填写车牌号"); }
+		if (name == null || "".equals(name)) { return new JSON(false, "请填写客户姓名"); }
 		Customer byMobile = customerService.getByMobile(mobile);
-		if (byMobile != null) {
-			return new JSON(false, "该手机号码已经被使用");
-		}
-		try {
-			//TODO 设置用户的推荐人
+		if (byMobile != null) { return new JSON(false, "该手机号码已经被使用"); }
+		try
+		{
+			customer.setReffer_work_id(user.getId() + "");
 			customerService.saveOrUpdate(customer);
 			return new JSON(true, "新增客户成功");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "新增客户失败" + e.getMessage());
 		}
 	}
@@ -132,19 +128,21 @@ public class ApiCustomer {
 	@Cwp(0)
 	@RequestMapping("update")
 	@ResponseBody
-	public JSON update(String carNo, String name) {
+	public JSON update(String carNo, String name)
+	{
 		Customer customer = Interceptor.threadLocalCustomer.get();
-		if (customer == null) {
-			return new JSON(false, Constant.ACCOUNTERROR).append("relogin",
-					true);
-		}
+		if (customer == null) { return new JSON(false, Constant.ACCOUNTERROR)
+				.append("relogin", true); }
 		customer.setCarNo(carNo);
 		customer.setName(name);
-		try {
+		try
+		{
 			customerService.saveOrUpdate(customer);
 			return new JSON(true, "更新成功").append("customer",
 					JSONObject.toJSON(customer));
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return new JSON(false, "更新失败");
 		}
 	}
