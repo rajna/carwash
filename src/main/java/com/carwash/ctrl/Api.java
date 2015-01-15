@@ -30,6 +30,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -169,4 +171,27 @@ public class Api
 				"登录密码不正确"); }
 		return new JSON(true, "登录成功").append("user", JSONObject.toJSON(user));
 	}
+
+	/**
+	 * 用户登录
+	 */
+	@RequestMapping("weblogin")
+	@ResponseBody
+	public JSON weblogin(String mobile, String password,
+			HttpServletRequest request)
+	{
+		if (mobile == null || password == null) { return new JSON(false,
+				"登录参数不完整"); }
+		Pattern p = Pattern.compile(Constant.MOBILEREG);
+		Matcher m = p.matcher(mobile);
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		User user = userService.get(mobile);
+		if (user == null) { return new JSON(false, "该手机号码尚未注册"); }
+		if (!user.isInuse()) { return new JSON(false, "该账户已停用"); }
+		if (!user.getPassword().equals(password)) { return new JSON(false,
+				"登录密码不正确"); }
+		request.getSession().setAttribute("user", user);
+		return new JSON(true, "登录成功");
+	}
+
 }

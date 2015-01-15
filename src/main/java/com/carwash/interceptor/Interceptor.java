@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.carwash.ctrl.CustomerCache;
 import com.carwash.entity.Customer;
+import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.util.Constant;
@@ -47,49 +48,55 @@ import com.carwash.util.JSON;
  * Date:2014年11月18日 Time:下午4:54:53
  * <p>
  */
-public class Interceptor implements HandlerInterceptor {
+public class Interceptor implements HandlerInterceptor
+{
 	private CustomerServiceI customerService;
 	public final static ThreadLocal<Customer> threadLocalCustomer = new ThreadLocal<Customer>();
 	public final static ThreadLocal<User> threadLocalUser = new ThreadLocal<User>();
 
 	@Override
 	public boolean preHandle(HttpServletRequest request,
-			HttpServletResponse response, Object obj) throws Exception {
+			HttpServletResponse response, Object obj) throws Exception
+	{
 		response.setContentType(Constant.HTMLCONTENTTYPE);
 		request.setCharacterEncoding(Constant.UTF8);
 		response.setCharacterEncoding(Constant.UTF8);
 		HandlerMethod handler = (HandlerMethod) obj;
 		Cwp cwp = handler.getMethodAnnotation(Cwp.class);
-		if (cwp == null || cwp.value().length == 0) {
-			return true;
-		}
+		if (cwp == null || cwp.value().length == 0) { return true; }
 		int[] values = cwp.value();
 		// 校验访问的方法是否是客户端api调用
 		boolean isFromApi = false;
-		for (int v : values) {
-			if (v == 0) {
+		for (int v : values)
+		{
+			if (v == 0)
+			{
 				isFromApi = true;
 				break;
 			}
 		}
-		if (isFromApi) {
+		if (isFromApi)
+		{
 			// 来自客户端的访问
 			Object mObj = request.getParameter("mobile");
 			Object pObj = request.getParameter("password");
-			if (mObj == null || pObj == null) {
+			if (mObj == null || pObj == null)
+			{
 				response.getWriter().write(
 						new JSON(false, Constant.ACCOUNTERROR).append(
 								"relogin", true).toJSONString());
 				return false;
 			}
 			Customer customer = CustomerCache.get(mObj.toString());
-			if (customer == null) {
+			if (customer == null)
+			{
 				// 缓存中未取到用户的话直接从数据库中查询
 				customer = customerService.getByMobile(mObj.toString());
 				CustomerCache.put(customer);
 			}
 			if (customer == null
-					|| !pObj.toString().equals(customer.getPassword())) {
+					|| !pObj.toString().equals(customer.getPassword()))
+			{
 				response.getWriter().write(
 						new JSON(false, Constant.ACCOUNTERROR).append(
 								"relogin", true).toJSONString());
@@ -100,36 +107,59 @@ public class Interceptor implements HandlerInterceptor {
 		}
 		// 来是网页版访问
 		User user = (User) request.getSession().getAttribute("loginuser");
-		if (user == null) {
+
+		if (user == null)
+		{
 			response.getWriter().write(
 					new JSON(false, Constant.UNLOGIN).append("relogin", true)
 							.toJSONString());
 			return false;
 		}
-		// TODO 需要做权限匹配
-		threadLocalUser.set(user);
-		return true;
+		Role role = user.getRole();
+		if (role == null)
+		{
+			response.getWriter().write(
+					new JSON(false, Constant.PERMISSIONDENIED).toJSONString());
+			return false;
+		}
+		// 由于cwp里规定权限里包含了0,0代表客户端，所以需要加1开始计算
+		int myValue = role.ordinal() + 1;
+		for (int v : values)
+		{
+			if (v == myValue)
+			{
+				threadLocalUser.set(user);
+				return true;
+			}
+		}
+		response.getWriter().write(
+				new JSON(false, Constant.PERMISSIONDENIED).toJSONString());
+		return false;
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+			ModelAndView modelAndView) throws Exception
+	{
 
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
-			throws Exception {
+			throws Exception
+	{
 
 	}
 
-	public CustomerServiceI getCustomerService() {
+	public CustomerServiceI getCustomerService()
+	{
 		return customerService;
 	}
 
-	public void setCustomerService(CustomerServiceI customerService) {
+	public void setCustomerService(CustomerServiceI customerService)
+	{
 		this.customerService = customerService;
 	}
 

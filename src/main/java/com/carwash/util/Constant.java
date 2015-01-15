@@ -33,7 +33,8 @@ package com.carwash.util;
  * Date:2014年11月13日 Time:下午10:06:07
  * <p>
  */
-public class Constant {
+public class Constant
+{
 	public final static boolean isDebug = false;
 	/**
 	 * 手机号码校验规则
@@ -44,6 +45,7 @@ public class Constant {
 	public final static String UTF8 = "UTF-8";
 	public final static String ACCOUNTERROR = "账号或密码错误";
 	public final static String UNLOGIN = "尚未登录";
+	public final static String PERMISSIONDENIED = "权限不足";
 	public final static String BASESOURCES = "/cwresources";
 	public final static String IMAGESSOURCES = "images/";
 	public final static String VOICESSOURCES = "voices/";

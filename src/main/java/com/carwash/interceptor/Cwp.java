@@ -44,6 +44,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Cwp
 {
-	//0为客户端客户，1，后台权限，
+	// 0为客户端客户，1ADMIN("超级管理员"),2MANAGER("区域管理员"),3SUPPORTOR("客服人员"),4SALESMAN("销售人员"),5WORKER("工人");
 	int[] value() default 0;
 }
