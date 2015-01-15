@@ -174,21 +174,51 @@
 							<template id="shopTemplatecopy" bind="{{shopitemcopy}}" is="auto-binding"> 
 							</template>
 							<template id="shopTemplate" bind="{{shopitem}}" is="auto-binding"> 
-							<div class="shopwrap">
-							<template repeat="{{item in shopitem.orderItems}}" >
-							<div horizontal layout class="shopitem">
-							  <div><img style="width:40px;" src="{{'../../cwresources/'+item.imageLink}}"/></div>
-							  <div flex style="line-height:28px;">{{item.name}} 价格:{{item.price}}</div>
-							  <div><paper-input onchange="showsubmit();" label="数量" type="number" min="0" step="1" placeholder="{{item.amount}}" value={{item.amount}} style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
-							</div>
-							
+								<div class="shopwrap">
+								<template repeat="{{item in shopitem.orderItems}}" >
+								<div horizontal layout class="shopitem">
+								  <div><img style="width:40px;" src="{{'../../cwresources/'+item.imageLink}}"/></div>
+								  <div flex style="line-height:28px;">{{item.name}} 价格:{{item.price}}</div>
+								  <div><paper-input onchange="showsubmit();" label="数量" type="number" min="0" step="1" placeholder="{{item.amount}}" value={{item.amount}} style="width:40px;padding:0px;display:inline-block;"></paper-input>个</div>
+								</div>
+								
+								</template>
+								<paper-input label="车牌" onchange="showsubmit();" placeholder="车牌" value={{shopitem.carNo}} floatingLabel></paper-input>
+								<paper-input label="地址" onchange="showsubmit();" placeholder="地址" value={{shopitem.address}} floatingLabel></paper-input>
+								</div>
+								<div class="selectwrap">
+									<h3 style="font-size: 12px;color:#757575;">服务人员:{{shopitem.workerName}}</h3>
+								</div>
 							</template>
-							<paper-input label="车牌" onchange="showsubmit();" placeholder="车牌" value={{shopitem.carNo}} floatingLabel></paper-input>
-							<paper-input label="地址" onchange="showsubmit();" placeholder="地址" value={{shopitem.address}} floatingLabel></paper-input>
-							<paper-input label="服务人员" onchange="showsubmit();" placeholder="服务人员" value={{shopitem.workerName}} floatingLabel></paper-input>
-							</div>
 							
+							<template id="areaTemplate" bind="{{areas}}" is="auto-binding"> 
+							 <div class="selectwrap">
+							    
+								<select class="p-select" selectedIndex={{area.id}} onchange="showuserlist(this);">
+								<option>选择地区</option>
+								<template if="{{areas}}">
+								<template repeat="{{area in areas}}">
+									<option name="{{area.id}}">{{area.name}}</option>
+								</template>
+								</template>
+								</select>
+							 </div>
 							</template>
+							
+							<template id="userTemplate" bind="{{userlist}}" is="auto-binding"> 
+							 <div class="selectwrap" style="padding-bottom:40px;padding-top:24px;">
+								<select class="p-select" selectedIndex={{u.id}} onchange="selectwordId(this);">
+								<option>选择服务人员</option>
+								<template if="{{userlist}}">
+								<template repeat="{{u in userlist}}">
+									<option name="{{u.id}}">{{u.name}}</option>
+								</template>
+								</template>
+								</select>
+								
+							 </div>
+							</template>
+							
 							</div>
 							</div>
 						  </div>
@@ -200,6 +230,8 @@
 	
 	<script>
 		window.addEventListener('polymer-ready', function() {
+		    
+		   
 		    var Serialize=function(obj){
 		    	switch(obj.constructor){     
 				        case Object:     
@@ -292,6 +324,9 @@
 			var pageTemplate=document.getElementById('pageTemplate');
 			var shopTemplate=document.getElementById('shopTemplate');
 			var shopTemplatecopy=document.getElementById('shopTemplatecopy');
+			
+			var areaTemplate=document.getElementById('areaTemplate');
+			var userTemplate=document.getElementById('userTemplate');
 			var sumbitButton=document.getElementById('sumbitButton');
 			
 			var categoryTemplate=document.getElementById('categoryTemplate');
@@ -300,6 +335,9 @@
 			
 			categoryTitle.categorytitle="选择产品类别";
 			sumbitButton.isHidden=false;
+			
+			
+			
 			
 			
 			//start预约列表
@@ -426,7 +464,34 @@
 			    	sumbitButton.isHidden=true;
 			    };
 			    
+			    //选择地区显示用户
+			    var areas=eval(localStorage["arealist"]);
+				var userlist=eval(localStorage["userlist"]);
+				areaTemplate.areas=areas;
 			    
+			    this.showuserlist=function(e){
+			        var areaid=e.selectedIndex;
+			        var users=[];
+			        var hasanyone=false;
+			        userTemplate.userlist={};
+			        for(var i=0;i<userlist.length;i++){
+			        	if(areaid==userlist[i].areaId){
+			        		users.push(userlist[i]);
+			        		hasanyone=true;
+			        	}
+			        };
+			        if(!hasanyone){
+			        	users=[];
+			        };
+			        userTemplate.userlist=users;
+			    };
+			    
+			    this.selectwordId=function(e){
+			    	var workerId=e.selectedIndex;
+			    	console.log(workerId);
+			    	shopTemplate.shopitem.workerId=workerId;
+			    };
+			    //选择地区显示用户end
 			    
 			    document.querySelector('.p_body').addEventListener("orderlist-show",function(e){
 			    	reservationId=tableTemplate.model.reservationId;

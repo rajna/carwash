@@ -111,12 +111,6 @@
 		               >
 		    </core-ajax>
 		    <template bind="{{customer}}" is="auto-binding" id="add_p_form">
-		    
-			<select class="p-select" value={{customer.reffer_work_id}}>
-			        <option>请选择</option>
-					<option  value="id1">1</option>
-					<option  value='id2'>2</option>
-			</select>
 			
 			<paper-input label="名字" inputValue="{{customer.name}}"
 				placeholder="名字" floatingLabel></paper-input>
