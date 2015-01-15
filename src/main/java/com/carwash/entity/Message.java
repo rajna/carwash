@@ -48,6 +48,7 @@ public class Message
 {
 	private int id;
 	private int customerId;
+	private int userId;
 	private String content;
 	private Date create_date = new Date();
 	private boolean readed; // 是否已读
@@ -103,6 +104,16 @@ public class Message
 	public void setCustomerId(int customerId)
 	{
 		this.customerId = customerId;
+	}
+
+	public int getUserId()
+	{
+		return userId;
+	}
+
+	public void setUserId(int userId)
+	{
+		this.userId = userId;
 	}
 
 }
