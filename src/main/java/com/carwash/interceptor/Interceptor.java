@@ -113,7 +113,7 @@ public class Interceptor implements HandlerInterceptor
 					new JSON(false, Constant.UNLOGIN).append("relogin", true)
 							.toJSONString());
 			return false;
-		}
+		} 
 		Role role = user.getRole();
 		if (role == null)
 		{

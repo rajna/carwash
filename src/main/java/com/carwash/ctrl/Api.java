@@ -96,8 +96,7 @@ public class Api
 				return new JSON(false, "验证码发送失败");
 			}
 		}
-		// 将发送手机验证码交个异步线程处理
-
+		// 将发送手机验证码交给异步线程处理
 		new Thread(new Runnable()
 		{
 			public void run()
