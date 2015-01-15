@@ -105,12 +105,13 @@ public class ApiOrder
 	 * @param rid
 	 * @return
 	 */
-	// @Cwp(1)
+	@Cwp(1)
 	@RequestMapping("listforrese")
 	@ResponseBody
 	public JSON listforRese(String rid)
 	{
-		// TODO 权限判断
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		int resId = 0;
 		try
 		{
@@ -134,13 +135,14 @@ public class ApiOrder
 	 * @param orderItems
 	 * @return
 	 */
-	// @Cwp(1)
+	@Cwp(1)
 	@RequestMapping("post")
 	@ResponseBody
 	public JSON post(String id, String carNo, String workerId, String address,
 			String orderItems)
 	{
-		// TODO 登录权限校验
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		// 预约编号
 		int rid = 0;
 		// 工作人员编号
@@ -169,10 +171,10 @@ public class ApiOrder
 		order.setCustomerId(reservation.getCustomer_id());
 		order.setReservation_date(reservation.getCreate_date());
 		order.setReservationId(reservation.getId());
-		// TODO 登陆者的id
-		// order.setSupportorId(supportorId);
-		// TODO 登陆者的名称
-		// order.setSupportorName(supportorName);
+		// 登陆者的id
+		order.setSupportorId(user.getId());
+		// 登陆者的名称
+		order.setSupportorName(user.getName());
 		order.setWorkerId(worker.getId());
 		order.setWorkerName(worker.getName());
 		try
@@ -221,13 +223,15 @@ public class ApiOrder
 	 *            服务人员编号
 	 * @return
 	 */
-	// @Cwp(1)
+	@Cwp(1)
 	@RequestMapping("update")
 	@ResponseBody
 	public JSON update(String id, String carNo, String workerId,
 			String address, String orderStatus, String orderItems)
 	{
-		// TODO 登录权限校验
+		// 登录权限校验
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		int oid = 0;
 		int wid = 0;
 		OrderStatus oStatus = null;
