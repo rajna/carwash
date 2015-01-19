@@ -227,21 +227,23 @@
 			    formData=new FormData();
 			    var msgtoast= document.querySelector('#p-a-msg');
 			    msgtoast.text=e.detail.response.message;
-			    if(e.detail.response.success){
-			    	
-			    }else{
+			    if(!e.detail.response.success){
 			        //添加失败
-			        var evt = document.createEvent( 'HTMLEvents' );
+			        //var evt = document.createEvent( 'HTMLEvents' );
 			        // initEvent接受3个参数：
 			        // 事件类型，是否冒泡，是否阻止浏览器的默认行为
-			        evt.initEvent("login", true, true); 
-			        document.querySelector('.p_body').dispatchEvent(evt);
+			        //evt.initEvent("userlogin", true, true); 
+			        //document.querySelector('.p_body').dispatchEvent(evt);
+			        if(e.detail.response.relogin){
+			        	parent.login(); 
+			        }
 			    }
 			    
 			    msgtoast.show();
 			    ajax.go();
 			});
 			//end
+			
 			
 			
 			//start获取列表
