@@ -21,8 +21,8 @@
 <link rel="import" href="../mycomponents/m-frame/nav-frame.html">
 <!--  <link href="../../cwresources/components/core-localstorage/core-localstorage.html">-->
 <link href="../../cwresources/components/core-ajax/core-ajax.html" rel="import">
-<link href="../../cwresources/components/paper-input/paper-input.html"
-	rel="import">
+<link href="../../cwresources/components/paper-input/paper-input.html" rel="import">
+<link href="../../cwresources/components/paper-toast/paper-toast.html" rel="import">
 <style>
 core-submenu,core-item{
   font-size:13px;
@@ -90,6 +90,7 @@ html /deep/ core-icon {
 	color: #fff;
 	background: rgba(0,0,0,0.25);
 	text-transform: uppercase;
+	text-align:center;
 	letter-spacing: 1px;
 	font-size: 0.6em;
 	white-space: nowrap;
@@ -102,7 +103,6 @@ html /deep/ core-icon {
 
 
    .login-input /deep/ ::-webkit-input-placeholder {
-     
       color: #4f92b6;
     }
 
@@ -116,11 +116,11 @@ html /deep/ core-icon {
 
     .login-input /deep/ .label-text,
     .login-input /deep/ .error {
-      color: #f4b400;
+      color: #4fc3f7;
     }
 
     .login-input /deep/ .unfocused-underline {
-      background-color: rgba(0,0,0,0.25);
+      background-color: #4f92b6;
     }
 
     .login-input[focused] /deep/ .floated-label .label-text {
@@ -140,8 +140,18 @@ html /deep/ core-icon {
       background-color: #fff;
     }
 
-    .login-input {
-      color: #fff;
+    .login-input /deep/ input{
+      color: #424242;
+    }
+    
+    .c-h-logout{
+    	position:absolute;
+    	bottom:24px;left:12px;
+    	color:#333;
+    }
+    
+    .c-h-logout core-submenu{
+    	cursor:pointer;
     }
 </style>
 
@@ -149,6 +159,8 @@ html /deep/ core-icon {
 </head>
 
 <body unresolved class="m_body">
+   <paper-toast id="p-a-msg" role="alert">
+   </paper-toast>
    <div id="loader" class="pageload-overlay" data-opening="M 0,0 c 0,0 63.5,-16.5 80,0 16.5,16.5 0,60 0,60 L 0,60 Z">
 				<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 80 60" preserveAspectRatio="none">
 					<path d="M 0,0 c 0,0 -16.5,43.5 0,60 16.5,16.5 80,0 80,0 L 0,60 Z"/>
@@ -176,27 +188,35 @@ html /deep/ core-icon {
 			</core-item>
 		</core-submenu> 
 		</nav-frame>
+		
+		
+		<div class="c-h-logout">
+		   <template bind="{{logintitle}}" is="auto-binding" id="login_title">
+			   <core-submenu
+				icon="account-circle" label="{{logintitle}}" onclick="userlogin(this);"> 
+				</core-submenu> 
+			</template>
+		</div>
 	</div>
 	
 	      <div class="container" id="page-2">
 				<div class="card">
 				    <h1 class="header">车帮夫</h1>
-				    <core-ajax class="loginform" 
+				    <span style="display: block;color: rgb(255, 255, 255);font-size: 18px;opacity: 0.7;">请先登录</span>
+				    <core-ajax class="ajaxloginform" 
 				               handleAs="json"
-				               url="../api/product/post" 
+				               url="../api/weblogin" 
 				               method="post">
 				    </core-ajax>
-				    <template bind="{{login}}" is="auto-binding" id="login_form">
+				    <template bind="{{user}}" is="auto-binding" id="login_form">
 				    
-					<paper-input label="电话" class="login-input" inputValue="{{user.mobile}}"
-						placeholder="电话" floatingLabel></paper-input>
+					<paper-input label="电话" class="login-input" type="number" inputValue="{{user.mobile}}"
+						placeholder="电话"></paper-input>
 					<paper-input label="密码" class="login-input"  type="password" inputValue="{{user.password}}"
-						placeholder="密码" floatingLabel></paper-input>
-					
-					
+						placeholder="密码"></paper-input>
 					</template>
 					
-					<a class="pageload-link">登陆</a>
+					<a class="pageload-link" id="loginbutton">登陆</a>
 					
 			</div>
 			</div><!-- /container -->
@@ -229,25 +249,74 @@ html /deep/ core-icon {
       });
       
       
-      function login(){
-      	alert("ddd");
-      };
+      
       
       window.addEventListener('polymer-ready', function() {
+      
         var pageWrap = document.getElementById( 'pagewrap' ),
 					pages = [].slice.call( pageWrap.querySelectorAll( 'div.container' ) ),
 					currentPage = 0,
       	            loader = new SVGLoader( document.getElementById( 'loader' ), { speedIn : 400, easingIn : mina.easeinout } );
-      	loader.show();
-      	setTimeout( function() {
-								//loader.hide();
-
-								classie.removeClass( pages[ currentPage ], 'show' );
-								// update..
-								currentPage = currentPage ? 0 : 1;
-								classie.addClass( pages[ currentPage ], 'show' );
-
-							}, 2000 );
+      	var login_form=document.querySelector('#login_form');
+		login_form.user={};
+		
+		var login_title=document.querySelector('#login_title');
+		login_title.logintitle="登录系统";
+		
+		
+		function showLoginPanel(){
+			login_form.user={};
+	    	loader.show();
+	      	setTimeout( function() {
+									//loader.hide();
+									classie.removeClass( pages[ currentPage ], 'show' );
+									// update..
+									currentPage = currentPage ? 0 : 1;
+									classie.addClass( pages[ currentPage ], 'show' );
+	
+								}, 1000 );
+		};
+		
+		function hideLoginPanel(){
+			loader.hide();
+					classie.removeClass( pages[ currentPage ], 'show' );
+					// update..
+					currentPage = currentPage ? 0 : 1;
+					classie.addClass( pages[ currentPage ], 'show' );
+		};
+      	//iframe子窗口调用
+      	window.login=function(){
+      	    showLoginPanel();
+	    };
+      	
+		
+		
+		var loginbutton=document.getElementById('loginbutton');
+		var ajaxloginform=document.querySelector('.ajaxloginform');
+		loginbutton.addEventListener("click", function(e) {
+		    ajaxloginform.params={'mobile':login_form.user.mobile,'password':login_form.user.password};;
+			ajaxloginform.go();
+		});
+		
+		ajaxloginform.addEventListener("core-response",function(e){
+			    var msgtoast= document.querySelector('#p-a-msg');
+			    msgtoast.text=e.detail.response.message;
+			    if(e.detail.response.success){
+			        login_title.logintitle="退出系统";
+			        hideLoginPanel();
+			    }else{
+			    	login_title.logintitle="登录系统";
+			    }
+			    
+			    msgtoast.show();
+			});
+			
+			
+		  this.userlogin=function(e) {
+		  	if(e){
+		  		showLoginPanel();
+		  	}
+		  };
       });
     </script>
     

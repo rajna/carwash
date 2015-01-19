@@ -235,6 +235,7 @@
 			        //evt.initEvent("userlogin", true, true); 
 			        //document.querySelector('.p_body').dispatchEvent(evt);
 			        if(e.detail.response.relogin){
+			           //iframe调用父窗口的方法
 			        	parent.login(); 
 			        }
 			    }
