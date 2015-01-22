@@ -258,14 +258,16 @@
 		        this.$.ajaxediteform.contentType = null;
           },
           handleEdite:function(e, detail, sender){
+               this.$.msgtoast.text=e.detail.response.message;
 			    if(e.detail.response.success){
-			    	this.$.msgtoast.text=e.detail.response.message;
+			    	this.fire('product-refresh');
 			    }else{
-			    	this.$.msgtoast.text="添加失败";
+			    	if(e.detail.response.relogin){
+			    		parent.login(); 
+			    	};
 			    }
-			    
 			    this.$.msgtoast.show();
-			    this.fire('product-refresh');
+			    
           }
       });
     </script>

@@ -190,10 +190,11 @@
 			addformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
 			    var msgtoast= document.querySelector('#p-a-msg');
-			    if(e.detail.response.success){
-			    	msgtoast.text=e.detail.response.message;
-			    }else{
-			    	msgtoast.text="添加失败"+e.detail.response.message;
+			    if(!e.detail.response.success){
+			    	if(e.detail.response.relogin){
+			           //iframe调用父窗口的方法
+			        	parent.login(); 
+			        }
 			    }
 			    
 			    msgtoast.show();

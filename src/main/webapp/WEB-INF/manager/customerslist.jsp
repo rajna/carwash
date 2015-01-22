@@ -208,7 +208,9 @@
 			
 			//start获取列表
 			ajaxlist.addEventListener("core-response", function(e) {
-			  
+			   if(!e.detail.response.success&&e.detail.response.relogin){
+			   		parent.login(); 
+			   }
 			   
 				var columns = [{
 					name : 'id',

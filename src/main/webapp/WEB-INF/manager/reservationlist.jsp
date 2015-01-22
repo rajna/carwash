@@ -388,7 +388,13 @@
 			ajaxlist.params={'pid':0,'status':"PROCESSING"};
 			ajaxlist.go();
 			ajaxlist.addEventListener("core-response", function(e) {
+			    if(!e.detail.response.success&&e.detail.response.relogin){
+			   		parent.login(); 
+			    }
 			    var newdata=e.detail.response.reservations;
+			    if(!newdata){
+			    	return;
+			    }
 			    var curpage=page+1;
 			    pages=e.detail.response.pages;
 			    for ( var i=0 ; i < newdata.length; ++i ){
