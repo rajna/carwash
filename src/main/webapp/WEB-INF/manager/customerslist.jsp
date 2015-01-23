@@ -163,6 +163,7 @@
 		
 		window.addEventListener('polymer-ready', function() {
 			var ajaxlist = document.querySelector('.p_list');
+			var msgtoast= document.querySelector('#p-a-msg');
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.customer={};
@@ -193,15 +194,14 @@
 			//start
 			addformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
-			    var msgtoast= document.querySelector('#p-a-msg');
+			    msgtoast.text=e.detail.response.message;
+			    msgtoast.show();
 			    if(e.detail.response.success){
-			    	msgtoast.text=e.detail.response.message;
-			    }else{
-			    	msgtoast.text="添加失败"+e.detail.response.message;
+			    	setTimeout( function() {
+									ajaxlist.go();
+								}, 1000 );
 			    }
 			    
-			    msgtoast.show();
-			    ajaxlist.go();
 			});
 			//end
 			
@@ -211,7 +211,12 @@
 			   if(!e.detail.response.success&&e.detail.response.relogin){
 			   		parent.login(); 
 			   }
-			   
+			   var newdata=e.detail.response.customers;
+			    if(!newdata){
+			        msgtoast.text=e.detail.response.message;
+			        msgtoast.show();
+			    	return;
+			    }
 				var columns = [{
 					name : 'id',
 					title : '编号'
@@ -232,9 +237,11 @@
 					title : '状态'
 				}];
 				document.getElementById('tableTemplate').model = {
-					data : e.detail.response.customers,
+					data : newdata,
 					columns : columns
 				};
+				msgtoast.text=e.detail.response.message;
+			        msgtoast.show();
 			});
 			//end获取列表
 			

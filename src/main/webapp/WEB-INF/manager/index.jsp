@@ -208,6 +208,11 @@ html /deep/ core-icon {
 				               url="../api/weblogin" 
 				               method="post">
 				    </core-ajax>
+				    <core-ajax class="ajaxlogoutform" 
+				               handleAs="json"
+				               url="../api/weblogout" 
+				               method="post">
+				    </core-ajax>
 				    <template bind="{{user}}" is="auto-binding" id="login_form">
 				    
 					<paper-input label="电话" class="login-input" type="number" inputValue="{{user.mobile}}"
@@ -261,7 +266,7 @@ html /deep/ core-icon {
 		login_form.user={};
 		
 		var login_title=document.querySelector('#login_title');
-		login_title.logintitle="登录系统";
+		login_title.logintitle=localStorage.userlogin=="退出系统"?localStorage.userlogin:"登录系统";
 		
 		
 		function showLoginPanel(){
@@ -293,6 +298,7 @@ html /deep/ core-icon {
 		
 		var loginbutton=document.getElementById('loginbutton');
 		var ajaxloginform=document.querySelector('.ajaxloginform');
+		var ajaxlogoutform=document.querySelector('.ajaxlogoutform');
 		loginbutton.addEventListener("click", function(e) {
 		    ajaxloginform.params={'mobile':login_form.user.mobile,'password':login_form.user.password};;
 			ajaxloginform.go();
@@ -303,9 +309,11 @@ html /deep/ core-icon {
 			    msgtoast.text=e.detail.response.message;
 			    if(e.detail.response.success){
 			        login_title.logintitle="退出系统";
+			        localStorage.userlogin=login_title.logintitle;
 			        hideLoginPanel();
 			    }else{
 			    	login_title.logintitle="登录系统";
+			    	localStorage.userlogin=login_title.logintitle;
 			    }
 			    
 			    msgtoast.show();
@@ -313,9 +321,10 @@ html /deep/ core-icon {
 			
 			
 		  this.userlogin=function(e) {
-		  	if(e){
-		  		showLoginPanel();
+		  	if(localStorage["userlogin"]=="退出系统"){
+		  		 ajaxlogoutform.go();
 		  	}
+		  	showLoginPanel();
 		  };
       });
     </script>

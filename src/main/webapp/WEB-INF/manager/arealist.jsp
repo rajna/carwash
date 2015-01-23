@@ -161,6 +161,7 @@
 		
 		window.addEventListener('polymer-ready', function() {
 			var ajaxlist = document.querySelector('.p_list');
+			var msgtoast= document.querySelector('#p-a-msg');
 			
 			var add_p_form=document.querySelector('#add_p_form');
 			add_p_form.item={};
@@ -189,7 +190,7 @@
 			//start
 			addformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
-			    var msgtoast= document.querySelector('#p-a-msg');
+			    
 			    if(!e.detail.response.success){
 			    	if(e.detail.response.relogin){
 			           //iframe调用父窗口的方法
@@ -197,8 +198,13 @@
 			        }
 			    }
 			    
+			    msgtoast.text=e.detail.response.message;
 			    msgtoast.show();
-			    ajaxlist.go();
+			    if(e.detail.response.success){
+			    	setTimeout( function() {
+									ajaxlist.go();
+								}, 1000 );
+			    }
 			});
 			//end
 			

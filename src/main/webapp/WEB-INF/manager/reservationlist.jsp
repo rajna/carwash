@@ -393,6 +393,8 @@
 			    }
 			    var newdata=e.detail.response.reservations;
 			    if(!newdata){
+			        msgtoast.text=e.detail.response.message;
+			        msgtoast.show();
 			    	return;
 			    }
 			    var curpage=page+1;
@@ -412,6 +414,9 @@
 					rowStatus:rowStatus,
 					reservationId:reservationId
 				};
+				
+				msgtoast.text=e.detail.response.message;
+			    msgtoast.show();
 			});
 			//end获取列表
 			
@@ -651,11 +656,9 @@
 			   	ajaxorderlist.go();
 			   	back();
 			   	
-			    if(e.detail.response.success){
-			    	msgtoast.text=e.detail.response.message;
-			    }else{
-			    	msgtoast.text="添加失败";
-			    }
+			    
+			    msgtoast.text=e.detail.response.message;
+			   
 			    msgtoast.show();
 			   });
 			   //end响应订单修改
@@ -667,11 +670,7 @@
 			    ajaxorderlist.go();
 			   	back();
 			   	
-			    if(e.detail.response.success){
-			    	msgtoast.text=e.detail.response.message;
-			    }else{
-			    	msgtoast.text="添加失败";
-			    }
+			    msgtoast.text=e.detail.response.message;
 			    msgtoast.show();
 			   });
 			   //end响应订单添加
