@@ -54,4 +54,6 @@ public interface UserServiceI
 	public User get(int id);
 	
 	public List<User> workers();
+	
+	public List<User> find();
 }

@@ -94,4 +94,10 @@ public class UserServiceImpl implements UserServiceI
 				"From User u where u.inuse=:inuse and u.role=:role ", params);
 	}
 
+	@Override
+	public List<User> find()
+	{
+		return userDao.find("From User u");
+	}
+
 }
