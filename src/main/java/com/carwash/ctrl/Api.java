@@ -193,4 +193,11 @@ public class Api
 		return new JSON(true, "登录成功");
 	}
 
+	@RequestMapping("weblogout")
+	@ResponseBody
+	public JSON weblogout(HttpServletRequest request)
+	{
+		request.getSession().invalidate();
+		return new JSON(true, "退出成功");
+	}
 }
