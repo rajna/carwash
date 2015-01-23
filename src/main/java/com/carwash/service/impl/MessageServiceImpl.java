@@ -25,6 +25,8 @@
  */
 package com.carwash.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Service;
 import com.carwash.entity.Message;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.MessageServiceI;
+import com.carwash.util.DateUtil;
 
 /**
  * 消息服务接口实现
@@ -71,15 +74,29 @@ public class MessageServiceImpl implements MessageServiceI
 	@Override
 	public List<Message> findByCid(int cid)
 	{
+		Calendar c_now = Calendar.getInstance();
+		c_now.add(Calendar.DATE, -31);
+		Date time = c_now.getTime();
+		time = DateUtil.todayStart(time);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("time", time);
 		return mDao.find("From Message m where m.customerId=" + cid
-				+ " Order By m.create_date desc");
+				+ " and m.create_date > :time Order By m.create_date desc",
+				params);
 	}
 
 	@Override
 	public List<Message> findByUid(int uid)
 	{
+		Calendar c_now = Calendar.getInstance();
+		c_now.add(Calendar.DATE, -31);
+		Date time = c_now.getTime();
+		time = DateUtil.todayStart(time);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("time", time);
 		return mDao.find("From Message m where m.userId=" + uid
-				+ " Order By m.create_date desc");
+				+ "  and m.create_date > :time Order By m.create_date desc",
+				params);
 	}
 
 	@Override
