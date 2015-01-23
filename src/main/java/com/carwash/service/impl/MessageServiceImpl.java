@@ -71,13 +71,15 @@ public class MessageServiceImpl implements MessageServiceI
 	@Override
 	public List<Message> findByCid(int cid)
 	{
-		return mDao.find("From Message m where m.customerId=" + cid);
+		return mDao.find("From Message m where m.customerId=" + cid
+				+ " Order By m.readed asc,m.create_date desc");
 	}
 
 	@Override
 	public List<Message> findByUid(int uid)
 	{
-		return mDao.find("From Message m where m.userId=" + uid);
+		return mDao.find("From Message m where m.userId=" + uid
+				+ " Order By m.create_date desc,m.readed asc");
 	}
 
 	@Override
