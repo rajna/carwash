@@ -141,7 +141,7 @@ public class ApiReservation
 	/**
 	 * 后台查询接口
 	 */
-	@Cwp(1)
+	@Cwp({1,3})
 	@RequestMapping("all")
 	@ResponseBody
 	public JSON all(String status, String pid)
@@ -221,7 +221,7 @@ public class ApiReservation
 		return calcelForClientAndWeb(rid, "用户主动取消", customer, null);
 	}
 
-	@Cwp(1)
+	@Cwp({1,3})
 	@RequestMapping("cancelForWeb")
 	@ResponseBody
 	public JSON cancelForWeb(String rid, String cancelReason)

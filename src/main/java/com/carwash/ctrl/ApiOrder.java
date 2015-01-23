@@ -105,7 +105,8 @@ public class ApiOrder
 	 * @param rid
 	 * @return
 	 */
-	@Cwp(1)
+	@Cwp(
+	{ 1, 3 })
 	@RequestMapping("listforrese")
 	@ResponseBody
 	public JSON listforRese(String rid)
@@ -133,7 +134,8 @@ public class ApiOrder
 	 * @param orderItems
 	 * @return
 	 */
-	@Cwp(1)
+	@Cwp(
+	{ 1, 3 })
 	@RequestMapping("post")
 	@ResponseBody
 	public JSON post(String id, String carNo, String workerId, String address,
@@ -221,7 +223,8 @@ public class ApiOrder
 	 *            服务人员编号
 	 * @return
 	 */
-	@Cwp(1)
+	@Cwp(
+	{ 1, 3 })
 	@RequestMapping("update")
 	@ResponseBody
 	public JSON update(String id, String carNo, String workerId,

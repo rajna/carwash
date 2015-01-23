@@ -77,7 +77,8 @@ public class ApiCustomer
 	 * 
 	 * @return
 	 */
-	@Cwp(1)
+	@Cwp(
+	{ 1, 2, 3, 4 })
 	@RequestMapping("list")
 	@ResponseBody
 	public JSON list()
@@ -91,7 +92,8 @@ public class ApiCustomer
 	 * 
 	 * @return
 	 */
-	@Cwp(1)
+	@Cwp(
+	{ 1, 2, 4 })
 	@RequestMapping("post")
 	@ResponseBody
 	public JSON post(Customer customer)

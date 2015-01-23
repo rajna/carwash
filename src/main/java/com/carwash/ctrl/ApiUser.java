@@ -54,7 +54,8 @@ public class ApiUser
 	@Autowired
 	private UserServiceI userService;
 
-	@Cwp(1)
+	@Cwp(
+	{ 1, 2, 3, 4})
 	@RequestMapping("workers")
 	@ResponseBody
 	public JSON workers()
