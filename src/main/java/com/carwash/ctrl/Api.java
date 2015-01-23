@@ -42,6 +42,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.carwash.category.CategoryUtil;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Device;
+import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.service.RecommendServiceI;
@@ -187,6 +188,9 @@ public class Api
 		User user = userService.get(mobile);
 		if (user == null) { return new JSON(false, "该手机号码尚未注册"); }
 		if (!user.isInuse()) { return new JSON(false, "该账户已停用"); }
+		if (user.getRole() == null) { return new JSON(false, "用户角色异常"); }
+		if (user.getRole().ordinal() == Role.WORKER.ordinal()) { return new JSON(
+				false, "服务人员无法登陆"); }
 		if (!user.getPassword().equals(password)) { return new JSON(false,
 				"登录密码不正确"); }
 		request.getSession().setAttribute("loginuser", user);
