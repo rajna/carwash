@@ -67,7 +67,7 @@ html /deep/ core-icon {
 }
 
 .pageload-overlay svg path {
-	fill: #4fc3f7;
+	fill: #3f51b5;
 }
 
 .card{
@@ -103,37 +103,37 @@ html /deep/ core-icon {
 
 
    .login-input /deep/ ::-webkit-input-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ ::-moz-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ :-ms-input-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ .label-text,
     .login-input /deep/ .error {
-      color: #4fc3f7;
+      color: #f5f5f5;
     }
 
     .login-input /deep/ .unfocused-underline {
-      background-color: #4f92b6;
+      background-color: #fff;
     }
 
     .login-input[focused] /deep/ .floated-label .label-text {
-      color: #fff;
+      color: #f5f5f5;
     }
 
     .login-input /deep/ .focused-underline {
-      background-color: #fff;
+      background-color: #e91e63;
     }
 
     .login-input.invalid /deep/ .floated-label .label-text,
     .login-input /deep/ .error {
-      color: #fff;
+      color: #f5f5f5;
     }
 
     .login-input.invalid /deep/ .focused-underline {
@@ -141,7 +141,7 @@ html /deep/ core-icon {
     }
 
     .login-input /deep/ input{
-      color: #424242;
+      color: #f5f5f5;
     }
     
     .c-h-logout{
