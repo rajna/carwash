@@ -169,6 +169,7 @@
 	<script>
 		
 		window.addEventListener('polymer-ready', function() {
+		    var msgtoast= document.querySelector('#p-a-msg');
 			var ajax = document.querySelector('.p_list');
 			var formData = new FormData();
 			
@@ -221,11 +222,13 @@
 		        add_p_form.product.imageLink=e.target.value;
 			});
 			document.querySelector('.p_body').addEventListener("product-refresh",function(e){
-			    ajax.go();
+			    setTimeout( function() {
+									ajax.go();;
+								}, 1000 );
 			});
 			addProductformajax.addEventListener("core-response",function(e){
 			    formData=new FormData();
-			    var msgtoast= document.querySelector('#p-a-msg');
+			    
 			    msgtoast.text=e.detail.response.message;
 			    if(!e.detail.response.success){
 			        //添加失败
@@ -249,6 +252,15 @@
 			
 			//start获取列表
 			ajax.addEventListener("core-response", function(e) {
+			   if(!e.detail.response.success&&e.detail.response.relogin){
+			   		parent.login(); 
+			    }
+			   var newdata=e.detail.response.products;
+			    if(!newdata){
+			        msgtoast.text=e.detail.response.message;
+			        msgtoast.show();
+			    	return;
+			    }
 			   var categories=[];
 			   var p_select=document.querySelector('.p-select');
 			   var options=p_select.getElementsByTagName("option");
@@ -282,7 +294,7 @@
 					title : '动作'
 				} ];
 				document.getElementById('tableTemplate').model = {
-					data : e.detail.response.products,
+					data : newdata,
 					columns : columns,
 					categories:categories
 				};

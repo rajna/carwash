@@ -258,7 +258,8 @@
 		        this.$.ajaxediteform.contentType = null;
           },
           handleEdite:function(e, detail, sender){
-               this.$.msgtoast.text=e.detail.response.message;
+                this.$.msgtoast.text=e.detail.response.message;
+                this.$.msgtoast.show();
 			    if(e.detail.response.success){
 			    	this.fire('product-refresh');
 			    }else{
@@ -266,7 +267,7 @@
 			    		parent.login(); 
 			    	};
 			    }
-			    this.$.msgtoast.show();
+			    
 			    
           }
       });

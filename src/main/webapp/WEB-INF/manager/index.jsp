@@ -67,7 +67,7 @@ html /deep/ core-icon {
 }
 
 .pageload-overlay svg path {
-	fill: #4fc3f7;
+	fill: #3f51b5;
 }
 
 .card{
@@ -103,37 +103,37 @@ html /deep/ core-icon {
 
 
    .login-input /deep/ ::-webkit-input-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ ::-moz-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ :-ms-input-placeholder {
-      color: #4f92b6;
+      color: #e0e0e0;
     }
 
     .login-input /deep/ .label-text,
     .login-input /deep/ .error {
-      color: #4fc3f7;
+      color: #f5f5f5;
     }
 
     .login-input /deep/ .unfocused-underline {
-      background-color: #4f92b6;
+      background-color: #fff;
     }
 
     .login-input[focused] /deep/ .floated-label .label-text {
-      color: #fff;
+      color: #f5f5f5;
     }
 
     .login-input /deep/ .focused-underline {
-      background-color: #fff;
+      background-color: #e91e63;
     }
 
     .login-input.invalid /deep/ .floated-label .label-text,
     .login-input /deep/ .error {
-      color: #fff;
+      color: #f5f5f5;
     }
 
     .login-input.invalid /deep/ .focused-underline {
@@ -141,7 +141,7 @@ html /deep/ core-icon {
     }
 
     .login-input /deep/ input{
-      color: #424242;
+      color: #f5f5f5;
     }
     
     .c-h-logout{
@@ -208,6 +208,11 @@ html /deep/ core-icon {
 				               url="../api/weblogin" 
 				               method="post">
 				    </core-ajax>
+				    <core-ajax class="ajaxlogoutform" 
+				               handleAs="json"
+				               url="../api/weblogout" 
+				               method="post">
+				    </core-ajax>
 				    <template bind="{{user}}" is="auto-binding" id="login_form">
 				    
 					<paper-input label="电话" class="login-input" type="number" inputValue="{{user.mobile}}"
@@ -261,7 +266,7 @@ html /deep/ core-icon {
 		login_form.user={};
 		
 		var login_title=document.querySelector('#login_title');
-		login_title.logintitle="登录系统";
+		login_title.logintitle=localStorage.userlogin=="退出系统"?localStorage.userlogin:"登录系统";
 		
 		
 		function showLoginPanel(){
@@ -293,6 +298,7 @@ html /deep/ core-icon {
 		
 		var loginbutton=document.getElementById('loginbutton');
 		var ajaxloginform=document.querySelector('.ajaxloginform');
+		var ajaxlogoutform=document.querySelector('.ajaxlogoutform');
 		loginbutton.addEventListener("click", function(e) {
 		    ajaxloginform.params={'mobile':login_form.user.mobile,'password':login_form.user.password};;
 			ajaxloginform.go();
@@ -303,9 +309,11 @@ html /deep/ core-icon {
 			    msgtoast.text=e.detail.response.message;
 			    if(e.detail.response.success){
 			        login_title.logintitle="退出系统";
+			        localStorage.userlogin=login_title.logintitle;
 			        hideLoginPanel();
 			    }else{
 			    	login_title.logintitle="登录系统";
+			    	localStorage.userlogin=login_title.logintitle;
 			    }
 			    
 			    msgtoast.show();
@@ -313,9 +321,10 @@ html /deep/ core-icon {
 			
 			
 		  this.userlogin=function(e) {
-		  	if(e){
-		  		showLoginPanel();
+		  	if(localStorage["userlogin"]=="退出系统"){
+		  		 ajaxlogoutform.go();
 		  	}
+		  	showLoginPanel();
 		  };
       });
     </script>
