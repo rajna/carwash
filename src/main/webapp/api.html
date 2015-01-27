@@ -59,7 +59,19 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{customer}`：JSONObject customer对象模型(success=true时存在)
-	
+
+
+#### 5.客户端新增客户数据
+- URL:`/api/customer/create`
+	* 请求方式:get Or post
+	* 参数`{mobile}`：String 登录用户的手机号
+	* 参数`{password}`：String 登陆用户的密码
+	* 参数`{c_name}`：String 客户的姓名
+	* 参数`{c_mobile}`：String 客户的手机号
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+
 二、用户数据接口	
 ------------	
 #### 1.用户登录
@@ -175,7 +187,7 @@
 	* 返回json,包含的key-value:
 		+ `{success}`,boolean
 		+ `{message}`,String
-		+ `{reservations}`,jsonarray(success=true时存在)
+		+ `{reservations}`,jsonarray(success=true时存在)	
 
 </xmp>
 
