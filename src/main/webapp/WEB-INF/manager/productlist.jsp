@@ -127,7 +127,7 @@
 	<paper-button label="确定" affirmative autofocus class="p_confirm"></paper-button> 
 	</paper-dialog>
 
-	<core-ajax auto url="../api/product/list" class="p_list"
+	<core-ajax auto url="../api/product/listforweb" class="p_list"
 		params='{"cid":"1"}' handleAs="json"></core-ajax>
 
 	<template repeat="{{data}}">
