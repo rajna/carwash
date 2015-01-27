@@ -131,11 +131,16 @@ public class ApiCustomer
 	{
 		User user = Interceptor.threadLocalUser.get();
 		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
+		if (user.getRole() == null) { return new JSON(false, "您无权增加客户信息"); }
+		int role_ordinal = user.getRole().ordinal();
+		if (!(role_ordinal == 1 || role_ordinal == 2 || role_ordinal == 4)) { return new JSON(
+				false, "您无权增加客户信息"); }
 		if (c_mobile == null) { return new JSON(false, "手机号码不能为空"); }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(c_mobile);
 		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
-		if (c_name == null || "".equals(c_name)) { return new JSON(false, "请填写客户姓名"); }
+		if (c_name == null || "".equals(c_name)) { return new JSON(false,
+				"请填写客户姓名"); }
 		Customer customer = customerService.getByMobile(c_mobile);
 		if (customer != null) { return new JSON(false, "该手机号码已经被使用"); }
 		customer = new Customer();
