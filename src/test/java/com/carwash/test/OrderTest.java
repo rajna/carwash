@@ -104,13 +104,14 @@ public class OrderTest
 				int sSize = OrderStatus.values().length;
 				OrderStatus os = OrderStatus.values()[new Random().nextInt(100)
 						% sSize];
+				os = OrderStatus.PROCESSING;
 				order.setOrderStatus(os);
-				order.setReservation_date(DateUtil.randomDate("2014-10-10",
-						"2014-12-12", "yyyy-MM-dd"));
+				order.setReservation_date(DateUtil.randomDate("2015-01-21",
+						"2015-02-12", "yyyy-MM-dd"));
 				order.setReservationId(1);
 				order.setSupportorId(1);
 				order.setSupportorName("客服姓名");
-				order.setWorkerId(2);
+				order.setWorkerId(12);
 				order.setWorkerName("服务人员姓名");
 				int itemSize = new Random().nextInt(3) + 1;
 				for (int j = 0; j < itemSize; j++)
