@@ -89,11 +89,18 @@ public class ApiProduct
 
 	}
 
+	@Cwp(
+	{ 1, 2, 3, 4 })
+	@RequestMapping("listforweb")
+	@ResponseBody
+	public JSON listforweb(String cid)
+	{
+		return list(cid);
+	}
+
 	/**
 	 * 通过产品分类cid查询产品列表
 	 */
-	@Cwp(
-	{ 1, 2, 3, 4 })
 	@RequestMapping("list")
 	@ResponseBody
 	public JSON list(String cid)
