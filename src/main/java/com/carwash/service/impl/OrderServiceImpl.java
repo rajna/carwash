@@ -107,7 +107,7 @@ public class OrderServiceImpl implements OrderServiceI
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("workerId", uid);
 		params.put("orderStatus", OrderStatus.PROCESSING);
-		if (type != 1 || type != 0)
+		if (type != 1 && type != 0)
 		{
 			type = 0;
 		}
@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderServiceI
 			Date start = c_now.getTime();
 			start = DateUtil.todayStart(start);
 			params.put("start", start);
-			hql.append(" and o.reservation_date >=:start");
+			hql.append(" and o.reservation_date >=:start ");
 		}
 		hql.append(" ORDER BY o.reservation_date DESC");
 		return oDao.find(hql.toString(), params);

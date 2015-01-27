@@ -403,7 +403,7 @@ public class ApiOrder
 		catch (Exception e)
 		{
 		}
-		if (type != 0 || type != 1)
+		if (type != 0 && type != 1)
 		{
 			type = 0;
 		}
@@ -412,8 +412,9 @@ public class ApiOrder
 				Constant.ACCOUNTERROR).append("relogin", true); }
 		if (user.getRole().ordinal() != Role.WORKER.ordinal()) { return new JSON(
 				false, "您无权查询任务列表"); }
-		return new JSON(true, "查询成功").append("orders",
-				orderService.findByUid(user.getId(), type));
+		List<Order> orders = orderService.findByUid(user.getId(), type);
+		System.out.println("t:" + t + " ordresizie:" + orders.size());
+		return new JSON(true, "查询成功").append("orders", orders);
 	}
 
 }
