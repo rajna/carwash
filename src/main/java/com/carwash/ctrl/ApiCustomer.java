@@ -133,7 +133,7 @@ public class ApiCustomer
 		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
 		if (user.getRole() == null) { return new JSON(false, "您无权增加客户信息"); }
 		int role_ordinal = user.getRole().ordinal();
-		if (role_ordinal != 1 && role_ordinal != 2 && role_ordinal != 4) { return new JSON(
+		if (role_ordinal != 0 && role_ordinal != 1 && role_ordinal != 3) { return new JSON(
 				false, "您无权增加客户信息"); }
 		if (c_mobile == null) { return new JSON(false, "手机号码不能为空"); }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
