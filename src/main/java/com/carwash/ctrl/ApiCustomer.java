@@ -124,6 +124,35 @@ public class ApiCustomer
 		}
 	}
 
+	@Cwp(0)
+	@RequestMapping("create")
+	@ResponseBody
+	public JSON create(String c_mobile, String c_name)
+	{
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null) { return new JSON(false, Constant.PERMISSIONDENIED); }
+		if (c_mobile == null) { return new JSON(false, "手机号码不能为空"); }
+		Pattern p = Pattern.compile(Constant.MOBILEREG);
+		Matcher m = p.matcher(c_mobile);
+		if (!m.find()) { return new JSON(false, "手机号码不规范"); }
+		if (c_name == null || "".equals(c_name)) { return new JSON(false, "请填写客户姓名"); }
+		Customer customer = customerService.getByMobile(c_mobile);
+		if (customer != null) { return new JSON(false, "该手机号码已经被使用"); }
+		customer = new Customer();
+		customer.setMobile(c_mobile);
+		customer.setName(c_name);
+		try
+		{
+			customer.setReffer_work_id(user.getId() + "");
+			customerService.saveOrUpdate(customer);
+			return new JSON(true, "新增客户成功");
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "新增客户失败" + e.getMessage());
+		}
+	}
+
 	/**
 	 * 客户更新车号与姓名
 	 */
