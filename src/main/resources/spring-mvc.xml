@@ -55,6 +55,7 @@
 			<list>
 				<bean class="com.carwash.interceptor.Interceptor">
 					<property name="customerService" ref="customerService" />
+					<property name="userService" ref="userService" />
 				</bean>
 			</list>
 		</property>

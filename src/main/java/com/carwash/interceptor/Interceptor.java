@@ -183,6 +183,16 @@ public class Interceptor implements HandlerInterceptor
 
 	}
 
+	public UserServiceI getUserService()
+	{
+		return userService;
+	}
+
+	public void setUserService(UserServiceI userService)
+	{
+		this.userService = userService;
+	}
+
 	public CustomerServiceI getCustomerService()
 	{
 		return customerService;
