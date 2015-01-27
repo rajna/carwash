@@ -413,7 +413,6 @@ public class ApiOrder
 		if (user.getRole().ordinal() != Role.WORKER.ordinal()) { return new JSON(
 				false, "您无权查询任务列表"); }
 		List<Order> orders = orderService.findByUid(user.getId(), type);
-		System.out.println("t:" + t + " ordresizie:" + orders.size());
 		return new JSON(true, "查询成功").append("orders", orders);
 	}
 
