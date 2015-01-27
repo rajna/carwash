@@ -25,6 +25,8 @@
  */
 package com.carwash.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import com.carwash.entity.Order;
 import com.carwash.entity.OrderStatus;
 import com.carwash.service.BaseDaoI;
 import com.carwash.service.OrderServiceI;
+import com.carwash.util.DateUtil;
 
 /**
  * 订单服务接口实现
@@ -91,4 +94,39 @@ public class OrderServiceImpl implements OrderServiceI
 		return oDao.get(" From Order o where o.id=:id", params);
 	}
 
+	@Override
+	public List<Order> findByUid(int uid, int type)
+	{
+		StringBuffer hql = new StringBuffer(
+				"From Order o where o.workerId=:workerId and o.orderStatus=:orderStatus ");
+		Calendar c_now = Calendar.getInstance();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("workerId", uid);
+		params.put("orderStatus", OrderStatus.PROCESSING);
+		if (type != 1 || type != 0)
+		{
+			type = 0;
+		}
+		if (type == 0)
+		{
+			c_now.add(Calendar.DATE, -7);
+			Date start = c_now.getTime();
+			start = DateUtil.todayStart(start);
+			Date end = new Date();
+			end = DateUtil.todayEnd(end);
+			params.put("start", start);
+			params.put("end", end);
+			hql.append(" and o.reservation_date >=:start and o.reservation_date<=:end ");
+		}
+		else
+		{
+			c_now.add(Calendar.DATE, +1);
+			Date start = c_now.getTime();
+			start = DateUtil.todayStart(start);
+			params.put("start", start);
+			hql.append(" and o.reservation_date >=:start");
+		}
+		hql.append(" ORDER BY o.reservation_date DESC");
+		return oDao.find(hql.toString(), params);
+	}
 }

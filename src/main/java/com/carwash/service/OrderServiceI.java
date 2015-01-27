@@ -56,4 +56,16 @@ public interface OrderServiceI
 	 * 查询订单
 	 */
 	public Order get(int id);
+
+	/**
+	 * 用户查询待处理的订单
+	 * 
+	 * @param uid
+	 *            用户编号
+	 * @param type
+	 *            0:代表今天之前,包含今天，1:代表明天之后 包含明天
+	 * @return
+	 */
+	public List<Order> findByUid(int uid, int type);
+
 }

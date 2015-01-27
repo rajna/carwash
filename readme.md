@@ -111,6 +111,17 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{orders}`,jsonarray(success=true时存在)
+		
+#### 2.订单列表(服务人员专用)
+- URL:`/api/order/listforworker`
+	* 请求方式:get OR post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{t}`：0:代表今天之前,包含今天，1:代表明天之后 包含明天,默认为0
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{orders}`,jsonarray(success=true时存在)
 	
 五、消息数据接口	
 ------------

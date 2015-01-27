@@ -42,6 +42,7 @@ import com.carwash.entity.OrderItem;
 import com.carwash.entity.OrderStatus;
 import com.carwash.entity.Product;
 import com.carwash.entity.Reservation;
+import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
@@ -387,6 +388,32 @@ public class ApiOrder
 			this.amount = amount;
 		}
 
+	}
+
+	@Cwp(0)
+	@RequestMapping("listforworker")
+	@ResponseBody
+	public JSON listforuser(String t)
+	{
+		int type = 0;
+		try
+		{
+			type = Integer.valueOf(t);
+		}
+		catch (Exception e)
+		{
+		}
+		if (type != 0 || type != 1)
+		{
+			type = 0;
+		}
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null || user.getRole() == null) { return new JSON(false,
+				Constant.ACCOUNTERROR).append("relogin", true); }
+		if (user.getRole().ordinal() != Role.WORKER.ordinal()) { return new JSON(
+				false, "您无权查询任务列表"); }
+		return new JSON(true, "查询成功").append("orders",
+				orderService.findByUid(user.getId(), type));
 	}
 
 }
