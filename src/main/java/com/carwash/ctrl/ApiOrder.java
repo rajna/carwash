@@ -447,6 +447,10 @@ public class ApiOrder
 				error); }
 		Order orderInDatabase = orderService.get(order.getId());
 		if (orderInDatabase == null) { return new JSON(false, "该订单已不存在"); }
+		if (orderInDatabase.getOrderStatus().ordinal() == OrderStatus.COMPLETED
+				.ordinal()) { return new JSON(false, "订单已经结算,结算失败"); }
+		if (orderInDatabase.getOrderStatus().ordinal() == OrderStatus.CANCELED
+				.ordinal()) { return new JSON(false, "订单已经取消,结算失败"); }
 		Customer customer = customerService
 				.get(orderInDatabase.getCustomerId());
 		if (customer == null || customer.getMobile() == null) { return new JSON(
@@ -481,7 +485,7 @@ public class ApiOrder
 		try
 		{
 			// 异步发送短信至客户手机
-			PhoneMessage.sendCheckOrderMessage(tPrice, customer.getMobile());
+			PhoneMessage.sendCheckOrderMessage(tPrice, "18601595393");
 			order.setId(0);
 			orderService.saveOrUpdate(orderInDatabase);
 			return new JSON(true, "验证码发送成功");
