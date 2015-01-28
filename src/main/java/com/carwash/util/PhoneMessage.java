@@ -40,64 +40,72 @@ import com.sun.jersey.api.client.WebResource;
  * Date:2014年12月12日 Time:下午5:45:09
  * <p>
  */
-public class PhoneMessage {
+public class PhoneMessage
+{
 
 	private static Client client = Client.create();
 
-	private static boolean send(final String mobile, final String content) {
+	private static boolean send(final String mobile, final String content)
+	{
 		System.out.println(content);
 		// 发送邮件
 		String mail = "carwash2014@126.com";
-		if ("18900000000".equals(mobile)) {
+		if ("18900000000".equals(mobile))
+		{
 			mail = "1036272678@qq.com";
 		}
 		Mail.sendMail(false, content, content, mail);
 		// 结束
-		if (mobile == null || content == null || content.trim().equals("")) {
-			return false;
-		}
+		if (mobile == null || content == null || content.trim().equals("")) { return false; }
 		Pattern p = Pattern.compile(Constant.MOBILEREG);
 		Matcher m = p.matcher(mobile);
-		if (!m.find()) {
-			return false;
-		}
+		if (!m.find()) { return false; }
 		// 测试阶段使用
-		if (Constant.isDebug) {
-			return Constant.isDebug;
-		}
+		if (Constant.isDebug) { return Constant.isDebug; }
 		WebResource wr = client
 				.resource("http://smsapi.c123.cn/OpenPlatform/OpenApi");
-		try {
+		try
+		{
 			String request = wr.queryParam("action", "sendOnce")
 					.queryParam("ac", "1001@501025490001")
 					.queryParam("authkey", "4750F5014042D4FBB30C0DF1CBB66405")
 					.queryParam("cgid", "52").queryParam("c", content)
 					.queryParam("m", mobile).get(String.class);
 			return request.contains("result=\"1\"");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 		}
 		return false;
 	}
 
-	public static boolean sendLoginMessage(String mobile) {
+	public static boolean sendLoginMessage(String mobile)
+	{
 		String code = CodeCache.generate(mobile);
-		if (code == null || code.length() != 4) {
-			return false;
-		}
+		if (code == null || code.length() != 4) { return false; }
 		String content = "尊敬的客户，您的登录验证码为:" + code + ", 如非本人操作请忽略!";
 		return send(mobile, content);
 	}
 
-	public static boolean sendConfirmOrderMessage(String mobile) {
+	public static boolean sendConfirmOrderMessage(String mobile)
+	{
 		String code = CodeCache.generate(mobile);
-		if (code == null || code.length() != 4) {
-			return false;
-		}
+		if (code == null || code.length() != 4) { return false; }
 		String content = "尊敬的客户，您的订单修改验证码为:" + code + ", 如非本人操作请忽略!";
 		return send(mobile, content);
 	}
 
-	public static void main(String[] args) {
-		sendConfirmOrderMessage("13057333810");
+	public static boolean sendCheckOrderMessage(double tprice, String mobile)
+	{
+		String code = CodeCache.generate(mobile);
+		if (code == null || code.length() != 4) { return false; }
+		String content = "尊敬的客户，您的订单总价为:" + tprice + "元,验证码:" + code
+				+ ",请将验证码提供给洗车小哥以便完成结算, 如非本人操作请忽略!";
+		return send(mobile, content);
+	}
+
+	public static void main(String[] args)
+	{
+		sendCheckOrderMessage(555,"15312495672");
 	}
 }

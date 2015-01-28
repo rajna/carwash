@@ -33,9 +33,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
 import com.carwash.entity.Order;
 import com.carwash.entity.OrderItem;
@@ -46,12 +48,14 @@ import com.carwash.entity.Role;
 import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
+import com.carwash.service.CustomerServiceI;
 import com.carwash.service.OrderServiceI;
 import com.carwash.service.ProductServiceI;
 import com.carwash.service.ReservationServiceI;
 import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
+import com.carwash.util.PhoneMessage;
 
 /**
  * 用户订单web接口
@@ -73,6 +77,8 @@ public class ApiOrder
 	private ProductServiceI productService;
 	@Autowired
 	private ReservationServiceI reservationService;
+	@Autowired
+	private CustomerServiceI customerService;
 
 	@Cwp(0)
 	@RequestMapping("list")
@@ -416,4 +422,73 @@ public class ApiOrder
 		return new JSON(true, "查询成功").append("orders", orders);
 	}
 
+	@Cwp(0)
+	@RequestMapping(value = "checkorder", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject checkorder(String orderstring)
+	{
+		String error = "订单参数异常";
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null || user.getRole() == null) { return new JSON(false,
+				Constant.ACCOUNTERROR).append("relogin", true); }
+		if (user.getRole().ordinal() != Role.WORKER.ordinal()) { return new JSON(
+				false, Constant.PERMISSIONDENIED); }
+		Order order = null;
+		try
+		{
+			order = JSONObject.parseObject(orderstring, Order.class);
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, error);
+		}
+		if (order == null || order.getId() == 0
+				|| order.getOrderItems().isEmpty()) { return new JSON(false,
+				error); }
+		Order orderInDatabase = orderService.get(order.getId());
+		if (orderInDatabase == null) { return new JSON(false, "该订单已不存在"); }
+		Customer customer = customerService
+				.get(orderInDatabase.getCustomerId());
+		if (customer == null || customer.getMobile() == null) { return new JSON(
+				false, "订单客户数据不存在"); }
+		Set<OrderItem> orderItems = order.getOrderItems();
+		double tPrice = 0;
+		orderInDatabase.getOrderItems().clear();
+		for (OrderItem orderItem : orderItems)
+		{
+			orderItem.setId(0);
+			if (orderItem.getProductId() == 0)
+			{
+				continue;
+			}
+			Product product = productService.get(orderItem.getProductId());
+			if (product == null)
+			{
+				continue;
+			}
+			OrderItem oi = new OrderItem();
+			oi.setAmount(orderItem.getAmount());
+			oi.setPrice(product.getPrice());
+			oi.setCategoryId(product.getCategoryId());
+			oi.setDescription(product.getDescription());
+			oi.setImageLink(product.getImageLink());
+			oi.setName(product.getName());
+			oi.setProductId(product.getId());
+			tPrice += orderItem.getAmount() * product.getPrice();
+			orderInDatabase.getOrderItems().add(oi);
+		}
+		// 将传回来的订单数据的id改成0
+		try
+		{
+			// 异步发送短信至客户手机
+			PhoneMessage.sendCheckOrderMessage(tPrice, customer.getMobile());
+			order.setId(0);
+			orderService.saveOrUpdate(orderInDatabase);
+			return new JSON(true, "验证码发送成功");
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "验证码发送失败");
+		}
+	}
 }
