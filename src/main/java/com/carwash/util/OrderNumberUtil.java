@@ -40,6 +40,6 @@ public class OrderNumberUtil
 
 	public synchronized static String getOrderNumber()
 	{
-		return DateUtil.formatToMilli(new Date());
+		return DateUtil.formatToString(new Date());
 	}
 }
