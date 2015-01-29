@@ -500,7 +500,7 @@ public class ApiOrder
 				public void run()
 				{
 					// TODO 发布的时候将手机号码改成mobile
-					PhoneMessage.sendCheckOrderMessage(price, "18601595393");
+					PhoneMessage.sendCheckOrderMessage(price, mobile);
 				}
 			}).start();
 			order.setId(0);
@@ -574,7 +574,7 @@ public class ApiOrder
 			price += orderItem.getAmount() * product.getPrice();
 		}
 		if (price < 0) { return new JSON(false, "订单结算失败,订单总价小于0"); }
-		String mobile = "18601595393";// customer.getMobile()
+		String mobile = customer.getMobile();
 		if (!CodeCache.verfiy(mobile, code)) { return new JSON(false,
 				"订单结算失败,验证码不正确"); }
 		order.setOrderStatus(OrderStatus.COMPLETED);
