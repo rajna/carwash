@@ -494,7 +494,7 @@ public class ApiOrder
 				public void run()
 				{
 					// TODO 发布的时候将手机号码改成mobile
-					PhoneMessage.sendCheckOrderMessage(price, "18601595393");
+					//PhoneMessage.sendCheckOrderMessage(price, "18601595393");
 				}
 			}).start();
 			order.setId(0);

@@ -43,6 +43,8 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.carwash.util.OrderNumberUtil;
+
 /**
  * 订单数据结构
  * <p>
@@ -60,8 +62,7 @@ public class Order
 	private int customerId; // 客户编号
 	private int reservationId; // 预约编号
 	private String carNo;
-	private String orderId = UUID.randomUUID().toString().replace("-", "")
-			.toLowerCase();
+	private String orderId = OrderNumberUtil.getOrderNumber();
 	private Date create_date = new Date();
 	private String address; // 服务地址 限制
 	private Set<OrderItem> orderItems = new HashSet<OrderItem>();

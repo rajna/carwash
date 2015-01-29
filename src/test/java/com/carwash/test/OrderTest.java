@@ -46,6 +46,7 @@ import com.carwash.service.CustomerServiceI;
 import com.carwash.service.OrderServiceI;
 import com.carwash.service.ProductServiceI;
 import com.carwash.util.DateUtil;
+import com.carwash.util.OrderNumberUtil;
 
 /**
  * TODO: File comments
@@ -99,8 +100,7 @@ public class OrderTest
 				order.setCustomerId(c.getId());
 				order.setCarNo(c.getCarNo());
 				order.setAddress(c.getMobile() + ":地址" + (i + 1));
-				order.setOrderId(UUID.randomUUID().toString().replace("-", "")
-						.toLowerCase());
+				order.setOrderId(OrderNumberUtil.getOrderNumber());
 				int sSize = OrderStatus.values().length;
 				OrderStatus os = OrderStatus.values()[new Random().nextInt(100)
 						% sSize];
