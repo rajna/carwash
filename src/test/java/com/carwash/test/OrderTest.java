@@ -27,7 +27,6 @@ package com.carwash.test;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -68,4 +68,5 @@ public interface OrderServiceI
 	 */
 	public List<Order> findByUid(int uid, int type);
 
+	public Order get(String orderId);
 }

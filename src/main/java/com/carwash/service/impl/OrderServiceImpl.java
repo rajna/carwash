@@ -97,10 +97,6 @@ public class OrderServiceImpl implements OrderServiceI
 	@Override
 	public List<Order> findByUid(int uid, int type)
 	{
-		// SELECT * FROM cw_order o WHERE o.workerId=12 AND o.orderStatus=0 AND
-		// o.reservation_date >='2015-01-22 00:00:00' AND
-		// o.reservation_date<='2015-09-22 23:59:59' ORDER BY o.reservation_date
-		// DESC
 		StringBuffer hql = new StringBuffer(
 				"From Order o where o.workerId=:workerId and o.orderStatus=:orderStatus ");
 		Calendar c_now = Calendar.getInstance();
@@ -132,5 +128,13 @@ public class OrderServiceImpl implements OrderServiceI
 		}
 		hql.append(" ORDER BY o.reservation_date DESC");
 		return oDao.find(hql.toString(), params);
+	}
+
+	@Override
+	public Order get(String orderId)
+	{
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("orderId", orderId);
+		return oDao.get("From Order o where o.orderId=:orderId", params);
 	}
 }

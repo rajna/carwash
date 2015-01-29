@@ -43,6 +43,8 @@ import com.carwash.entity.Customer;
 import com.carwash.entity.Order;
 import com.carwash.entity.OrderItem;
 import com.carwash.entity.OrderStatus;
+import com.carwash.entity.PayConsume;
+import com.carwash.entity.PayRecord;
 import com.carwash.entity.Product;
 import com.carwash.entity.Reservation;
 import com.carwash.entity.Role;
@@ -51,12 +53,14 @@ import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.CustomerServiceI;
 import com.carwash.service.OrderServiceI;
+import com.carwash.service.PayRecordServiceI;
 import com.carwash.service.ProductServiceI;
 import com.carwash.service.ReservationServiceI;
 import com.carwash.service.UserServiceI;
 import com.carwash.util.Constant;
 import com.carwash.util.JSON;
 import com.carwash.util.PhoneMessage;
+import com.carwash.util.cache.CodeCache;
 
 /**
  * 用户订单web接口
@@ -80,6 +84,8 @@ public class ApiOrder
 	private ReservationServiceI reservationService;
 	@Autowired
 	private CustomerServiceI customerService;
+	@Autowired
+	private PayRecordServiceI payRecordService;
 
 	@Cwp(0)
 	@RequestMapping("list")
@@ -426,7 +432,7 @@ public class ApiOrder
 	@Cwp(0)
 	@RequestMapping(value = "checkorder", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject checkorder(String orderstring)
+	public JSON checkorder(String orderstring)
 	{
 		String error = "订单参数异常";
 		User user = Interceptor.threadLocalUser.get();
@@ -494,7 +500,7 @@ public class ApiOrder
 				public void run()
 				{
 					// TODO 发布的时候将手机号码改成mobile
-					//PhoneMessage.sendCheckOrderMessage(price, "18601595393");
+					PhoneMessage.sendCheckOrderMessage(price, "18601595393");
 				}
 			}).start();
 			order.setId(0);
@@ -509,4 +515,131 @@ public class ApiOrder
 			return new JSON(false, "验证码发送失败");
 		}
 	}
+
+	@Cwp(0)
+	@RequestMapping("settle")
+	@ResponseBody
+	public JSON settle(String orderId, String code, String iscash,
+			String c_credit)
+	{
+		if (orderId == null || "".equals(orderId)) { return new JSON(false,
+				"订单结算失败,订单号不存在"); }
+		if (code == null || "".equals(code)) { return new JSON(false,
+				"订单结算失败,验证码不正确"); }
+		boolean isCash = false;
+		try
+		{
+			isCash = Boolean.valueOf(iscash);
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "订单结算失败,未知的支付方式");
+		}
+		double d_c_credit = -1;
+		try
+		{
+			d_c_credit = Double.valueOf(c_credit);
+		}
+		catch (Exception e)
+		{
+
+		}
+		if (d_c_credit < 0) { return new JSON(false, "订单结算失败,余额校验失败"); }
+		User user = Interceptor.threadLocalUser.get();
+		if (user == null || user.getRole() == null) { return new JSON(false,
+				Constant.ACCOUNTERROR).append("relogin", true); }
+		Order order = orderService.get(orderId);
+		if (order == null) { return new JSON(false, "订单结算失败,该订单不存在"); }
+		if (order.getOrderStatus().ordinal() == OrderStatus.COMPLETED.ordinal()) { return new JSON(
+				false, "订单结算失败,订单已经结算"); }
+		if (order.getOrderStatus().ordinal() == OrderStatus.CANCELED.ordinal()) { return new JSON(
+				false, "订单结算失败,订单已经取消"); }
+		Customer customer = customerService.get(order.getCustomerId());
+		if (customer == null || customer.getMobile() == null) { return new JSON(
+				false, "订单结算失败,该订单客户数据不存在"); }
+		double credit = customer.getCredit();
+		if (d_c_credit != credit) { return new JSON(false, "订单结算失败,客户余额发生了变化"); }
+		double price = -1;
+		for (OrderItem orderItem : order.getOrderItems())
+		{
+			if (orderItem.getProductId() == 0)
+			{
+				continue;
+			}
+			Product product = productService.get(orderItem.getProductId());
+			if (product == null)
+			{
+				continue;
+			}
+			price += orderItem.getAmount() * product.getPrice();
+		}
+		if (price < 0) { return new JSON(false, "订单结算失败,订单总价小于0"); }
+		String mobile = "18601595393";// customer.getMobile()
+		if (!CodeCache.verfiy(mobile, code)) { return new JSON(false,
+				"订单结算失败,验证码不正确"); }
+		order.setOrderStatus(OrderStatus.COMPLETED);
+		try
+		{
+			orderService.saveOrUpdate(order);
+		}
+		catch (Exception e)
+		{
+			return new JSON(false, "订单结算失败," + e.getMessage());
+		}
+		double cash = 0;
+		double minus_credit = 0;
+
+		if (!isCash)
+		{
+			if (credit >= price)
+			{
+				minus_credit = price;
+				customer.setCredit(credit - price);
+			}
+			else
+			{
+				// 计算出需要付现金的部分
+				customer.setCredit(0);
+				minus_credit = credit;
+				cash = price - credit;
+			}
+			try
+			{
+				customerService.saveOrUpdate(customer);
+			}
+			catch (Exception e)
+			{
+				// 手动回滚
+				order.setOrderStatus(OrderStatus.PROCESSING);
+				orderService.saveOrUpdate(order);
+				return new JSON(false, "结算失败," + e.getMessage());
+			}
+		}
+		else
+		{
+			cash = price;
+		}
+		PayRecord pr = new PayRecord();
+		pr.setPayConsume(PayConsume.CONSUME);
+		pr.setUserName(user.getName());
+		pr.setCustomerId(customer.getId());
+		pr.setCustomerMobile(customer.getMobile());
+		pr.setUserId(user.getId());
+		pr.setCash(cash);
+		pr.setMinus_credit(minus_credit);
+		try
+		{
+			payRecordService.saveOrUpdate(pr);
+		}
+		catch (Exception e)
+		{
+			order.setOrderStatus(OrderStatus.PROCESSING);
+			orderService.saveOrUpdate(order);
+			customer.setCredit(credit);
+			customerService.saveOrUpdate(customer);
+			return new JSON(false, "结算失败," + e.getMessage());
+		}
+		return new JSON(true, "订单结算成功");
+	}
+
 }
