@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -481,14 +482,27 @@ public class ApiOrder
 			tPrice += orderItem.getAmount() * product.getPrice();
 			orderInDatabase.getOrderItems().add(oi);
 		}
+		final double price = tPrice;
+		final String mobile = customer.getMobile();
 		// 将传回来的订单数据的id改成0
 		try
 		{
 			// 异步发送短信至客户手机
-			PhoneMessage.sendCheckOrderMessage(tPrice, "18601595393");
+			// 将发送手机验证码交给异步线程处理
+			new Thread(new Runnable()
+			{
+				public void run()
+				{
+					// TODO 发布的时候将手机号码改成mobile
+					PhoneMessage.sendCheckOrderMessage(price, "18601595393");
+				}
+			}).start();
 			order.setId(0);
 			orderService.saveOrUpdate(orderInDatabase);
-			return new JSON(true, "验证码发送成功");
+			Customer rcustomer = new Customer();
+			BeanUtils.copyProperties(customer, rcustomer);
+			rcustomer.setPassword("");
+			return new JSON(true, "验证码发送成功").append("customer", rcustomer);
 		}
 		catch (Exception e)
 		{
