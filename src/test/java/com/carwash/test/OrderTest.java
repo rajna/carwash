@@ -87,6 +87,10 @@ public class OrderTest
 			{
 				c.setCarNo(randomCarNo());
 			}
+			if (c.getName() == null)
+			{
+				c.setName("客户" + new Random().nextInt(1000));
+			}
 		}
 		List<Product> products = productService.find();
 		for (Customer c : customers)
