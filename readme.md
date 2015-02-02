@@ -122,7 +122,31 @@
 		+ `{success}`,boolean
 		+ `{message}`,String
 		+ `{orders}`,jsonarray(success=true时存在)
+		
+#### 3.订单修改确认,发送验证码至客户手机(服务人员专用) 
+- URL:`/api/order/checkorder`
+	* 请求方式:post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{orderstring}`：客户端修改好的订单内容 JSON格式
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		+ `{customer}`,success=true时存在,最新的客户信息,包含客户余额,手机号码等信息,成功之后即代表客户端的订单数据已经与服务器数据同步成功
 	
+#### 4.订单结算(服务人员专用) 
+- URL:`/api/order/settle`
+	* 请求方式:post
+	* 参数`{mobile}`：String
+	* 参数`{password}`：String
+	* 参数`{orderId}`：String 订单编号,(注意:非订单id)
+	* 参数`{code}`：String 客户告知服务人员的验证码
+	* 参数`{iscash}`：boolean 是否使用现金结算
+	* 参数`{c_credit}`：double 该订单的客户的余额,用于安全校验
+	* 返回json,包含的key-value:
+		+ `{success}`,boolean
+		+ `{message}`,String
+		
 五、消息数据接口	
 ------------
 #### 1.消息列表
