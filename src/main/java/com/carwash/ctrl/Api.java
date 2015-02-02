@@ -169,7 +169,8 @@ public class Api
 		if (!user.isInuse()) { return new JSON(false, "该账户已停用"); }
 		if (!user.getPassword().equals(password)) { return new JSON(false,
 				"登录密码不正确"); }
-		return new JSON(true, "登录成功").append("user", JSONObject.toJSON(user));
+		return new JSON(true, "登录成功").append("user", JSONObject.toJSON(user))
+				.append("categories", CategoryUtil.getCategories());
 	}
 
 	/**

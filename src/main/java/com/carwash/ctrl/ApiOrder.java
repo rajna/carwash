@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.carwash.entity.Customer;
+import com.carwash.entity.Message;
 import com.carwash.entity.Order;
 import com.carwash.entity.OrderItem;
 import com.carwash.entity.OrderStatus;
@@ -52,6 +53,7 @@ import com.carwash.entity.User;
 import com.carwash.interceptor.Cwp;
 import com.carwash.interceptor.Interceptor;
 import com.carwash.service.CustomerServiceI;
+import com.carwash.service.MessageServiceI;
 import com.carwash.service.OrderServiceI;
 import com.carwash.service.PayRecordServiceI;
 import com.carwash.service.ProductServiceI;
@@ -86,6 +88,8 @@ public class ApiOrder
 	private CustomerServiceI customerService;
 	@Autowired
 	private PayRecordServiceI payRecordService;
+	@Autowired
+	private MessageServiceI messageService;
 
 	@Cwp(0)
 	@RequestMapping("list")
@@ -499,7 +503,7 @@ public class ApiOrder
 			{
 				public void run()
 				{
-					// TODO 发布的时候将手机号码改成mobile
+					// 发布的时候将手机号码改成mobile
 					PhoneMessage.sendCheckOrderMessage(price, mobile);
 				}
 			}).start();
@@ -638,6 +642,21 @@ public class ApiOrder
 			customer.setCredit(credit);
 			customerService.saveOrUpdate(customer);
 			return new JSON(false, "结算失败," + e.getMessage());
+		}
+		try
+		{
+			// 发送站内信
+			Message message = new Message();
+			message.setCustomerId(customer.getId());
+			String content = "尊敬的客户,您刚支付了一笔订单,订单号:" + orderId + ",余额支付:"
+					+ minus_credit + "元,现金支付:" + cash + "元,账户剩余:"
+					+ customer.getCredit() + "元";
+			message.setContent(content);
+			messageService.saveOrUpdate(message);
+		}
+		catch (Exception e)
+		{
+			// TODO: handle exception
 		}
 		return new JSON(true, "订单结算成功");
 	}
