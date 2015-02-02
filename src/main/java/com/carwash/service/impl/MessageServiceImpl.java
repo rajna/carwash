@@ -81,7 +81,7 @@ public class MessageServiceImpl implements MessageServiceI
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("time", time);
 		return mDao.find("From Message m where m.customerId=" + cid
-				+ " and m.create_date > :time Order By m.create_date desc",
+				+ " and m.create_date > :time Order By m.id desc",
 				params);
 	}
 
@@ -95,7 +95,7 @@ public class MessageServiceImpl implements MessageServiceI
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("time", time);
 		return mDao.find("From Message m where m.userId=" + uid
-				+ "  and m.create_date > :time Order By m.create_date desc",
+				+ "  and m.create_date > :time Order By m.id desc",
 				params);
 	}
 
