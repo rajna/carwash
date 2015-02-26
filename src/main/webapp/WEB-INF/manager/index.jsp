@@ -9,7 +9,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>车帮夫后台主页</title>
+<title>车夫帮后台主页</title>
 
 <meta name="viewport"
 	content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -201,7 +201,7 @@ html /deep/ core-icon {
 	
 	      <div class="container" id="page-2">
 				<div class="card">
-				    <h1 class="header">车帮夫</h1>
+				    <h1 class="header">车夫帮</h1>
 				    <span style="display: block;color: rgb(255, 255, 255);font-size: 18px;opacity: 0.7;">请先登录</span>
 				    <core-ajax class="ajaxloginform" 
 				               handleAs="json"
