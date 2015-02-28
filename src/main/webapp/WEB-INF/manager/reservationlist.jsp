@@ -59,7 +59,7 @@
      <paper-toast id="p-a-msg" role="alert">
 	 </paper-toast>
 	
-	<core-animated-pages  transitions="slide-from-right">
+	<core-animated-pages>
     <section>
               <core-ajax url="../api/reservation/all" class="p_list"  handleAs="json"></core-ajax>
 		      <core-scroll-header-panel condenses keepCondensedHeader
