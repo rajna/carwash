@@ -8,6 +8,7 @@
 <link rel="import" href="../../../cwresources/components/paper-toast/paper-toast.html">
 <link rel="import" href="../../../cwresources/components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../../../cwresources/components/core-icons/core-icons.html">
+<link rel="import" href="../filter/polymer-filters.html">
 <polymer-element name="reservation-table" attributes="data columns categories sortColumn sortDescending rowStatus reservationId">
     <template>
       <style>
@@ -145,10 +146,17 @@ core-icon{
             <div class="card-left">
              <template repeat="{{column in columns}}">
              <tr style="width:50%;">
-	            <template if="{{column.name!='action'&&column.type=='base'}}">
+	            <template if="{{column.name!='action'&&column.type=='base'&&column.date!='true'}}">
 	            
 	                <td>
 	                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]}}</span>
+	                </td>
+	            </template>
+	            
+	            <template if="{{column.name!='action'&&column.type=='base'&&column.date=='true'}}">
+	            
+	                <td>
+	                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]|date('yyyy-MM-dd HH:mm:ss Z')}}</span>
 	                </td>
 	            </template>
 	             

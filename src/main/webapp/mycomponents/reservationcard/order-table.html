@@ -133,9 +133,14 @@
             <div class="card-left"><template repeat="{{column in columns}}">
                 <template if="{{column.name!='orderItems'}}">
                  <tr style="width:50%;">
-		            <template if="{{column.name!='action'&&column.name!='orderItems'}}">
+		            <template if="{{column.name!='action'&&column.name!='orderItems'&&column.date!='true'}}">
 		                <td>
 		                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]}}</span>
+		                </td>
+		            </template>
+		            <template if="{{column.name!='action'&&column.name!='orderItems'&&column.date=='true'}}">
+		                <td>
+		                  <span><core-icon icon="{{column.icon}}"></core-icon>{{row[column.name]|date('yyyy-MM-dd HH:mm:ss Z')}}</span>
 		                </td>
 		            </template>
 		            <template if="{{column.name=='action'}}">

@@ -23,6 +23,7 @@
 <link href="../../cwresources/components/core-ajax/core-ajax.html" rel="import">
 <link href="../../cwresources/components/paper-input/paper-input.html" rel="import">
 <link href="../../cwresources/components/paper-toast/paper-toast.html" rel="import">
+
 <style>
 core-submenu,core-item{
   font-size:13px;
@@ -221,6 +222,7 @@ html /deep/ core-icon {
 						placeholder="密码"></paper-input>
 					</template>
 					
+    
 					<a class="pageload-link" id="loginbutton">登陆</a>
 					
 			</div>
@@ -240,6 +242,7 @@ html /deep/ core-icon {
     <script>
       Polymer('load-areaUser', {
         ready:function(){
+           
         	var ajaxarealist = document.querySelector('.area_list');
 			var ajaxuserlist = document.querySelector('.user_list');
 			ajaxarealist.addEventListener("core-response", function(e) {

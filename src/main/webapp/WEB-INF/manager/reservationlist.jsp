@@ -371,7 +371,8 @@
 					name : 'create_date',
 					title : '创建时间',
 					type:'base',
-					icon:'due-date'
+					icon:'due-date',
+					date:'true'
 				}, {
 					name : 'message_text',
 					title : '客户留言',
@@ -526,7 +527,8 @@
 				}, {
 					name : 'create_date',
 					title : '创建时间',
-					icon:'due-date'
+					icon:'due-date',
+					date:'true'
 				}, {
 					name : 'workerName',
 					title : '服务人员姓名',
